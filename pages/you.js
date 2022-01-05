@@ -1,9 +1,9 @@
 import Head from 'next/head'
 import Image from 'next/image'
+import Avatar from '../components/Avatar'
 import Navbar from '../components/Navbar'
 
-
-export default function Home() {
+export default function You() {
   return (
     <>
       <Head>
@@ -12,6 +12,8 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <Navbar />
+      <Avatar />
+      <h1>You &lt;3</h1>
     </>
   )
 }
