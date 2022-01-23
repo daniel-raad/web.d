@@ -12,7 +12,6 @@ export default function You() {
       </Head>
       <Navbar />
       <Avatar />
-      <h1>You &lt;3</h1>
     </>
   )
 }

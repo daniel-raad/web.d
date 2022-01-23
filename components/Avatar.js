@@ -1,7 +1,12 @@
 import Image from 'next/image'
 
 function Avatar() {
-  return <Image src="/you.jpeg" alt="me" width="356" height="356" />
+  return (
+    <div className="image-div" style={{display: 'flex',  justifyContent:'center', alignItems:'center', height: '100vh'}}>
+      <Image src="/you.JPG" alt="me" width="400" height="650" />
+      <h1>You &lt;3</h1>
+    </div>
+  )
 }
 
 export default Avatar
