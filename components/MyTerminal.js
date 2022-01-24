@@ -1,6 +1,6 @@
-import { render } from "react-dom"
 import React, { Component } from 'react';
 import Terminal from 'terminal-in-react';
+
 
 class MyTerminal extends Component { 
     render() { 
@@ -19,15 +19,15 @@ class MyTerminal extends Component {
                 barColor='black'
                 style={{ fontWeight: "bold", fontSize: "1em" }}
                 commands={{
-                    'github': () => window.open('https://github.com/daniel-raad', '_blank'),
-                    'projects': () => window.open('/you', '_blank'), 
-                    popup: () => alert('Nosey parker')
+                    'github': () => console.log(window.open("https://github.com/daniel-raad", '_blank')),
+                    'projects': () => window.open('/you', '_self'), 
+                    popup: () => alert('Hellooo')
                 }}
                 descriptions={{
                     'github': 'Opens a link to Github',
                     alert: 'alert', popup: 'alert'
                 }}
-                msg='Hi baby, congratulations on your success my love <3, type help to see what you can do with this! '
+                msg='Type help to see what you can do with this!'
             /> 
             </div>
         );
