@@ -2,8 +2,7 @@ import React, { Component } from 'react';
 import Terminal from 'terminal-in-react';
 
 
-class MyTerminal extends Component { 
-    render() { 
+    const MyTerminal = () =>   { 
         return ( 
             <div
                 style={{
@@ -20,18 +19,17 @@ class MyTerminal extends Component {
                 style={{ fontWeight: "bold", fontSize: "1em" }}
                 commands={{
                     'github': () => console.log(window.open("https://github.com/daniel-raad", '_blank')),
-                    'projects': () => window.open('/you', '_self'), 
+                    'projects': () => console.log(window.open('/you', '_self')), 
                     popup: () => alert('Hellooo')
                 }}
                 descriptions={{
                     'github': 'Opens a link to Github',
                     alert: 'alert', popup: 'alert'
                 }}
-                msg='Type help to see what you can do with this!'
+                msg='hello, welcome to the page, type help to see what you can do with this!'
             /> 
             </div>
         );
-    } 
-}
+    }
 
 export default MyTerminal
