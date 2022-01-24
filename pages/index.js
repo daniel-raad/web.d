@@ -1,7 +1,7 @@
 import Head from 'next/head'
-import Image from 'next/image'
 import Navbar from '../components/Navbar'
-import Terminal from 'terminal-in-react'; 
+import MyTerminal from '../components/MyTerminal'
+ 
 
 
 export default function Home() {
@@ -13,30 +13,9 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <Navbar />
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          height: "100vh"
-        }}
-      >
-        <Terminal
-          color='green'
-          backgroundColor='black'
-          barColor='black'
-          style={{ fontWeight: "bold", fontSize: "1em" }}
-          commands={{
-            'show-you': () => window.open('/you', '_blank'),
-            popup: () => alert('I love you!')
-          }}
-          descriptions={{
-            'show-you': 'opens a link to you',
-            alert: 'alert', popup: 'alert'
-          }}
-          msg='Hi baby, congratulations on your success my love <3, type help to see what you can do with this! '
-        />
-      </div>
+      <MyTerminal />
+
+
     </>
   )
 }
