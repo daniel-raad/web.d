@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import Terminal from 'terminal-in-react';
 
 
@@ -26,7 +26,7 @@ import Terminal from 'terminal-in-react';
                     'github': 'Opens a link to Github',
                     alert: 'alert', popup: 'alert'
                 }}
-                msg='hello, welcome to the page, type help to see what you can do with this!'
+                msg='Hey, welcome to the page, type help to see what you can do with this!'
             /> 
             </div>
         );

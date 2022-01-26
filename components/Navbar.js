@@ -10,24 +10,26 @@ const Nav = styled.nav`
     align-items: center; 
 `;
 
+const StyledLink = styled.a`
+    padding: 0rem 2rem
+`;
 const Navbar = () => {
     return (
         <Nav>
            <div> 
-             <Link href="/">
-                 <a>Home</a>
+             <Link href="/" passHref>
+                 <StyledLink>Home</StyledLink>
              </Link>
-             <Link href="/">
-                 <a>Is</a>
+            </div>
+            <div> 
+             <Link href="/" passHref>
+                 <StyledLink>About</StyledLink>
              </Link>
-             <Link href="/">
-                 <a>Where</a>
+             <Link href="/" passHref>
+                 <StyledLink>Projects</StyledLink>
              </Link>
-             <Link href="/you">
-                 <a>You</a>
-             </Link>
-             <Link href="/">
-                 <a>Are</a>
+             <Link href="/you" passHref> 
+                 <StyledLink>Life</StyledLink>
              </Link>
            </div>
         </Nav>

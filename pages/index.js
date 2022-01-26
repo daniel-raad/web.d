@@ -1,7 +1,20 @@
 import Head from 'next/head'
-import Navbar from '../components/Navbar'
 import MyTerminal from '../components/MyTerminal'
- 
+ import styled from 'styled-components';
+
+const Hero = styled.div`
+  height: 20vh;
+  display: flex;
+  justify-content: center;
+  align-item: center; 
+  background: #fff; 
+`;
+
+const Heading = styled.h1`
+  color: #000;
+  font-size: 6rem; 
+  font-weight: 600;  
+`;
 
 
 export default function Home() {
@@ -12,7 +25,9 @@ export default function Home() {
         <meta name="description" content="Hello, its Daniel" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <Navbar/>
+      <Hero>
+        <Heading>Welcome</Heading>
+      </Hero>
       <MyTerminal/>
     </>
   )
