@@ -8,7 +8,7 @@ export default function You() {
       <Head>
         <title>All about you</title>
         <meta name="description" content="Hello you <3" />
-        <link rel="icon" href="/favicon.ico" />
+        <link rel="icon" href="/NinjaEmoji.jpeg" />
       </Head>
       <Avatar />
     </>
