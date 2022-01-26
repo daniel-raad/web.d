@@ -3,7 +3,7 @@ import MyTerminal from '../components/MyTerminal'
  import styled from 'styled-components';
 
 const Hero = styled.div`
-  height: 20vh;
+  height: 15vh;
   display: flex;
   justify-content: center;
   align-item: center; 
@@ -26,7 +26,7 @@ export default function Home() {
         <link rel="icon" href="/NinjaEmoji.jpeg" />
       </Head>
       <Hero>
-        <Heading>Welcome</Heading>
+        <Heading>Hello there!</Heading>
       </Hero>
       <MyTerminal/>
     </>
