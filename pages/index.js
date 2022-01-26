@@ -23,7 +23,7 @@ export default function Home() {
       <Head>
         <title>draad is typing...</title>
         <meta name="description" content="Hello, its Daniel" />
-        <link rel="icon" href="/favicon.ico" />
+        <link rel="icon" href="/NinjaEmoji.jpeg" />
       </Head>
       <Hero>
         <Heading>Welcome</Heading>

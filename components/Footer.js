@@ -15,7 +15,8 @@ const Footer = () => {
 
     return (
         <FooterSection> 
-            <h2 style={hstyle}> Daniel Raad 2022</h2>
+            <h2 style={hstyle}> Daniel Raad 2022 </h2>
+            <p style={hstyle}> ~ Echo con amor </p>
         </FooterSection>
     );
 };
