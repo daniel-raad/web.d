@@ -35,17 +35,17 @@ export default function Navbar() {
       <ul className={click ? "nav-menu active" : "nav-menu"}>
         <li classNamme="nav-item">
           <Link href="/about" passHref>
-            <StyledLink onClick={closeMobileMenu}>About</StyledLink>
+            <StyledLink className="nav-links" onClick={closeMobileMenu}>About</StyledLink>
           </Link>
         </li>
         <li className="nav-item">
           <Link href="/projects" passHref >
-            <StyledLink onClick={closeMobileMenu}>Projects</StyledLink>
+            <StyledLink className="nav-links" onClick={closeMobileMenu}>Projects</StyledLink>
           </Link>
         </li>
         <li className="nav-item">
           <Link href="/life" passHref>
-            <StyledLink onClick={closeMobileMenu}>Life</StyledLink>
+            <StyledLink className="nav-links" onClick={closeMobileMenu}>Life</StyledLink>
           </Link>
         </li>
       </ul>
