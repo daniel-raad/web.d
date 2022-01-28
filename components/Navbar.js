@@ -26,7 +26,7 @@ export default function Navbar() {
     <Nav>
       <div className="navbar-container">
         <Link href="/" passHref>
-          <StyledLink>Home</StyledLink>
+          <StyledLink className="nav-links" onClick={closeMobileMenu}>Home</StyledLink>
         </Link>
       </div>
       <div className="menu-icon" onClick={handleClick}>
