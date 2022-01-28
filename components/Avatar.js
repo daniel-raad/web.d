@@ -4,7 +4,6 @@ function Avatar() {
   return (
     <div className="image-div" style={{display: 'flex',  justifyContent:'center', alignItems:'center', height: '100vh'}}>
       <Image src="/you.JPG" alt="me" width="400" height="650" />
-      <h1>You &lt;3</h1>
     </div>
   )
 }

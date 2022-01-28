@@ -2,7 +2,7 @@ import Head from 'next/head'
 import Avatar from '../components/Avatar'
 
 
-export default function You() {
+export default function Life() {
   return (
     <>
       <Head>

@@ -1,39 +1,54 @@
-import styled from 'styled-components'; 
-import Link from 'next/link'
+import styled from "styled-components";
+import Link from "next/link";
+import React, { useState } from "react";
+import Bars from "./BurgerFont";
 
-const Nav = styled.nav`
+
+export default function Navbar() {
+  const Nav = styled.nav`
     height: 60px;
-    background: #000; 
+    background: #000;
     color: #fff;
-    display: flex; 
-    justify-content: space-between; 
-    align-items: center; 
-`;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  `;
 
-const StyledLink = styled.a`
-    padding: 0rem 2rem
-`;
-const Navbar = () => {
-    return (
-        <Nav>
-           <div> 
-             <Link href="/" passHref>
-                 <StyledLink>Home</StyledLink>
-             </Link>
-            </div>
-            <div> 
-             <Link href="/" passHref>
-                 <StyledLink>About</StyledLink>
-             </Link>
-             <Link href="/" passHref>
-                 <StyledLink>Projects</StyledLink>
-             </Link>
-             <Link href="/you" passHref> 
-                 <StyledLink>Life</StyledLink>
-             </Link>
-           </div>
-        </Nav>
-    )
+  const StyledLink = styled.a`
+    padding: 0rem 2rem;
+  `;
+
+  const [click, setClick] = useState(false);
+  const handleClick = () => setClick(!click);
+  const closeMobileMenu = () => setClick(false);
+
+  return (
+    <Nav>
+      <div className="navbar-container">
+        <Link href="/" passHref>
+          <StyledLink>Home</StyledLink>
+        </Link>
+      </div>
+      <div className="menu-icon" onClick={handleClick}>
+        <Bars />
+      </div>
+      <ul className={click ? "nav-menu active" : "nav-menu"}>
+        <li classNamme="nav-item">
+          <Link href="/about" passHref>
+            <StyledLink onClick={closeMobileMenu}>About</StyledLink>
+          </Link>
+        </li>
+        <li className="nav-item">
+          <Link href="/projects" passHref >
+            <StyledLink onClick={closeMobileMenu}>Projects</StyledLink>
+          </Link>
+        </li>
+        <li className="nav-item">
+          <Link href="/life" passHref>
+            <StyledLink onClick={closeMobileMenu}>Life</StyledLink>
+          </Link>
+        </li>
+      </ul>
+    </Nav>
+  );
 }
-
-export default Navbar
