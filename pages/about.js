@@ -16,9 +16,11 @@ export default function About() {
       </Head>
       <Card className={styles.card}>
         <Card.Body>
+        
           <Header/>
           <Description />
           <CV/>
+
         </Card.Body>
       </Card>
 
