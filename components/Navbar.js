@@ -26,14 +26,14 @@ export default function Navbar() {
     <Nav>
       <div className="navbar-container">
         <Link href="/" passHref>
-          <StyledLink className="nav-links" onClick={closeMobileMenu}>Home</StyledLink>
+          <StyledLink className="home-icon" onClick={closeMobileMenu}>Home</StyledLink>
         </Link>
       </div>
       <div className="menu-icon" onClick={handleClick}>
         <Bars />
       </div>
       <ul className={click ? "nav-menu active" : "nav-menu"}>
-        <li classNamme="nav-item">
+        <li className="nav-item">
           <Link href="/about" passHref>
             <StyledLink className="nav-links" onClick={closeMobileMenu}>About</StyledLink>
           </Link>
