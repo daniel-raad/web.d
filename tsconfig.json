@@ -23,7 +23,7 @@
     "next-env.d.ts",
     "**/*.ts",
     "**/*.tsx"
-  ],
+, "firebase/clientApp.js", "pages/auth.js"  ],
   "exclude": [
     "node_modules"
   ]
