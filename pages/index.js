@@ -1,6 +1,7 @@
 import Head from 'next/head'
 import MyTerminal from '../components/MyTerminal'
 import styled from 'styled-components';
+import Auth from '../components/Auth'
 import {auth, app} from "../firebase/clientApp";
 import { useAuthState } from "react-firebase-hooks/auth";
 
@@ -23,6 +24,7 @@ const Heading = styled.h1`
 export default function Home() {
   return (    
     <>
+      <Auth/> 
       <Head>
         <title>draad is typing...</title>
         <meta name="description" content="Hello, its Daniel" />
@@ -31,7 +33,7 @@ export default function Home() {
       <Hero>
         <Heading>Hello there!</Heading>
       </Hero>
-      {/* <MyTerminal/> */}
+      <MyTerminal/>
     </>
   )
 }
