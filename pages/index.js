@@ -31,7 +31,7 @@ export default function Home() {
       <Hero>
         <Heading>Hello there!</Heading>
       </Hero>
-      <MyTerminal/>
+      {/* <MyTerminal/> */}
     </>
   )
 }
