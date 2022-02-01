@@ -18,6 +18,10 @@
     "bootstrap-icons": "^1.7.2",
     "downloadjs": "^1.4.7",
     "firebase": "^9.6.5",
+    "graphql": "^16.3.0",
+    "graphql-request": "^4.0.0",
+    "html-react-parser": "^1.4.6",
+    "moment": "^2.29.1",
     "next": "12.0.7",
     "next-images": "^1.8.4",
     "react": "17.0.2",
@@ -25,12 +29,17 @@
     "react-dom": "17.0.2",
     "react-firebase-hooks": "^5.0.1",
     "react-firebaseui": "^6.0.0",
+    "react-multi-carousel": "^2.6.5",
     "react-router-dom": "^6.2.1",
+    "sass": "^1.49.4",
     "styled-components": "^5.3.3",
     "terminal-in-react": "^4.3.1"
   },
   "devDependencies": {
+    "autoprefixer": "^10.4.2",
     "eslint": "8.6.0",
-    "eslint-config-next": "12.0.7"
+    "eslint-config-next": "12.0.7",
+    "postcss": "^8.4.6",
+    "tailwindcss": "^3.0.18"
   }
 }

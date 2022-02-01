@@ -1,5 +1,8 @@
+import React, { useEffect, useState } from 'react';
+
 import Layout from '../components/Layout'
-import '../styles/globals.css'
+import 'tailwindcss/tailwind.css';
+import '../styles/globals.scss'
 import '../styles/navbar.css'
 import '@fortawesome/fontawesome-svg-core/styles.css'
 import "bootstrap/dist/css/bootstrap.css";

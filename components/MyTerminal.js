@@ -9,7 +9,7 @@ import Terminal from 'terminal-in-react';
                 display: "flex",
                 justifyContent: "center",
                 alignItems: "center",
-                height: "100vh",  
+                height: "75vh",  
                 backgroundColor: "FFEFD5",
             }}
             >
