@@ -1,42 +1,39 @@
+import React, { useState } from 'react';
+import DragMove from "../components/DragMove";
 import Head from 'next/head'
 import MyTerminal from '../components/MyTerminal'
 import styled from 'styled-components';
-import {auth, app} from "../firebase/clientApp";
-import { useAuthState } from "react-firebase-hooks/auth";
-
-// const Hero = styled.div`
-//   height: 13vh;
-//   display: flex;
-//   justify-content: center;
-//   align-item: center; 
-//   background: #FFFF; 
-// `;
-
-const Heading = styled.h1`
-  text-align: center;
-  color: #102F5A;
-  font-size: 6rem; 
-  font-weight: 600;  
-`;
-
-
 
 export default function Home() {
+
+  const [translate, setTranslate] = useState({
+    x: 0,
+    y: 0
+  });
+
+  const handleDragMove = (e) => {
+    setTranslate({
+      x: translate.x + e.movementX,
+      y: translate.y + e.movementY
+    });
+  };
+
   return (    
-    <div className="container mx-auto"> 
+    <div className="container mx-auto px-10 mb-8"> 
       <Head>
         <title>draad is typing...</title>
         <meta name="description" content="Hello, its Daniel" />
         <link rel="icon" href="/NinjaEmoji.jpeg" />
       </Head>
-      
-        <Heading>
-          <div className="container mx-auto">
-            Hello there!
-          </div>
-        </Heading>
-      
-      <MyTerminal/>
+    
+      <DragMove onDragMove={handleDragMove}>
+        <div  style={{
+            transform: `translateX(${translate.x}px) translateY(${translate.y}px)`
+        }}>
+          <MyTerminal/>
+        </div>
+      </DragMove>
+
     </div>
   )
 }
