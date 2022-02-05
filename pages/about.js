@@ -2,7 +2,6 @@ import Head from 'next/head'
 import Header from "../components/Header"
 import Description from "../components/Description"
 import { Card } from "react-bootstrap"
-import styles from "../styles/About.module.css";
 import CV from "../components/CV";
 
 
