@@ -8,7 +8,7 @@ const PostDetails = ({ post }) => {
     <div className="container mx-auto px-10 mb-8">      
       <Head>
         <title>Blog Posts</title>
-        <meta name="description" content="Hello you <3" />
+        <meta name="description" />
         <link rel="icon" href="/NinjaEmoji.jpeg" />
       </Head>
       <BlogHeader />

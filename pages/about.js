@@ -3,6 +3,7 @@ import Header from "../components/Header"
 import Description from "../components/Description"
 import { Card } from "react-bootstrap"
 import CV from "../components/CV";
+import UtterComments from '../components/utterComment';
 
 
 export default function About() {
@@ -23,6 +24,8 @@ export default function About() {
 
         </Card.Body>
       </Card>
+      <UtterComments/> 
     </div>
+
   )
 }

@@ -19,8 +19,8 @@ import Terminal from 'terminal-in-react';
                     descriptions={{
                         'github': 'Opens a link to Github',
                         alert: 'alert', popup: 'alert'
-                    }}
-                    msg='Hey, welcome to the page, type help to see what you can do with this!'
+                    }} 
+                    msg='Hey, welcome to my website, try type help to see what you can do with this terminal!'
                 /> 
             </div>
         );
