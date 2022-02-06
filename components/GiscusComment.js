@@ -28,7 +28,7 @@ export default class GiscusComments extends Component {
     render(){ 
         return (
 
-            <div className="w-full"> 
+            <div className="w-full mb-20"> 
                 <div ref={this.commentBox}></div>
             </div>
         )
