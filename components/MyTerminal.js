@@ -4,7 +4,7 @@ import Terminal from 'terminal-in-react';
 
     const MyTerminal = () =>   { 
         return ( 
-            <div className="flex justify-center">
+            <div className="grid place-items-center h-screen">
                 <Terminal
                     color='white'
                     backgroundColor='black'
