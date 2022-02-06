@@ -12,7 +12,8 @@ import Terminal from 'terminal-in-react';
                     style={{ fontWeight: "bold", fontSize: "1.3em" }}
                     commands={{
                         'github': () => console.log(window.open("https://github.com/daniel-raad", '_blank')),
-                        'projects': () => console.log(window.open('/you', '_self')), 
+                        'projects': () => console.log(window.open('/projects', '_self')), 
+                        'life': () => console.log(window.open('/life', '_self')),
                         popup: () => alert('Hellooo')
                     }}
                     descriptions={{

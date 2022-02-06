@@ -6,7 +6,7 @@ const Footer = () => {
 
     return (
         <div className="text-center text-white p-4 bg-black text bottom-0">
-            © 2021 Copyright: Daniel Raad
+            Daniel Raad @ 2022 
         </div>
     );
 };
