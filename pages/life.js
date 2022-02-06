@@ -14,7 +14,7 @@ export default function Life({ posts }) {
         <link rel="icon" href="/NinjaEmoji.jpeg" />
       </Head>
       <BlogHeader />
-      <div className='grid grid-cols-1 lg:grid-cols-12 gap-12'>
+      <div className='grid grid-cols-1 lg:grid-cols-12 gap-12 mb-20'>
         <div className="lg:col-span-8 col-span-1">
           {posts.map((post) => <PostCard post={post.node} key={post.title}/>)}
         </div>
