@@ -4,6 +4,7 @@ import Description from "../components/Description"
 import { Card } from "react-bootstrap"
 import CV from "../components/CV";
 import UtterComments from '../components/utterComment';
+import GiscusComments from '../components/GiscusComment';
 
 
 export default function About() {
@@ -24,7 +25,7 @@ export default function About() {
 
         </Card.Body>
       </Card>
-      <UtterComments/> 
+      <GiscusComments/> 
     </div>
 
   )
