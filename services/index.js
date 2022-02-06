@@ -1,7 +1,7 @@
 import { request, gql } from 'graphql-request';
 
-// const graphqlAPI = "https://api-eu-west-2.graphcms.com/v2/ckz4epj4j007701z890df3rzc/master";
-const graphqlAPI = "abc"
+const graphqlAPI = "https://api-eu-west-2.graphcms.com/v2/ckz4epj4j007701z890df3rzc/master";
+
 
 export const getPosts = async () => {
   const query = gql`
