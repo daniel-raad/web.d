@@ -6,7 +6,7 @@ import Terminal from 'terminal-in-react';
         return ( 
             <div className="flex justify-center">
                 <Terminal
-                    color='green'
+                    color='white'
                     backgroundColor='black'
                     barColor='black'
                     style={{ fontWeight: "bold", fontSize: "1.3em" }}
