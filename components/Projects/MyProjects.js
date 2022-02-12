@@ -9,7 +9,7 @@ const MyProjects = () => {
         {projects.map((p, i) => {
             return(
                 <div className="pb-8"> 
-                    <PostCard post={p}/> 
+                    <PostCard post={p} key={p.title}/> 
                 </div>
             )
         })}
