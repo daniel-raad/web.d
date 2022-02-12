@@ -8,7 +8,7 @@ const MyProjects = () => {
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 px-10 py-5">
         {projects.map((p, i) => {
             return(
-                <div className="pb-8"> 
+                <div key={i} className="pb-8"> 
                     <PostCard key={p.title} post={p}/> 
                 </div>
             )
