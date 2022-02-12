@@ -3,6 +3,7 @@ import DragMove from "../components/DragMove";
 import Head from 'next/head'
 import MyTerminal from '../components/MyTerminal'
 import styled from 'styled-components';
+import TypeWriter from '../components/TypeWriter';
 
 export default function Home() {
 
@@ -26,6 +27,7 @@ export default function Home() {
         <link rel="icon" href="/NinjaEmoji.jpeg" />
       </Head>
     
+      <TypeWriter content={'Hello Im Dan'} speed={100}/> 
       <DragMove onDragMove={handleDragMove}>
         <div  style={{
             transform: `translateX(${translate.x}px) translateY(${translate.y}px)`

@@ -1,10 +1,9 @@
 import React from 'react';
 import moment from 'moment'; 
 import Link from 'next/link';
-
 const PostCard = ({ post }) => {
   return (
-    <div className="bg-white shadow-lg rounded-lg p-0 lg:p-8 ob-12 mb-8">
+    <div className="bg-white shadow-lg rounded-lg pb-5 p-0 lg:p-8 ob-12 mb-8">
       <div className="relative overflow-hidden shadow-mb pb-80 mb-6">
         <img 
           src={post.featuredImage.url} 
@@ -17,7 +16,7 @@ const PostCard = ({ post }) => {
         </Link>
       </h1>
       <div className="block text-center items-center justify-center mb-8 w-full">
-        <div className="flex items-center justify-center mb-3 w-full lg:w-auto mr-8">
+        <div className="flex items-center lg:pl-10 justify-center mb-3 w-full lg:w-auto mr-8">
           <img 
             alt={post.author.name}
             height="20px"
@@ -26,19 +25,46 @@ const PostCard = ({ post }) => {
             src={post.author.photo.url}/>
             <p className="inline align-middle text-gray-700 ml-2 mb-0 font-medium text-lg">{post.author.name}</p>
         </div>
-        <div className="font-medium text-gray-700">
-        <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 inline mr-2 text-pink-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-        </svg>
-        <span className="align-middle">{moment(post.createdAt).format('MMM DD, YYYY')}</span>
-      </div>
+        <div className="flex items-center font-medium text-gray-700 justify-center">
+          <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 inline mr-2 text-pink-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+          </svg>
+          <span className="align-middle">{moment(post.createdAt).format('MMM DD, YYYY')}</span>
+        </div>
       </div>
       <p className="text-center text-lg text-gray-700 font-normal px-4 lg:px-20 mb-8"> {post.excerpt}</p>
-      <div className="text-center">
-        <Link href={`/post/${post.slug}`}>
-          <span className="transition duration-500 ease transform hover:-translate-y-1 mb-8 inline-block bg-pink-600 text-lg font-medium rounded-full text-white px-8 py-3 cursor-pointer">Continue Reading</span>
-        </Link>
-      </div>
+      { post.slug && 
+        <div className="text-center">
+          <Link href={`/post/${post.slug}`}>
+            <span className="transition duration-500 ease transform hover:-translate-y-1 mb-8 inline-block bg-pink-600 text-lg font-medium rounded-full text-white px-8 py-3 cursor-pointer">Continue Reading</span>
+          </Link>
+        </div>
+      }
+      { post.source && post.visit && 
+        <div className="grid grid-cols-2 text-center"> 
+              <Link href={post.source}>
+                  <a className="inline-block hover:bg-purple-700 hover:text-white bg-purple-100 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2">
+                      Source code 
+                  </a>
+              </Link>
+              <Link href={post.visit}>
+                  <a className="inline-block hover:bg-purple-700 hover:text-white bg-purple-100 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2">
+                      Visit project
+                  </a>
+              </Link>
+        </div>
+      }
+      { post.tags &&                     
+        <div className="text-center grid grid-cols-3"> 
+            {post.tags.map((t,i) => { 
+                return(
+                    <div className='inline-block bg-blue-100 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2 hover:bg-blue-700 hover:text-white '>
+                        {t}
+                    </div>
+                )
+            })} 
+          </div> 
+      }
     </div>
   );
 };
