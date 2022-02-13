@@ -16,7 +16,7 @@ export default function About() {
         <link rel="icon" href="/NinjaEmoji.jpeg" />
       </Head>
       
-      <Card className="relative bg-white text-black mt-10 mb-5 ml-15 text-center p-8 shadow rounded-lg shadow-black">
+      <Card className="relative bg-slate-600 text-black mt-10 mb-5 ml-15 text-center p-8 shadow rounded-lg shadow-black">
         <Card.Body>
         
           <Header/>

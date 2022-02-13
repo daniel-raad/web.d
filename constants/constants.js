@@ -36,6 +36,15 @@ export const projects = [
     },
   ];
   
+
+  export const blogs = [ 
+
+
+
+  ]
+
+
+  
   export const TimeLineData = [
     { year: 2018, text: 'Worked in the world of finance and was a co-founder of a student run hedge fund', },
     { year: 2019, text: 'Did some work with Python to perform auto trading', },
