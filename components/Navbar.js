@@ -43,11 +43,11 @@ export default function Navbar() {
             <StyledLink className="nav-links" onClick={closeMobileMenu}>Projects</StyledLink>
           </Link>
         </li>
-        <li className="nav-item">
+        {/* <li className="nav-item">
           <Link href="/life" passHref>
             <StyledLink className="nav-links" onClick={closeMobileMenu}>Life</StyledLink>
           </Link>
-        </li>
+        </li> */}
       </ul>
     </Nav>
   );

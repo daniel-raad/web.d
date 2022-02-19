@@ -22,7 +22,7 @@ import Terminal from 'terminal-in-react';
                         'life': 'Why not check out my blog on different technologies and life!', 
                         alert: 'alert', popup: 'alert'
                     }} 
-                    msg= 'Hey, welcome to my website, try type help to see what you can do with this terminal!'
+                    msg= 'Hey, type help to see what you can do with this terminal...'
                 /> 
             </div>
         );

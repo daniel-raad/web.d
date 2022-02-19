@@ -2,11 +2,12 @@ import Head from 'next/head'
 import TypeWriter from '../components/TypeWriter';
 import MyProjects from '../components/Projects/MyProjects';
 import BackgroundAnimation from '../components/BgAnimation';
+import { useEffect } from 'react'
 
 
 export default function Projects() {
   return (
-    <>
+    <div>
       <Head>
         <title>Projects by Daniel</title>
         <meta name="description" />
@@ -20,6 +21,6 @@ export default function Projects() {
             <BackgroundAnimation/>
       </div>
       <MyProjects/>
-    </>
+    </div>
   )
 }

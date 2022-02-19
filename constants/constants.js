@@ -1,7 +1,7 @@
 export const projects = [
     {
       title: 'TikTok Automation',
-      excerpt: "Using Python, I automated a compression and download of TikTok videos to quickly create compilations.",
+      excerpt: "Using Python, I automated a compression and download of TikTok videos to quickly create compilations. You can download videos straight from the terminal using a hashtag and pick up the X most liked or X most viewed. Am aiming to add a small front end to it in the near future...",
       featuredImage: { 
           url: '/NinjaEmoji.jpeg'
       },
@@ -12,8 +12,8 @@ export const projects = [
           },
       },
       tags: ['Python', 'Flask'],
-      source: 'https://github.com',
-      visit: 'https://github.com',
+      source: 'https://github.com/daniel-raad/YTAuto',
+      visit: 'https://www.youtube.com/channel/UCy6UwC18Mg6-K54H73E9rrQ',
       createdAt: "Dec 01, 2021",
       id: 0,
     },
@@ -22,7 +22,7 @@ export const projects = [
       excerpt: "I built this website to practice and learn different ways to work using js, react and next",
       tags: ['React', 'JavaScript', 'firebase', 'next', 'vercel'],
       featuredImage: { 
-        url: '/NinjaEmoji.jpeg'
+        url: "/website.png"
       },
       author: { 
         name: 'Daniel Raad',
@@ -30,7 +30,7 @@ export const projects = [
             url: '/NinjaEmoji.jpeg'
         },
       },
-      source:'https://www.danielraad.co.uk',
+      source:'https://github.com/daniel-raad/web3d',
       visit: 'https://www.danielraad.co.uk',
       id: 1,
     },
@@ -38,7 +38,25 @@ export const projects = [
   
 
   export const blogs = [ 
-
+    { 
+      "author": {
+      "bio": "Hey I'm Daniel, as you've probably heard and seen enough of throughout this website! ",
+      "name": "Dan ",
+    },
+    "createdAt": "2022-02-01T17:57:13.015324+00:00",
+    "slug": "danielraad",
+    "title": "My web dev journey",
+    "excerpt": "This is going to take you through my web dev journey in creating this website! I hope you learn a bunch from my experience!",
+    "categories": [
+      {
+        "name": "Web Development ",
+        "slug": "webdev"
+      }
+    ],
+    "featuredImage": {
+      "url": 'bg.jpg',
+    } 
+  }
 
 
   ]

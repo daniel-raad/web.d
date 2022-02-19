@@ -10,10 +10,8 @@ const PostCard = ({ post }) => {
           alt={post.title} 
           className="object-top absolute mt-3 h-80 w-full object-scale-down shadow rounded-t-lg lg:rounded-lg"/>  
       </div>
-      <h1 className="transition duration-500 text-center mb-8 cursor-pointer hover:text-pink-600 text-3xl font-semibold">
-        <Link rel="stylesheet" href={`/post/${post.slug}`}> 
+      <h1 className="transition duration-500 text-center mb-8 cursor-default hover:text-pink-600 text-3xl font-semibold">
           {post.title} 
-        </Link>
       </h1>
       <div className="block text-center items-center justify-center mb-8 w-full">
         <div className="flex items-center lg:pl-10 justify-center mb-3 w-full lg:w-auto mr-8">

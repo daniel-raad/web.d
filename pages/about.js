@@ -3,7 +3,6 @@ import Header from "../components/Header"
 import Description from "../components/Description"
 import { Card } from "react-bootstrap"
 import CV from "../components/CV";
-import UtterComments from '../components/utterComment';
 import GiscusComments from '../components/GiscusComment';
 
 
@@ -16,7 +15,7 @@ export default function About() {
         <link rel="icon" href="/NinjaEmoji.jpeg" />
       </Head>
       
-      <Card className="relative bg-slate-600 text-black mt-10 mb-5 ml-15 text-center p-8 shadow rounded-lg shadow-black">
+      <Card className="relative bg-slate-300 text-black mt-10 mb-5 ml-15 text-center p-8 shadow rounded-lg shadow-black">
         <Card.Body>
         
           <Header/>

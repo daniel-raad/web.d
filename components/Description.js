@@ -3,7 +3,6 @@ import styles from "../styles/Description.module.css";
 export default function Description(){ 
     return ( 
         <div className={styles.about}>
-            <h2>About</h2>
             <p> Hello there! My name is Daniel and its lovely to meet you! </p>
             <p> On this website, its going to be a omnishambles (to put it politely) of different things i try out! Please forgive the trainwreck </p>
             <p> i am currently working on a number of different projects, including this website, as i learn react and next, along with GCP and a host of other technologies</p>
