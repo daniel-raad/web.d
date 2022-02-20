@@ -1,8 +1,10 @@
 import axios from 'axios';
 import download from 'downloadjs';
 
+
   async function retrieveCV() {
-    let api_key = 'AIzaSyBvh9M-MgtK6rk81DVGYx9zsa8wDS64Lc0'
+    console.log(process.env.GOOGLE_API_KEY)
+    let api_key = process.env.GOOGLE_API_KEY;
     let fileId = '1jFLoHrB5PlmUtB5iE5JSryHiojMdGoU2oxpqORSL1F8'
     let url = `https://www.googleapis.com/drive/v3/files/${fileId}/export?key=${api_key}&?mimetype=application/pdf`
     console.log("Trying to retrieve CV")
