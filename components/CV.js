@@ -3,7 +3,6 @@ import download from 'downloadjs';
 
 
   async function retrieveCV() {
-    console.log(process.env.NEXT_PUBLIC_GOOGLE_API_KEY)
     let api_key = process.env.NEXT_PUBLIC_GOOGLE_API_KEY;
     let fileId = '1jFLoHrB5PlmUtB5iE5JSryHiojMdGoU2oxpqORSL1F8'
     let url = `https://www.googleapis.com/drive/v3/files/${fileId}/export?key=${api_key}&?mimetype=application/pdf`
