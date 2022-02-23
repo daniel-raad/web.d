@@ -1,4 +1,5 @@
 import React from 'react'
+import Tile from './Tile';
 
 const maxFile = 8;
 const verticalAxis = ['1','2','3','4','5','6','7','8'];
@@ -12,11 +13,7 @@ export default function Chessboard() {
         count += 1
         for(let i = 0; i < maxRank; i++){
             count += 1 
-            if(count % 2 === 0){ 
-                board.push(<div className=' w-[6.25rem] h-[6.25rem] bg-white'> [{horizontalAxis[i]}{verticalAxis[j]}]  </div>)
-            } else { 
-                board.push(<div className=' w-[6.25rem] h-[6.25rem] bg-green-500'> [{horizontalAxis[i]}{verticalAxis[j]}]  </div>)
-            }
+            board.push(<Tile count={count}/>)
             
         }
     }
