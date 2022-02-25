@@ -39,3 +39,6 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/deploym
 
 
 This project is an attempt at my personal website. I have used a number of public libraries and tools, such as firebase, vercel, graphql and graphcms. Graphcms has provided a useful tool for managing blog posts 
+
+npm run dev 
+runs on localhost:3000 
