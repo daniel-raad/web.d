@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import DragMove from "../components/DragMove";
 import Head from 'next/head'
 import MyTerminal from '../components/MyTerminal'
-import styled from 'styled-components';
 
 export default function Home() {
 

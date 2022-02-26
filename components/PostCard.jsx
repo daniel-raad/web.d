@@ -41,12 +41,12 @@ const PostCard = ({ post }) => {
       { post.source && post.visit && 
         <div className="grid grid-cols-2 text-center"> 
               <Link key={post.source} href={post.source}>
-                  <a className="inline-block hover:bg-purple-700 hover:text-white bg-purple-100 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2">
+                  <a className="inline-block hover:bg-purple-700 hover:text-white bg-purple-100 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2" target="_blank">
                       Source code 
                   </a>
               </Link>
               <Link key={post.visit} href={post.visit}>
-                  <a className="inline-block hover:bg-purple-700 hover:text-white bg-purple-100 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2">
+                  <a className="inline-block hover:bg-purple-700 hover:text-white bg-purple-100 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2" target="_blank">
                       Visit project
                   </a>
               </Link>
