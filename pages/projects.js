@@ -11,7 +11,7 @@ export default function Projects() {
       <Head>
         <title>Projects by Daniel</title>
         <meta name="description" />
-        <link rel="icon" href="/NinjaEmoji.jpeg" />
+        <link rel="icon" href="/astro.png" />
       </Head>
       <div className="font-serif text-white text-3xl text-left pt-10 px-10 pb-20"> 
         <TypeWriter content={'Scroll down to checkout my projects'} speed={100}/> 

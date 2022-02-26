@@ -11,7 +11,7 @@
 //       <Head>
 //         <title>All about you</title>
 //         <meta name="description" content="Hello you <3" />
-//         <link rel="icon" href="/NinjaEmoji.jpeg" />
+//         <link rel="icon" href="/astro.png" />
 //       </Head>
 //       <BlogHeader />
 //       <div className='grid grid-cols-1 lg:grid-cols-12 gap-12 mb-20'>

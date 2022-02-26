@@ -23,7 +23,7 @@ export default function Home() {
       <Head>
         <title>draad is typing...</title>
         <meta name="description" content="Hello, its Daniel" />
-        <link rel="icon" href="/NinjaEmoji.jpeg" />
+        <link rel="icon" href="/astro.png" />
       </Head>
       <DragMove onDragMove={handleDragMove}>
         <div  style={{
