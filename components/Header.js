@@ -5,7 +5,7 @@ export default function Header(){
     return(
         <main className={styles.header}>
 
-            <Image src="/NinjaEmoji.jpeg" width="200" height="200" className={styles.dp} />
+            <Image src="/astro.png" width="400" height="400" className={styles.dp} />
 
             
             <h1 className={styles.name}> Daniel Raad</h1>

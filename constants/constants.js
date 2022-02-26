@@ -3,12 +3,12 @@ export const projects = [
       title: 'TikTok Automation',
       excerpt: "Using Python, I automated a compression and download of TikTok videos to quickly create compilations. You can download videos straight from the terminal using a hashtag and pick up the X most liked or X most viewed. Am aiming to add a small front end to it in the near future...",
       featuredImage: { 
-          url: '/NinjaEmoji.jpeg'
+          url: '/astro.png'
       },
       author: { 
           name: 'Daniel Raad',
           photo: { 
-              url: '/NinjaEmoji.jpeg'
+              url: '/astro.png'
           },
       },
       tags: ['Python', 'Flask'],
@@ -27,7 +27,7 @@ export const projects = [
       author: { 
         name: 'Daniel Raad',
         photo: { 
-            url: '/NinjaEmoji.jpeg'
+            url: '/astro.png'
         },
       },
       source:'https://github.com/daniel-raad/web3d',

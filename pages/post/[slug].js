@@ -9,7 +9,7 @@
 //       <Head>
 //         <title>Blog Posts</title>
 //         <meta name="description" />
-//         <link rel="icon" href="/NinjaEmoji.jpeg" />
+//         <link rel="icon" href="/astro.png" />
 //       </Head>
 //       <BlogHeader />
 //         <div className="grid gird-cols-1 lg:grid-cols-12 gap-12"> 

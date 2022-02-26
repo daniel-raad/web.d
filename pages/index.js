@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import DragMove from "../components/DragMove";
 import Head from 'next/head'
 import MyTerminal from '../components/MyTerminal'
-import styled from 'styled-components';
 
 export default function Home() {
 
@@ -23,7 +22,7 @@ export default function Home() {
       <Head>
         <title>draad is typing...</title>
         <meta name="description" content="Hello, its Daniel" />
-        <link rel="icon" href="/NinjaEmoji.jpeg" />
+        <link rel="icon" href="/astro.png" />
       </Head>
       <DragMove onDragMove={handleDragMove}>
         <div  style={{
