@@ -13,7 +13,7 @@ const Tile = ({piece, count}: Props) => {
        return (
             <div className='flex w-[6.25rem] h-[6.25rem] bg-white justify-center items-center'>
                 <div className="w-[4rem] h-[4rem]"> 
-                    <Image src="/chessImages/king_b.png" width="100" height="100"/>
+                    <Image src={`/chessImages/${piece}`} width="100" height="100"/>
                 </div> 
             </div>
        )
