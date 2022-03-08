@@ -31,11 +31,14 @@ function readFen(initialFen) {
       maxRank = maxRank - 1;
       count+=1
     }else if(positions[i] in pieceDict){ 
-      board.push(<Tile count={count} piece={pieceDict[positions[i]]}/>)
+      console.log(`${count}`)
+      console.log(pieceDict[positions[i]])
+      board.push(<Tile key={`${count}`} count={count} piece={pieceDict[positions[i]]}/>)
       count += 1;
     } else { 
       for(maxFile; maxFile > 0; maxFile-- ){
-        board.push(<Tile count={count} piece=''/>)
+        console.log(`${maxRank}, ${maxFile}`)
+        board.push(<Tile key={`${count}`} count={count} piece=''/>)
         count += 1;
       }
       maxFile = 8 
