@@ -8,6 +8,7 @@ export default function Navbar() {
     {name:"About", link:"/about"},
     {name:"Projects", link:"/projects"},
     {name:"Life", link:"/life"},
+    {name:"Chess", link:"/chess"}
   ]
 
   return (
@@ -15,7 +16,7 @@ export default function Navbar() {
       <div className=' sticky mx-auto items-center shadow-md w-full top-0 left-0'>
         <div className='md:flex items-center justify-between py-4 md:px-10 px-7'>
           <div className='font-bold text-2xl cursor-default flex items-center font-[Poppins] text-white'>
-            راد
+          رعد 
           </div>
         
           <div onClick={()=>setShowNav(!showNav)} className='text-3xl bg-white absolute right-8 top-4 cursor-pointer md:hidden'>

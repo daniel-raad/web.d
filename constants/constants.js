@@ -30,10 +30,29 @@ export const projects = [
             url: '/astro.png'
         },
       },
+      createdAt: "Jan 01, 2022",
       source:'https://github.com/daniel-raad/web3d',
       visit: 'https://www.danielraad.co.uk',
       id: 1,
     },
+    {
+      title: 'blank space',
+      excerpt: "This prokect was built for the ICP blockchain, the first realtime peer-to-peer document on the ICP.",
+      tags: ['React', 'JavaScript', 'Azure', 'motoko'],
+      featuredImage: { 
+        url: "/blankspace.png"
+      },
+      author: { 
+        name: 'Daniel Raad, Hassan Memon',
+        photo: { 
+            url: '/astro.png'
+        },
+      },
+      createdAt: "June 20, 2022",
+      source:'https://github.com/mhmemon444/blankspace',
+      visit: 'https://www.blankspace.live',
+      id: 2,
+    }, 
   ];
   
 

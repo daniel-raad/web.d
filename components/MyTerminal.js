@@ -6,7 +6,7 @@ import Terminal from 'terminal-in-react';
         return ( 
             <div className="grid place-items-center">
                 <Terminal
-                    color='white'
+                    color='purple'
                     backgroundColor='black'
                     barColor='black'
                     style={{ fontWeight: "bold", fontSize: "1.3em" }}
@@ -14,15 +14,17 @@ import Terminal from 'terminal-in-react';
                         'github': () => console.log(window.open("https://github.com/daniel-raad", '_blank')),
                         'projects': () => console.log(window.open('/projects', '_self')), 
                         'life': () => console.log(window.open('/life', '_self')),
-                        popup: () => alert('Boo')
+                        'chess': () => console.log(window.open('/chess', '_self')),
+                        popup: () => alert('...')
                     }}
                     descriptions={{
                         'github': 'Opens a link to my Github page',
-                        'projects': 'Link to my projects page', 
-                        'life': 'Why not check out my blog on different technologies and life!', 
+                        'projects': 'my projectss', 
+                        'life': 'checkout the blogs', 
+                        'chess': 'play some chess',
                         alert: 'alert', popup: 'alert'
                     }} 
-                    msg= 'Hey, type help to see what you can do with this terminal...'
+                    msg= 'enter help to see what this can do :)'
                 /> 
             </div>
         );
