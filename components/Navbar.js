@@ -4,11 +4,11 @@ export default function Navbar() {
  
   const [showNav, setShowNav] = useState(false);
   let Links = [ 
-    {name:"Home", link:"/"}, 
-    {name:"About", link:"/about"},
+    {name:"About", link:"/"},
+    {name:"Media Terminal", link:"/terminal"}, 
     {name:"Projects", link:"/projects"},
-    {name:"Life", link:"/life"},
-    {name:"Chess", link:"/chess"}
+    // {name:"Life", link:"/life"},
+    // {name:"Chess", link:"/chess"}
   ]
 
   return (

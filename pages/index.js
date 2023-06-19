@@ -1,37 +1,31 @@
-import React, { useState } from 'react';
-import DragMove from "../components/DragMove";
 import Head from 'next/head'
-import MyTerminal from '../components/MyTerminal'
+import Header from "../components/Header"
+import Description from "../components/Description"
+import { Card } from "react-bootstrap"
+import CV from "../components/CV";
+import GiscusComments from '../components/GiscusComment';
 
-export default function Home() {
 
-  const [translate, setTranslate] = useState({
-    x: 0,
-    y: 0
-  });
-
-  const handleDragMove = (e) => {
-    setTranslate({
-      x: translate.x + e.movementX,
-      y: translate.y + e.movementY
-    });
-  };
-
-  return (    
+export default function About() {
+  return (
     <div className="container mx-auto px-10 mb-8"> 
       <Head>
-        <title>draad is typing...</title>
-        <meta name="description" content="Hello, its Daniel" />
+        <title>Read all about it</title>
+        <meta name="description" />
         <link rel="icon" href="/astro.png" />
       </Head>
-      <DragMove onDragMove={handleDragMove}>
-        <div  style={{
-            transform: `translateX(${translate.x}px) translateY(${translate.y}px)`
-        }}>
-          <MyTerminal/>
-        </div>
-      </DragMove>
+      
+      <Card className="relative bg-slate-300 text-black mt-10 mb-5 ml-15 text-center p-8 shadow rounded-lg shadow-black">
+        <Card.Body>
+        
+          <Header/>
+          <Description />
+          <CV/>
 
+        </Card.Body>
+      </Card>
+      <GiscusComments/> 
     </div>
+
   )
 }

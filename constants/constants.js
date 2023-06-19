@@ -1,4 +1,22 @@
 export const projects = [
+  {
+    title: 'blank space',
+    excerpt: "This prokect was built for the ICP blockchain, the first realtime peer-to-peer document on the ICP.",
+    tags: ['React', 'JavaScript', 'Azure', 'motoko'],
+    featuredImage: { 
+      url: "/blankspace.png"
+    },
+    author: { 
+      name: 'Daniel Raad, Hassan Memon',
+      photo: { 
+          url: '/astro.png'
+      },
+    },
+    createdAt: "June 20, 2022",
+    source:'https://github.com/mhmemon444/blankspace',
+    visit: 'https://www.youtube.com/channel/UCbXJT2uuBrd8ApJnAeMCqrA',
+    id: 2,
+  }, 
     {
       title: 'TikTok Automation',
       excerpt: "Using Python, I automated a compression and download of TikTok videos to quickly create compilations. You can download videos straight from the terminal using a hashtag and pick up the X most liked or X most viewed. Am aiming to add a small front end to it in the near future...",
@@ -35,24 +53,6 @@ export const projects = [
       visit: 'https://www.danielraad.co.uk',
       id: 1,
     },
-    {
-      title: 'blank space',
-      excerpt: "This prokect was built for the ICP blockchain, the first realtime peer-to-peer document on the ICP.",
-      tags: ['React', 'JavaScript', 'Azure', 'motoko'],
-      featuredImage: { 
-        url: "/blankspace.png"
-      },
-      author: { 
-        name: 'Daniel Raad, Hassan Memon',
-        photo: { 
-            url: '/astro.png'
-        },
-      },
-      createdAt: "June 20, 2022",
-      source:'https://github.com/mhmemon444/blankspace',
-      visit: 'https://www.blankspace.live',
-      id: 2,
-    }, 
   ];
   
 
