@@ -20,7 +20,7 @@ import Terminal from 'terminal-in-react';
                         'instagram': 'Check out my instagram', 
                         'linkedin': 'Check out my linkedin', 
                     }} 
-                    msg= 'enter help to see what this can do :)'
+                    msg= 'type "help" to see what this can do :)'
                 /> 
             </div>
         );
