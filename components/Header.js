@@ -10,7 +10,7 @@ export default function Header(){
             
             <h1 className={styles.name}> Daniel Raad</h1>
             <p className={styles.about}> 
-                Software Engineer at Lloyds Banking Group 
+                Senior Software Engineer at Lloyds Banking Group 
             </p>
 
         </main>

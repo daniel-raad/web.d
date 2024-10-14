@@ -1,5 +1,20 @@
 export const projects = [
   {
+    title: 'OVA gym',
+    excerpt: "A react-native application with a Python backend. Coming soon in December 2024 on both ios and Android.",
+    tags: ['React-Native', 'Python', 'Azure', 'PostgresQL'],
+    featuredImage: { 
+      url: "/gym.png"
+    },
+    author: { 
+      name: 'Daniel Raad, Stuart Said',
+      photo: { 
+          url: '/astro.png'
+      },
+    },
+    createdAt: "March, 2024",
+  },
+  {
     title: 'blank space',
     excerpt: "This prokect was built for the ICP blockchain, the first realtime peer-to-peer document on the ICP.",
     tags: ['React', 'JavaScript', 'Azure', 'motoko'],
