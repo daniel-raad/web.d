@@ -1,0 +1,49 @@
+.container {
+  margin-bottom: 1.5rem;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+
+.streak {
+  font-size: 0.8em;
+  color: rgba(255, 255, 255, 0.45);
+}
+
+.scrollWrapper {
+  overflow-x: auto;
+  padding-bottom: 4px;
+}
+
+.months {
+  display: grid;
+  grid-template-columns: repeat(26, 14px);
+  gap: 3px;
+  margin-bottom: 2px;
+}
+
+.monthLabel {
+  font-size: 0.6em;
+  color: rgba(255, 255, 255, 0.3);
+  white-space: nowrap;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(26, 14px);
+  gap: 3px;
+}
+
+.cell {
+  width: 14px;
+  height: 14px;
+  border-radius: 3px;
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.active {
+  background: rgba(100, 180, 255, 0.7);
+}
