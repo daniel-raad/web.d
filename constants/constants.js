@@ -1,5 +1,23 @@
 export const projects = [
   {
+    title: 'Conversify',
+    excerpt: "A restaurant loyalty and WhatsApp messaging platform. Customers earn points, redeem offers, and interact via AI-powered WhatsApp conversations. Features campaign management, a digital wallet, and multi-restaurant support. Built with a microservices architecture across Express.js, Next.js, and Go.",
+    tags: ['Next.js', 'Express.js', 'Go', 'Supabase', 'WhatsApp API', 'Gemini AI'],
+    featuredImage: {
+      url: "/conversify.png"
+    },
+    author: {
+      name: 'Daniel Raad',
+      photo: {
+        url: '/astro.png'
+      },
+    },
+    createdAt: "January, 2025",
+    source: 'https://github.com/daniel-raad/conversify',
+    visit: 'https://conversify.uk/',
+    id: 5,
+  },
+  {
     title: 'OVA gym',
     excerpt: "A react-native application with a Python backend. Coming soon in December 2024 on both ios and Android.",
     tags: ['React-Native', 'Python', 'Azure', 'PostgresQL'],

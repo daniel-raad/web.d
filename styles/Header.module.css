@@ -1,38 +1,99 @@
-.header {
+.hero {
+  position: relative;
   display: flex;
-  justify-content: center;
   flex-direction: column;
   align-items: center;
-}
-.name {
-  font-size: 2em;
-  margin-top: 1rem;
-}
-.about {
-  font-weight: 100;
-  margin-bottom: 0;
+  justify-content: center;
+  padding: 5rem 2rem 3rem;
+  overflow: hidden;
+  background: radial-gradient(ellipse at 50% 0%, #1a1f3d 0%, #0b0d17 70%);
 }
 
-.dp {
-  width: 11rem;
-  height: 11rem;
-  border-radius: 50%;
-  margin-top: 3rem;
-  box-shadow: 0 15px 35px rgba(50, 50, 93, 0.1), 0 5px 15px rgba(0, 0, 0, 0.07) !important;
-  transition: transform 0.2s;
-  cursor: pointer;
-  border: 3px solid white;
+.stars {
+  position: absolute;
+  inset: 0;
+  background-image:
+    radial-gradient(1px 1px at 10% 20%, rgba(255,255,255,0.6), transparent),
+    radial-gradient(1px 1px at 30% 65%, rgba(255,255,255,0.5), transparent),
+    radial-gradient(1.5px 1.5px at 55% 15%, rgba(255,255,255,0.7), transparent),
+    radial-gradient(1px 1px at 70% 40%, rgba(255,255,255,0.4), transparent),
+    radial-gradient(1px 1px at 85% 70%, rgba(255,255,255,0.5), transparent),
+    radial-gradient(1.5px 1.5px at 20% 80%, rgba(255,255,255,0.6), transparent),
+    radial-gradient(1px 1px at 45% 50%, rgba(255,255,255,0.3), transparent),
+    radial-gradient(1px 1px at 90% 10%, rgba(255,255,255,0.5), transparent),
+    radial-gradient(1px 1px at 60% 85%, rgba(255,255,255,0.4), transparent),
+    radial-gradient(1.5px 1.5px at 5% 45%, rgba(255,255,255,0.5), transparent),
+    radial-gradient(1px 1px at 15% 10%, rgba(255,255,255,0.5), transparent),
+    radial-gradient(1.5px 1.5px at 25% 35%, rgba(255,255,255,0.6), transparent),
+    radial-gradient(1px 1px at 38% 22%, rgba(255,255,255,0.4), transparent),
+    radial-gradient(1px 1px at 48% 75%, rgba(255,255,255,0.5), transparent),
+    radial-gradient(1.5px 1.5px at 62% 30%, rgba(255,255,255,0.7), transparent),
+    radial-gradient(1px 1px at 72% 58%, rgba(255,255,255,0.4), transparent),
+    radial-gradient(1px 1px at 78% 12%, rgba(255,255,255,0.6), transparent),
+    radial-gradient(1.5px 1.5px at 82% 48%, rgba(255,255,255,0.5), transparent),
+    radial-gradient(1px 1px at 92% 55%, rgba(255,255,255,0.4), transparent),
+    radial-gradient(1px 1px at 35% 90%, rgba(255,255,255,0.5), transparent),
+    radial-gradient(1.5px 1.5px at 50% 5%, rgba(255,255,255,0.6), transparent),
+    radial-gradient(1px 1px at 8% 60%, rgba(255,255,255,0.3), transparent),
+    radial-gradient(1px 1px at 42% 42%, rgba(255,255,255,0.5), transparent),
+    radial-gradient(2px 2px at 68% 8%, rgba(255,255,255,0.8), transparent),
+    radial-gradient(1px 1px at 95% 35%, rgba(255,255,255,0.4), transparent),
+    radial-gradient(1px 1px at 18% 52%, rgba(255,255,255,0.5), transparent),
+    radial-gradient(1.5px 1.5px at 88% 88%, rgba(255,255,255,0.6), transparent),
+    radial-gradient(1px 1px at 3% 30%, rgba(255,255,255,0.4), transparent),
+    radial-gradient(2px 2px at 28% 8%, rgba(255,255,255,0.7), transparent),
+    radial-gradient(1px 1px at 58% 62%, rgba(255,255,255,0.3), transparent);
+  pointer-events: none;
 }
-.dp:hover {
-  transform: scale(1.1);
-  box-shadow: 0 2px 5px 0 #dfdfdf, 0 8px 40px 0 rgb(10 14 29 / 6%);
+
+.spaceman {
+  width: 140px;
+  height: 140px;
+  border-radius: 50%;
+  border: 3px solid rgba(255, 255, 255, 0.15);
+  animation: float 4s ease-in-out infinite;
+  position: relative;
+  z-index: 1;
+  filter: drop-shadow(0 0 20px rgba(100, 180, 255, 0.3));
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-12px); }
+}
+
+.name {
+  font-size: 2.8em;
+  font-weight: 700;
+  color: #ffffff;
+  margin: 1.2rem 0 0.3rem;
+  letter-spacing: 0.03em;
+  position: relative;
+  z-index: 1;
+}
+
+.tagline {
+  font-size: 1em;
+  font-weight: 300;
+  color: rgba(255, 255, 255, 0.5);
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  position: relative;
+  z-index: 1;
 }
 
 @media (max-width: 600px) {
-  .about {
-    font-size: 0.9em;
+  .hero {
+    padding: 3.5rem 1.5rem 2rem;
   }
-  .dp {
-    margin-top: -7rem;
+  .spaceman {
+    width: 100px;
+    height: 100px;
+  }
+  .name {
+    font-size: 2em;
+  }
+  .tagline {
+    font-size: 0.8em;
   }
 }
