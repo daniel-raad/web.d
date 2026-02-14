@@ -5,14 +5,19 @@ excerpt: "Love is in the air.md"
 tags: ["general"]
 ---
 
-# Hello World
+# Valentines Day
 
-Welcome to my blog! I'm committing to writing one post a week here. Posts will cover things I'm working on, things I'm learning, and things I find interesting.
+Life has been flying by lately. Every day brings a new change in AI, something new to learn, keep up with, and adapt to. With AI accelerating everything, it can feel like the pace is only getting faster.
 
-## Why blog?
+But if there’s one constant that still anchors everything, it’s human connection. Valentine’s Day has a way of bringing that into focus.
 
-Writing helps me think more clearly about the things I'm learning. If something I write here is useful to you too, that's a bonus.
+Today, Mel and I were walking through Richmond Park and noticed two birds “kissing” — beaks together, totally locked in. Mel joked that the other birds around them looked upset and the juxtaposition between the lover birds and the birds that were like a bickering old couple. And that was the moment.
 
-## What to expect
+Because the truth is: we don’t actually know what the birds were doing. We added our imagination onto it. We turned something ordinary into something meaningful, funny, and sweet.
 
-- Conversations with Claude
+That’s what I keep coming back to as AI gets better and better. AI can help us build faster, create more, and remove friction from so many parts of life. Used well, it can give you a lot.
+
+But the world will always run on connection and on our ability to make meaning. To notice something small, feel something real, and share it with someone you care about. To be present enough to let a simple moment become a memory.
+
+Stay imaginative. That’s human.
+Stay loving. That’s human too.
