@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback } from "react"
 import Head from "next/head"
 import Header from "../components/Header"
 import HabitGrid from "../components/Habits/HabitGrid"
+import CalendarView from "../components/Habits/CalendarView"
 import ProgressChart from "../components/Habits/ProgressChart"
 import MemoableMoments from "../components/Habits/MemoableMoments"
 import HabitSettings from "../components/Habits/HabitSettings"
@@ -20,6 +21,7 @@ export default function Habits() {
   const [habits, setHabits] = useState([])
   const [entries, setEntries] = useState({})
   const [config, setConfig] = useState(null)
+  const [viewMode, setViewMode] = useState("list")
   const [showSettings, setShowSettings] = useState(false)
   const [loading, setLoading] = useState(true)
 
@@ -98,7 +100,7 @@ export default function Habits() {
         <link rel="icon" href="/astro.png" />
       </Head>
 
-      <Header />
+      <Header compact />
 
       <div className={styles.page}>
         {/* Header with countdown and settings */}
@@ -114,28 +116,51 @@ export default function Habits() {
           </button>
         </div>
 
-        {/* Month navigator */}
+        {/* Month navigator + view toggle */}
         <div className={styles.monthSelector}>
           <button onClick={prevMonth}>◀</button>
           <div className={styles.monthLabel}>
             {MONTH_NAMES[month - 1]} {year}
           </div>
           <button onClick={nextMonth}>▶</button>
+          <div className={styles.viewToggle}>
+            <button
+              className={`${styles.viewToggleBtn} ${viewMode === "list" ? styles.viewToggleActive : ""}`}
+              onClick={() => setViewMode("list")}
+            >
+              List
+            </button>
+            <button
+              className={`${styles.viewToggleBtn} ${viewMode === "calendar" ? styles.viewToggleActive : ""}`}
+              onClick={() => setViewMode("calendar")}
+            >
+              Calendar
+            </button>
+          </div>
         </div>
 
         {loading ? (
           <div className={styles.loading}>Loading...</div>
         ) : (
           <>
-            {/* Main layout: Grid + Chart */}
+            {/* Main layout: Grid/Calendar + Chart */}
             <div className={styles.mainLayout}>
-              <HabitGrid
-                year={year}
-                month={month}
-                habits={habits}
-                entries={entries}
-                onToggle={handleToggle}
-              />
+              {viewMode === "list" ? (
+                <HabitGrid
+                  year={year}
+                  month={month}
+                  habits={habits}
+                  entries={entries}
+                  onToggle={handleToggle}
+                />
+              ) : (
+                <CalendarView
+                  year={year}
+                  month={month}
+                  habits={habits}
+                  entries={entries}
+                />
+              )}
               <ProgressChart
                 year={year}
                 month={month}

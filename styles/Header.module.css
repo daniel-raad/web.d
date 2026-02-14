@@ -82,6 +82,30 @@
   z-index: 1;
 }
 
+/* --- Compact header (small astronaut, top-left) --- */
+.compactHeader {
+  padding: 0.75rem 1rem;
+}
+
+.compactLink {
+  display: inline-block;
+  line-height: 0;
+}
+
+.compactSpaceman {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 2px solid rgba(255, 255, 255, 0.15);
+  filter: drop-shadow(0 0 8px rgba(100, 180, 255, 0.3));
+  animation: float 4s ease-in-out infinite;
+  transition: border-color 0.2s;
+}
+
+.compactSpaceman:hover {
+  border-color: rgba(100, 180, 255, 0.5);
+}
+
 @media (max-width: 600px) {
   .hero {
     padding: 3.5rem 1.5rem 2rem;

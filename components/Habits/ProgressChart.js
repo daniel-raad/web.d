@@ -85,7 +85,7 @@ export default function ProgressChart({ year, month, habits, entries }) {
         {points.length > 1 && (
           <polygon
             points={`${PAD.left},${PAD.top + plotH} ${polyline} ${points[points.length - 1].x},${PAD.top + plotH}`}
-            fill="rgba(231,76,60,0.1)"
+            fill="rgba(59,130,246,0.1)"
           />
         )}
 
@@ -94,7 +94,7 @@ export default function ProgressChart({ year, month, habits, entries }) {
           <polyline
             points={polyline}
             fill="none"
-            stroke="#e74c3c"
+            stroke="#3b82f6"
             strokeWidth="1.5"
             strokeLinecap="round"
             strokeLinejoin="round"
@@ -108,7 +108,7 @@ export default function ProgressChart({ year, month, habits, entries }) {
             cx={p.x}
             cy={p.y}
             r="2.5"
-            fill="#e74c3c"
+            fill="#3b82f6"
             stroke="#0d0f1a"
             strokeWidth="1"
           />
