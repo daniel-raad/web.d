@@ -1,3 +1,4 @@
+import Link from 'next/link'
 import styles from "../styles/Header.module.css"
 import Image from 'next/image'
 
@@ -5,9 +6,11 @@ export default function Header({ compact }){
     if (compact) {
         return (
             <div className={styles.compactHeader}>
-                <a href="/" className={styles.compactLink}>
-                    <Image src="/astro.png" width="40" height="40" className={styles.compactSpaceman} alt="Home" />
-                </a>
+                <Link href="/">
+                    <a className={styles.compactLink}>
+                        <Image src="/astro.png" width="40" height="40" className={styles.compactSpaceman} alt="Home" />
+                    </a>
+                </Link>
             </div>
         );
     }
