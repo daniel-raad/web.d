@@ -34,6 +34,41 @@ export default function ProgressChart({ year, month, habits, entries }) {
   // Y-axis labels
   const yLabels = [0, 25, 50, 75, 100]
 
+  // Weight chart data
+  const weightPoints = []
+  for (let d = 1; d <= totalDays; d++) {
+    const dateStr = formatDate(year, month, d)
+    const entry = entries[dateStr]
+    if (!entry || entry.weight == null) continue
+    weightPoints.push({ d, weight: entry.weight })
+  }
+
+  let wMin = Infinity, wMax = -Infinity
+  for (const p of weightPoints) {
+    if (p.weight < wMin) wMin = p.weight
+    if (p.weight > wMax) wMax = p.weight
+  }
+  // Add some padding to the range
+  const wRange = wMax - wMin || 1
+  wMin = wMin - wRange * 0.1
+  wMax = wMax + wRange * 0.1
+  const wSpan = wMax - wMin
+
+  const weightMapped = weightPoints.map((p) => ({
+    ...p,
+    x: PAD.left + ((p.d - 1) / (totalDays - 1)) * plotW,
+    y: PAD.top + plotH - ((p.weight - wMin) / wSpan) * plotH,
+  }))
+  const weightPolyline = weightMapped.map((p) => `${p.x},${p.y}`).join(" ")
+
+  // Generate nice Y-axis labels for weight
+  const wLabelCount = 4
+  const wLabels = []
+  for (let i = 0; i < wLabelCount; i++) {
+    const val = wMin + (i / (wLabelCount - 1)) * wSpan
+    wLabels.push(Math.round(val * 10) / 10)
+  }
+
   return (
     <div className={styles.chartPanel}>
       <div className={styles.chartTitle}>Daily Progress</div>
@@ -114,6 +149,91 @@ export default function ProgressChart({ year, month, habits, entries }) {
           />
         ))}
       </svg>
+
+      {weightPoints.length > 0 && (
+        <>
+          <div className={styles.chartTitle} style={{ marginTop: "1rem" }}>Weight (kg)</div>
+          <svg viewBox={`0 0 ${W} ${H}`} className={styles.chartSvg}>
+            {/* Grid lines */}
+            {wLabels.map((v, i) => {
+              const y = PAD.top + plotH - ((v - wMin) / wSpan) * plotH
+              return (
+                <g key={i}>
+                  <line
+                    x1={PAD.left}
+                    x2={W - PAD.right}
+                    y1={y}
+                    y2={y}
+                    stroke="rgba(255,255,255,0.06)"
+                    strokeWidth="0.5"
+                  />
+                  <text
+                    x={PAD.left - 4}
+                    y={y + 3}
+                    fill="rgba(255,255,255,0.3)"
+                    fontSize="7"
+                    textAnchor="end"
+                  >
+                    {v}
+                  </text>
+                </g>
+              )
+            })}
+
+            {/* X-axis labels */}
+            {[1, Math.ceil(totalDays / 2), totalDays].map((d) => {
+              const x = PAD.left + ((d - 1) / (totalDays - 1)) * plotW
+              return (
+                <text
+                  key={d}
+                  x={x}
+                  y={H - 4}
+                  fill="rgba(255,255,255,0.3)"
+                  fontSize="7"
+                  textAnchor="middle"
+                >
+                  {d}
+                </text>
+              )
+            })}
+
+            {/* Area fill */}
+            {weightMapped.length > 1 && (
+              <polygon
+                points={`${PAD.left},${PAD.top + plotH} ${weightPolyline} ${weightMapped[weightMapped.length - 1].x},${PAD.top + plotH}`}
+                fill="rgba(139,92,246,0.1)"
+              />
+            )}
+
+            {/* Line */}
+            {weightMapped.length > 1 && (
+              <polyline
+                points={weightPolyline}
+                fill="none"
+                stroke="#8b5cf6"
+                strokeWidth="1.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            )}
+
+            {/* Dots */}
+            {weightMapped.map((p) => (
+              <circle
+                key={p.d}
+                cx={p.x}
+                cy={p.y}
+                r="2.5"
+                fill="#8b5cf6"
+                stroke="#0d0f1a"
+                strokeWidth="1"
+              >
+                <title>{p.weight} kg</title>
+              </circle>
+            ))}
+          </svg>
+        </>
+      )}
     </div>
   )
 }

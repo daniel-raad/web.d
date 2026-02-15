@@ -42,6 +42,15 @@ export default function MemoableMoments({ year, month, entries, onSaveMoment }) 
   return (
     <div className={styles.moments}>
       <div className={styles.momentsTitle}>Memorable Moments</div>
+      {!expanded ? (
+        <button className={styles.momentToggle} onClick={() => setExpanded(true)}>
+          Show all days...
+        </button>
+      ) : (
+        <button className={styles.momentToggle} onClick={() => setExpanded(false)}>
+          Show less
+        </button>
+      )}
       {days.map(({ day, dateStr }) => {
         const dayOfWeek = DAYS[new Date(year, month - 1, day).getDay()]
         const entry = entries[dateStr] || {}
@@ -60,15 +69,6 @@ export default function MemoableMoments({ year, month, entries, onSaveMoment }) 
           </div>
         )
       })}
-      {!expanded ? (
-        <button className={styles.momentToggle} onClick={() => setExpanded(true)}>
-          Show all days...
-        </button>
-      ) : (
-        <button className={styles.momentToggle} onClick={() => setExpanded(false)}>
-          Show less
-        </button>
-      )}
       {days.length === 0 && <p style={{ color: "rgba(255,255,255,0.3)", fontSize: "0.85rem" }}>No entries yet this month.</p>}
     </div>
   )

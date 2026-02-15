@@ -186,6 +186,11 @@
     width: 95%;
     padding: 1rem;
   }
+
+  .momentInput {
+    min-height: 4rem;
+    font-size: 1rem;
+  }
 }
 
 /* --- Habit Grid --- */
@@ -776,4 +781,72 @@
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+.weekWeightInput {
+  width: 100%;
+  max-width: 50px;
+  background: rgba(255, 255, 255, 0.07);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+  padding: 0.2rem 0.3rem;
+  color: #e0e0e0;
+  font-size: 0.75rem;
+  font-family: inherit;
+  text-align: center;
+  -moz-appearance: textfield;
+}
+
+.weekWeightInput::-webkit-outer-spin-button,
+.weekWeightInput::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.weekWeightInput:focus {
+  outline: none;
+  border-color: rgba(139, 92, 246, 0.5);
+}
+
+.weekWeightInput::placeholder {
+  color: rgba(255, 255, 255, 0.25);
+}
+
+/* --- Weight Section --- */
+.weightSection {
+  margin-top: 1.25rem;
+  padding-top: 1rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.weightLabel {
+  font-size: 0.8rem;
+  color: rgba(255, 255, 255, 0.6);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  margin-bottom: 0.4rem;
+  display: block;
+}
+
+.weightInput {
+  width: 120px;
+  background: rgba(255, 255, 255, 0.07);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 6px;
+  padding: 0.5rem 0.7rem;
+  color: #e0e0e0;
+  font-size: 1rem;
+  font-family: inherit;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.weightInput:focus {
+  outline: none;
+  border-color: rgba(59, 130, 246, 0.5);
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.1);
+}
+
+.weightInput::placeholder {
+  color: rgba(255, 255, 255, 0.3);
 }

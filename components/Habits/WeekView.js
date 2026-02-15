@@ -1,4 +1,4 @@
-import React from "react"
+import React, { useRef, useCallback } from "react"
 import styles from "../../styles/Habits.module.css"
 
 const DAY_LABELS = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
@@ -17,10 +17,21 @@ function getWeekDates(weekStart) {
   return dates
 }
 
-export default function WeekView({ weekStart, habits, entries, onToggle }) {
+export default function WeekView({ weekStart, habits, entries, onToggle, onSaveWeight }) {
   const weekDates = getWeekDates(weekStart)
   const today = new Date()
   const todayStr = formatDate(today)
+  const weightTimers = useRef({})
+
+  const handleWeightChange = useCallback((dateStr, value) => {
+    if (weightTimers.current[dateStr]) clearTimeout(weightTimers.current[dateStr])
+    weightTimers.current[dateStr] = setTimeout(() => {
+      const num = parseFloat(value)
+      if (!isNaN(num) && num > 0) {
+        onSaveWeight(dateStr, num)
+      }
+    }, 800)
+  }, [onSaveWeight])
 
   return (
     <div className={styles.weekWrapper}>
@@ -75,6 +86,36 @@ export default function WeekView({ weekStart, habits, entries, onToggle }) {
             </div>
           )
         })}
+
+        {/* Weight row */}
+        <div style={{ display: "contents" }} className={styles.weekHabitRow}>
+          <div className={styles.weekHabitLabel}>
+            <span>⚖️</span> Weight
+          </div>
+          {weekDates.map((d, i) => {
+            const dateStr = formatDate(d)
+            const isToday = dateStr === todayStr
+            const entry = entries[dateStr] || {}
+            return (
+              <div
+                key={i}
+                className={`${styles.weekCell} ${isToday ? styles.weekCellToday : ""}`}
+                style={{ cursor: "default" }}
+              >
+                <input
+                  type="number"
+                  className={styles.weekWeightInput}
+                  defaultValue={entry.weight ?? ""}
+                  placeholder="–"
+                  step="0.1"
+                  min="0"
+                  onChange={(e) => handleWeightChange(dateStr, e.target.value)}
+                />
+              </div>
+            )
+          })}
+          <div className={styles.weekCompletion} />
+        </div>
       </div>
     </div>
   )

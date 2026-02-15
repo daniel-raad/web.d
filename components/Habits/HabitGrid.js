@@ -15,13 +15,11 @@ export default function HabitGrid({ year, month, habits, entries, onToggle }) {
   const totalDays = daysInMonth(year, month)
   const today = new Date()
   const todayStr = formatDate(today.getFullYear(), today.getMonth() + 1, today.getDate())
-  const cols = habits.length + 2 // day label + habits + pct
-
   return (
     <div className={styles.gridWrapper}>
       <div
         className={styles.grid}
-        style={{ gridTemplateColumns: `60px repeat(${habits.length}, 1fr) 50px` }}
+        style={{ gridTemplateColumns: `60px repeat(${habits.length}, 1fr) 45px 50px` }}
       >
         {/* Header row */}
         <div className={styles.gridHeaderCell}>Day</div>
@@ -31,6 +29,10 @@ export default function HabitGrid({ year, month, habits, entries, onToggle }) {
             {h.name}
           </div>
         ))}
+        <div className={styles.gridHeaderCell}>
+          <span className={styles.gridHeaderEmoji}>⚖️</span>
+          kg
+        </div>
         <div className={styles.gridHeaderCell}>%</div>
 
         {/* Day rows */}
@@ -62,6 +64,7 @@ export default function HabitGrid({ year, month, habits, entries, onToggle }) {
                   </div>
                 )
               })}
+              <div className={styles.pctCell}>{entry.weight != null ? entry.weight : ""}</div>
               <div className={styles.pctCell}>{pct}%</div>
             </div>
           )

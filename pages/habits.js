@@ -4,10 +4,11 @@ import Header from "../components/Header"
 import TodayView from "../components/Habits/TodayView"
 import WeekView from "../components/Habits/WeekView"
 import HabitGrid from "../components/Habits/HabitGrid"
+import CalendarView from "../components/Habits/CalendarView"
 import ProgressChart from "../components/Habits/ProgressChart"
 import MemoableMoments from "../components/Habits/MemoableMoments"
 import HabitSettings from "../components/Habits/HabitSettings"
-import { getHabits, getEntries, toggleHabit, saveMoment, getConfig } from "../lib/firestore"
+import { getHabits, getEntries, toggleHabit, saveMoment, saveWeight, getConfig } from "../lib/firestore"
 import styles from "../styles/Habits.module.css"
 
 const MONTH_NAMES = [
@@ -56,6 +57,7 @@ export default function Habits() {
   const [weekStart, setWeekStart] = useState(() => getMonday(now))
   const [showSettings, setShowSettings] = useState(false)
   const [loading, setLoading] = useState(true)
+  const [monthViewStyle, setMonthViewStyle] = useState("grid")
 
   const loadData = useCallback(async () => {
     if (viewMode === "week") {
@@ -106,6 +108,14 @@ export default function Habits() {
       return { ...prev, [date]: { ...entry, moment: text } }
     })
     await saveMoment(date, text)
+  }
+
+  const handleSaveWeight = async (date, weight) => {
+    setEntries((prev) => {
+      const entry = prev[date] || { habits: {}, moment: "" }
+      return { ...prev, [date]: { ...entry, weight } }
+    })
+    await saveWeight(date, weight)
   }
 
   const prevMonth = () => {
@@ -219,6 +229,17 @@ export default function Habits() {
                 {MONTH_NAMES[month - 1]} {year}
               </div>
               <button onClick={nextMonth}>▶</button>
+              <div className={styles.viewToggle}>
+                {["grid", "calendar"].map((s) => (
+                  <button
+                    key={s}
+                    className={`${styles.viewToggleBtn} ${monthViewStyle === s ? styles.viewToggleActive : ""}`}
+                    onClick={() => setMonthViewStyle(s)}
+                  >
+                    {s.charAt(0).toUpperCase() + s.slice(1)}
+                  </button>
+                ))}
+              </div>
               {viewToggle}
             </>
           )}
@@ -235,6 +256,7 @@ export default function Habits() {
                   habits={habits}
                   entries={entries}
                   onToggle={handleToggle}
+                  onSaveWeight={handleSaveWeight}
                 />
               )}
               {viewMode === "week" && (
@@ -243,15 +265,24 @@ export default function Habits() {
                   habits={habits}
                   entries={entries}
                   onToggle={handleToggle}
+                  onSaveWeight={handleSaveWeight}
                 />
               )}
-              {viewMode === "month" && (
+              {viewMode === "month" && monthViewStyle === "grid" && (
                 <HabitGrid
                   year={year}
                   month={month}
                   habits={habits}
                   entries={entries}
                   onToggle={handleToggle}
+                />
+              )}
+              {viewMode === "month" && monthViewStyle === "calendar" && (
+                <CalendarView
+                  year={year}
+                  month={month}
+                  habits={habits}
+                  entries={entries}
                 />
               )}
               <ProgressChart

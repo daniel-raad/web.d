@@ -46,7 +46,7 @@ export default function CalendarView({ year, month, habits, entries }) {
       <div
         key={d}
         className={`${styles.calCell} ${intensityClass} ${isToday ? styles.calToday : ""}`}
-        title={`${dateKey}: ${doneCount}/${totalHabits}`}
+        title={`${dateKey}: ${doneCount}/${totalHabits}${entry && entry.weight != null ? ` | ${entry.weight}kg` : ""}`}
       >
         <span className={styles.calDayNum}>{d}</span>
       </div>
