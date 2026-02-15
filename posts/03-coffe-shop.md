@@ -7,6 +7,7 @@ hidden: false
 ---
 
 # Coffee Shops
+
 Sitting in a coffee shop, sipping my coffee, I realised something that’s been hiding in plain sight.
 
 Some of the best tools I use — Obsidian, OpenClaw — are built on top of something almost embarrassingly simple: a Markdown file. A TODO.md. A SOUL.md. Plain text.
