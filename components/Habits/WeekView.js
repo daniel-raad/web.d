@@ -1,0 +1,81 @@
+import React from "react"
+import styles from "../../styles/Habits.module.css"
+
+const DAY_LABELS = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
+
+function formatDate(d) {
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`
+}
+
+function getWeekDates(weekStart) {
+  const dates = []
+  for (let i = 0; i < 7; i++) {
+    const d = new Date(weekStart)
+    d.setDate(d.getDate() + i)
+    dates.push(d)
+  }
+  return dates
+}
+
+export default function WeekView({ weekStart, habits, entries, onToggle }) {
+  const weekDates = getWeekDates(weekStart)
+  const today = new Date()
+  const todayStr = formatDate(today)
+
+  return (
+    <div className={styles.weekWrapper}>
+      <div
+        className={styles.weekGrid}
+        style={{ gridTemplateColumns: `120px repeat(7, 1fr) 45px` }}
+      >
+        {/* Header row */}
+        <div className={styles.weekDayHeader} />
+        {weekDates.map((d, i) => {
+          const dateStr = formatDate(d)
+          const isToday = dateStr === todayStr
+          return (
+            <div
+              key={i}
+              className={`${styles.weekDayHeader} ${isToday ? styles.weekDayHeaderToday : ""}`}
+            >
+              <div>{DAY_LABELS[i]}</div>
+              <div>{d.getDate()}</div>
+            </div>
+          )
+        })}
+        <div className={styles.weekDayHeader} />
+
+        {/* Habit rows */}
+        {habits.map((h) => {
+          let doneCount = 0
+          return (
+            <div key={h.id} className={styles.weekHabitRow} style={{ display: "contents" }}>
+              <div className={styles.weekHabitLabel}>
+                <span>{h.emoji}</span> {h.name}
+              </div>
+              {weekDates.map((d, i) => {
+                const dateStr = formatDate(d)
+                const isToday = dateStr === todayStr
+                const entry = entries[dateStr] || { habits: {} }
+                const isDone = !!entry.habits[h.id]
+                if (isDone) doneCount++
+                return (
+                  <div
+                    key={i}
+                    className={`${styles.weekCell} ${isToday ? styles.weekCellToday : ""}`}
+                    onClick={() => onToggle(dateStr, h.id, !isDone)}
+                  >
+                    <span
+                      className={`${styles.habitDot} ${isDone ? styles.habitDotDone : ""}`}
+                    />
+                  </div>
+                )
+              })}
+              <div className={styles.weekCompletion}>{doneCount}/7</div>
+            </div>
+          )
+        })}
+      </div>
+    </div>
+  )
+}

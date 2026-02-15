@@ -60,9 +60,13 @@ export default function MemoableMoments({ year, month, entries, onSaveMoment }) 
           </div>
         )
       })}
-      {!expanded && (
+      {!expanded ? (
         <button className={styles.momentToggle} onClick={() => setExpanded(true)}>
           Show all days...
+        </button>
+      ) : (
+        <button className={styles.momentToggle} onClick={() => setExpanded(false)}>
+          Show less
         </button>
       )}
       {days.length === 0 && <p style={{ color: "rgba(255,255,255,0.3)", fontSize: "0.85rem" }}>No entries yet this month.</p>}
