@@ -1,4 +1,4 @@
-import React, { useState, useRef, useCallback } from "react"
+import React, { useState, useRef, useCallback, useEffect } from "react"
 import styles from "../../styles/Habits.module.css"
 
 function daysInMonth(year, month) {
@@ -18,14 +18,21 @@ export default function MemoableMoments({ year, month, entries, onSaveMoment }) 
   const todayStr = formatDate(today.getFullYear(), today.getMonth() + 1, today.getDate())
   const timers = useRef({})
 
+  const autoResize = useCallback((el) => {
+    if (!el) return
+    el.style.height = "auto"
+    el.style.height = el.scrollHeight + "px"
+  }, [])
+
   const handleChange = useCallback(
-    (dateStr, value) => {
+    (dateStr, value, el) => {
+      autoResize(el)
       if (timers.current[dateStr]) clearTimeout(timers.current[dateStr])
       timers.current[dateStr] = setTimeout(() => {
         onSaveMoment(dateStr, value)
       }, 800)
     },
-    [onSaveMoment]
+    [onSaveMoment, autoResize]
   )
 
   // Show today + days with entries, or all days when expanded
@@ -64,7 +71,8 @@ export default function MemoableMoments({ year, month, entries, onSaveMoment }) 
               defaultValue={entry.moment || ""}
               placeholder="What made today memorable?"
               rows={1}
-              onChange={(e) => handleChange(dateStr, e.target.value)}
+              ref={(el) => { if (el) autoResize(el) }}
+              onChange={(e) => handleChange(dateStr, e.target.value, e.target)}
             />
           </div>
         )
