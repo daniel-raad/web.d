@@ -62,4 +62,4 @@ That’s the goal.
 
 Keep it simple. Make it obvious. Make it feel like text files powering an operating system — because honestly, that’s where the magic seems to live.
 
-NOTE: Blog is AI ASSISTED - as everything will be moving forward
+NOTE: Blog is AI ASSISTED, thoughts are my own
