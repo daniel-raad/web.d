@@ -69,6 +69,39 @@ export default function ProgressChart({ year, month, habits, entries }) {
     wLabels.push(Math.round(val * 10) / 10)
   }
 
+  // Sleep chart data
+  const sleepPoints = []
+  for (let d = 1; d <= totalDays; d++) {
+    const dateStr = formatDate(year, month, d)
+    const entry = entries[dateStr]
+    if (!entry || entry.sleep == null) continue
+    sleepPoints.push({ d, sleep: entry.sleep })
+  }
+
+  let sMin = Infinity, sMax = -Infinity
+  for (const p of sleepPoints) {
+    if (p.sleep < sMin) sMin = p.sleep
+    if (p.sleep > sMax) sMax = p.sleep
+  }
+  const sRange = sMax - sMin || 1
+  sMin = sMin - sRange * 0.1
+  sMax = sMax + sRange * 0.1
+  const sSpan = sMax - sMin
+
+  const sleepMapped = sleepPoints.map((p) => ({
+    ...p,
+    x: PAD.left + ((p.d - 1) / (totalDays - 1)) * plotW,
+    y: PAD.top + plotH - ((p.sleep - sMin) / sSpan) * plotH,
+  }))
+  const sleepPolyline = sleepMapped.map((p) => `${p.x},${p.y}`).join(" ")
+
+  const sLabelCount = 4
+  const sLabels = []
+  for (let i = 0; i < sLabelCount; i++) {
+    const val = sMin + (i / (sLabelCount - 1)) * sSpan
+    sLabels.push(Math.round(val * 10) / 10)
+  }
+
   return (
     <div className={styles.chartPanel}>
       <div className={styles.chartTitle}>Daily Progress</div>
@@ -149,6 +182,86 @@ export default function ProgressChart({ year, month, habits, entries }) {
           />
         ))}
       </svg>
+
+      {sleepPoints.length > 0 && (
+        <>
+          <div className={styles.chartTitle} style={{ marginTop: "1rem" }}>Sleep (hrs)</div>
+          <svg viewBox={`0 0 ${W} ${H}`} className={styles.chartSvg}>
+            {sLabels.map((v, i) => {
+              const y = PAD.top + plotH - ((v - sMin) / sSpan) * plotH
+              return (
+                <g key={i}>
+                  <line
+                    x1={PAD.left}
+                    x2={W - PAD.right}
+                    y1={y}
+                    y2={y}
+                    stroke="rgba(255,255,255,0.06)"
+                    strokeWidth="0.5"
+                  />
+                  <text
+                    x={PAD.left - 4}
+                    y={y + 3}
+                    fill="rgba(255,255,255,0.3)"
+                    fontSize="7"
+                    textAnchor="end"
+                  >
+                    {v}
+                  </text>
+                </g>
+              )
+            })}
+
+            {[1, Math.ceil(totalDays / 2), totalDays].map((d) => {
+              const x = PAD.left + ((d - 1) / (totalDays - 1)) * plotW
+              return (
+                <text
+                  key={d}
+                  x={x}
+                  y={H - 4}
+                  fill="rgba(255,255,255,0.3)"
+                  fontSize="7"
+                  textAnchor="middle"
+                >
+                  {d}
+                </text>
+              )
+            })}
+
+            {sleepMapped.length > 1 && (
+              <polygon
+                points={`${PAD.left},${PAD.top + plotH} ${sleepPolyline} ${sleepMapped[sleepMapped.length - 1].x},${PAD.top + plotH}`}
+                fill="rgba(34,197,94,0.1)"
+              />
+            )}
+
+            {sleepMapped.length > 1 && (
+              <polyline
+                points={sleepPolyline}
+                fill="none"
+                stroke="#22c55e"
+                strokeWidth="1.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            )}
+
+            {sleepMapped.map((p) => (
+              <circle
+                key={p.d}
+                cx={p.x}
+                cy={p.y}
+                r="2.5"
+                fill="#22c55e"
+                stroke="#0d0f1a"
+                strokeWidth="1"
+              >
+                <title>{p.sleep} hrs</title>
+              </circle>
+            ))}
+          </svg>
+        </>
+      )}
 
       {weightPoints.length > 0 && (
         <>

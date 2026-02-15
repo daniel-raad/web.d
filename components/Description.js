@@ -1,3 +1,4 @@
+import Link from "next/link";
 import styles from "../styles/Description.module.css";
 import CV from "./CV";
 
@@ -21,6 +22,9 @@ export default function Description(){
                     </li>
                     <li className={styles.linkItem}>
                         <a href="https://github.com/daniel-raad" target="_blank" rel="noopener noreferrer">GitHub</a>
+                    </li>
+                    <li className={styles.linkItem}>
+                        <Link href="/habits">Habits</Link>
                     </li>
                 </ul>
             </div>

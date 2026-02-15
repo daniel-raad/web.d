@@ -3,6 +3,7 @@ title: "Coffe Shop"
 date: "2026-02-15"
 excerpt: "Coffee shop energy"
 tags: ["general"]
+hidden: false
 ---
 
 # Coffee Shops

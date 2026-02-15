@@ -1,3 +1,4 @@
+import { useRouter } from 'next/router'
 import Head from 'next/head'
 import Link from 'next/link'
 import Header from '../../components/Header'
@@ -18,6 +19,23 @@ export async function getStaticProps({ params }) {
 }
 
 export default function BlogPost({ post }) {
+  const router = useRouter()
+
+  if (post.hidden && router.query.secret !== 'danny') {
+    return (
+      <div>
+        <Head>
+          <title>Not Found — Daniel Raad</title>
+          <link rel="icon" href="/astro.png" />
+        </Head>
+        <Header />
+        <div style={{ textAlign: 'center', padding: '4rem 1rem', color: 'rgba(255,255,255,0.5)' }}>
+          This page doesn&apos;t exist.
+        </div>
+      </div>
+    )
+  }
+
   return (
     <div>
       <Head>

@@ -8,7 +8,7 @@ import CalendarView from "../components/Habits/CalendarView"
 import ProgressChart from "../components/Habits/ProgressChart"
 import MemoableMoments from "../components/Habits/MemoableMoments"
 import HabitSettings from "../components/Habits/HabitSettings"
-import { getHabits, getEntries, toggleHabit, saveMoment, saveWeight, getConfig } from "../lib/firestore"
+import { getHabits, getEntries, toggleHabit, saveMoment, saveWeight, saveSleep, getConfig } from "../lib/firestore"
 import styles from "../styles/Habits.module.css"
 
 const MONTH_NAMES = [
@@ -116,6 +116,14 @@ export default function Habits() {
       return { ...prev, [date]: { ...entry, weight } }
     })
     await saveWeight(date, weight)
+  }
+
+  const handleSaveSleep = async (date, sleep) => {
+    setEntries((prev) => {
+      const entry = prev[date] || { habits: {}, moment: "" }
+      return { ...prev, [date]: { ...entry, sleep } }
+    })
+    await saveSleep(date, sleep)
   }
 
   const prevMonth = () => {
@@ -257,6 +265,7 @@ export default function Habits() {
                   entries={entries}
                   onToggle={handleToggle}
                   onSaveWeight={handleSaveWeight}
+                  onSaveSleep={handleSaveSleep}
                 />
               )}
               {viewMode === "week" && (
@@ -266,6 +275,7 @@ export default function Habits() {
                   entries={entries}
                   onToggle={handleToggle}
                   onSaveWeight={handleSaveWeight}
+                  onSaveSleep={handleSaveSleep}
                 />
               )}
               {viewMode === "month" && monthViewStyle === "grid" && (
