@@ -67,7 +67,7 @@ export default function TodayView({ habits, entries, onToggle, onSaveWeight, onS
               <span className={`${styles.todayCheckbox} ${isDone ? styles.todayCheckboxDone : ""}`}>
                 {isDone ? "✓" : ""}
               </span>
-              <span className={styles.todayEmoji}>{h.emoji}</span>
+              {h.emoji !== "✅" && <span className={styles.todayEmoji}>{h.emoji}</span>}
               <span className={styles.todayHabitName}>{h.name}</span>
             </div>
           )
