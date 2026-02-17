@@ -1,8 +1,13 @@
 import React, { useState, useEffect } from "react"
-import { addHabit, updateHabit, deleteHabit, getConfig, saveConfig } from "../../lib/firestore"
+import { addMonthHabit, updateMonthHabit, deleteMonthHabit, getConfig, saveConfig } from "../../lib/firestore"
 import styles from "../../styles/Habits.module.css"
 
-export default function HabitSettings({ habits, onClose, onRefresh }) {
+const MONTH_NAMES = [
+  "January", "February", "March", "April", "May", "June",
+  "July", "August", "September", "October", "November", "December",
+]
+
+export default function HabitSettings({ habits, year, month, onClose, onRefresh }) {
   const [localHabits, setLocalHabits] = useState(habits)
   const [targetDate, setTargetDate] = useState("")
   const [startDate, setStartDate] = useState("")
@@ -23,19 +28,19 @@ export default function HabitSettings({ habits, onClose, onRefresh }) {
   }
 
   const handleSaveHabit = async (habit) => {
-    await updateHabit(habit.id, { name: habit.name, emoji: habit.emoji })
+    await updateMonthHabit(habit.id, year, month, { name: habit.name, emoji: habit.emoji })
   }
 
   const handleDelete = async (id) => {
-    await deleteHabit(id)
+    await deleteMonthHabit(id, year, month)
     setLocalHabits((h) => h.filter((x) => x.id !== id))
     onRefresh()
   }
 
   const handleAdd = async () => {
     const order = localHabits.length
-    const id = await addHabit({ name: "New Habit", emoji: "✅", order })
-    setLocalHabits((h) => [...h, { id, name: "New Habit", emoji: "✅", order, active: true }])
+    const id = await addMonthHabit(year, month, { name: "New Habit", emoji: "✅", order })
+    setLocalHabits((h) => [...h, { id, name: "New Habit", emoji: "✅", order }])
     onRefresh()
   }
 
@@ -45,9 +50,8 @@ export default function HabitSettings({ habits, onClose, onRefresh }) {
     const temp = updated[index - 1]
     updated[index - 1] = updated[index]
     updated[index] = temp
-    // Update order in Firestore
-    await updateHabit(updated[index - 1].id, { order: index - 1 })
-    await updateHabit(updated[index].id, { order: index })
+    await updateMonthHabit(updated[index - 1].id, year, month, { order: index - 1 })
+    await updateMonthHabit(updated[index].id, year, month, { order: index })
     setLocalHabits(updated)
     onRefresh()
   }
@@ -84,7 +88,7 @@ export default function HabitSettings({ habits, onClose, onRefresh }) {
         </div>
 
         <div className={styles.settingsGroup}>
-          <label className={styles.settingsLabel}>Habits</label>
+          <label className={styles.settingsLabel}>Habits for {MONTH_NAMES[month - 1]} {year}</label>
           <ul className={styles.habitList}>
             {localHabits.map((h, i) => (
               <li key={h.id} className={styles.habitItem}>

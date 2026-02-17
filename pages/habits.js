@@ -8,7 +8,8 @@ import CalendarView from "../components/Habits/CalendarView"
 import ProgressChart from "../components/Habits/ProgressChart"
 import MemoableMoments from "../components/Habits/MemoableMoments"
 import HabitSettings from "../components/Habits/HabitSettings"
-import { getHabits, getEntries, toggleHabit, saveMoment, saveWeight, saveSleep, getConfig } from "../lib/firestore"
+import RoutineView from "../components/Habits/RoutineView"
+import { getMonthHabits, getEntries, toggleHabit, saveMoment, saveWeight, saveSleep, getConfig } from "../lib/firestore"
 import styles from "../styles/Habits.module.css"
 
 const MONTH_NAMES = [
@@ -60,10 +61,18 @@ export default function Habits() {
   const [monthViewStyle, setMonthViewStyle] = useState("grid")
 
   const loadData = useCallback(async () => {
+    if (viewMode === "routine") {
+      // Routine view loads its own data
+      setLoading(false)
+      return
+    }
+
     if (viewMode === "week") {
       const months = getMonthsForWeek(weekStart)
+      // Use the primary month (Monday's month) for habits
+      const primaryMonth = months[0]
       const [h, c, ...entryResults] = await Promise.all([
-        getHabits(),
+        getMonthHabits(primaryMonth.year, primaryMonth.month),
         getConfig(),
         ...months.map((m) => getEntries(m.year, m.month)),
       ])
@@ -73,7 +82,7 @@ export default function Habits() {
       setConfig(c)
     } else {
       const [h, e, c] = await Promise.all([
-        getHabits(),
+        getMonthHabits(year, month),
         getEntries(year, month),
         getConfig(),
       ])
@@ -174,7 +183,7 @@ export default function Habits() {
 
   const viewToggle = (
     <div className={styles.viewToggle}>
-      {["today", "week", "month"].map((mode) => (
+      {["today", "week", "month", "routine"].map((mode) => (
         <button
           key={mode}
           className={`${styles.viewToggleBtn} ${viewMode === mode ? styles.viewToggleActive : ""}`}
@@ -251,6 +260,11 @@ export default function Habits() {
               {viewToggle}
             </>
           )}
+          {viewMode === "routine" && (
+            <>
+              {viewToggle}
+            </>
+          )}
         </div>
 
         {loading ? (
@@ -258,7 +272,7 @@ export default function Habits() {
         ) : (
           <>
             {/* Main layout */}
-            <div className={styles.mainLayout}>
+            <div className={viewMode === "routine" ? undefined : styles.mainLayout}>
               {viewMode === "today" && (
                 <TodayView
                   habits={habits}
@@ -285,6 +299,8 @@ export default function Habits() {
                   habits={habits}
                   entries={entries}
                   onToggle={handleToggle}
+                  onSaveWeight={handleSaveWeight}
+                  onSaveSleep={handleSaveSleep}
                 />
               )}
               {viewMode === "month" && monthViewStyle === "calendar" && (
@@ -295,21 +311,28 @@ export default function Habits() {
                   entries={entries}
                 />
               )}
-              <ProgressChart
-                year={year}
-                month={month}
-                habits={habits}
-                entries={entries}
-              />
+              {viewMode === "routine" && (
+                <RoutineView />
+              )}
+              {viewMode !== "routine" && (
+                <ProgressChart
+                  year={year}
+                  month={month}
+                  habits={habits}
+                  entries={entries}
+                />
+              )}
             </div>
 
             {/* Memorable Moments */}
-            <MemoableMoments
-              year={year}
-              month={month}
-              entries={entries}
-              onSaveMoment={handleSaveMoment}
-            />
+            {viewMode !== "routine" && (
+              <MemoableMoments
+                year={year}
+                month={month}
+                entries={entries}
+                onSaveMoment={handleSaveMoment}
+              />
+            )}
           </>
         )}
 
@@ -317,6 +340,8 @@ export default function Habits() {
         {showSettings && (
           <HabitSettings
             habits={habits}
+            year={year}
+            month={month}
             onClose={() => setShowSettings(false)}
             onRefresh={loadData}
           />

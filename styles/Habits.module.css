@@ -48,7 +48,7 @@
   margin-bottom: 1.5rem;
 }
 
-.monthSelector button {
+.monthSelector > button {
   background: none;
   border: 1px solid rgba(255, 255, 255, 0.18);
   color: rgba(255, 255, 255, 0.7);
@@ -59,7 +59,7 @@
   transition: all 0.2s;
 }
 
-.monthSelector button:hover {
+.monthSelector > button:hover {
   background: rgba(255, 255, 255, 0.1);
   color: #fff;
 }
@@ -853,4 +853,133 @@
 
 .weightInput::placeholder {
   color: rgba(255, 255, 255, 0.3);
+}
+
+/* --- Routine View --- */
+.routineWrapper {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  padding: 1.25rem;
+}
+
+.routineGrid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 1px;
+  background: rgba(255, 255, 255, 0.06);
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.routineDay {
+  display: flex;
+  flex-direction: column;
+  background: rgba(13, 15, 26, 0.9);
+  min-height: 200px;
+}
+
+.routineDayHeader {
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.5);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  text-align: center;
+  padding: 0.6rem 0.5rem;
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.routineDayToday {
+  color: #3b82f6;
+  background: rgba(59, 130, 246, 0.08);
+}
+
+.routineItems {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 0.4rem;
+}
+
+.routineItemRow {
+  display: flex;
+  align-items: center;
+  position: relative;
+}
+
+.routineItem {
+  width: 100%;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid transparent;
+  border-radius: 4px;
+  padding: 0.4rem 1.4rem 0.4rem 0.5rem;
+  color: #e0e0e0;
+  font-size: 0.8rem;
+  font-family: inherit;
+  transition: border-color 0.2s, background 0.2s;
+}
+
+.routineItem:hover {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.routineItem:focus {
+  outline: none;
+  border-color: rgba(59, 130, 246, 0.4);
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.routineItem::placeholder {
+  color: rgba(255, 255, 255, 0.2);
+}
+
+.routineRemoveBtn {
+  position: absolute;
+  right: 2px;
+  background: none;
+  border: none;
+  color: rgba(255, 255, 255, 0.15);
+  cursor: pointer;
+  padding: 0.2rem 0.35rem;
+  font-size: 0.8rem;
+  transition: color 0.2s;
+  opacity: 0;
+}
+
+.routineItemRow:hover .routineRemoveBtn {
+  opacity: 1;
+}
+
+.routineRemoveBtn:hover {
+  color: #ef4444;
+}
+
+.routineAddBtn {
+  background: none;
+  border: 1px dashed rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.25);
+  border-radius: 4px;
+  padding: 0.3rem;
+  cursor: pointer;
+  font-size: 0.7rem;
+  transition: all 0.2s;
+  margin: 0.4rem;
+}
+
+.routineAddBtn:hover {
+  border-color: rgba(59, 130, 246, 0.3);
+  color: rgba(59, 130, 246, 0.7);
+  background: rgba(59, 130, 246, 0.06);
+}
+
+@media (max-width: 800px) {
+  .routineGrid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .routineDay {
+    min-height: 120px;
+  }
 }
