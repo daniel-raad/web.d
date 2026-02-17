@@ -816,6 +816,42 @@
   color: rgba(255, 255, 255, 0.25);
 }
 
+/* Month grid number inputs — compact for 28-31 columns */
+.monthNumInput {
+  width: 100%;
+  max-width: 100%;
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 3px;
+  padding: 0.25rem 0.15rem;
+  color: #e0e0e0;
+  font-size: 0.65rem;
+  font-family: inherit;
+  text-align: center;
+  -moz-appearance: textfield;
+  transition: border-color 0.2s, background 0.2s;
+}
+
+.monthNumInput::-webkit-outer-spin-button,
+.monthNumInput::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.monthNumInput:hover {
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.monthNumInput:focus {
+  outline: none;
+  border-color: rgba(139, 92, 246, 0.5);
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.monthNumInput::placeholder {
+  color: rgba(255, 255, 255, 0.15);
+}
+
 /* --- Weight Section --- */
 .weightSection {
   margin-top: 1.25rem;

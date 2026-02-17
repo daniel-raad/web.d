@@ -9,28 +9,39 @@ function formatDate(year, month, day) {
   return `${year}-${String(month).padStart(2, "0")}-${String(day).padStart(2, "0")}`
 }
 
+function MonthInput({ dateStr, value, placeholder, step, min, max, onSave }) {
+  const timerRef = useRef(null)
+
+  const handleChange = useCallback((e) => {
+    const val = e.target.value
+    if (timerRef.current) clearTimeout(timerRef.current)
+    timerRef.current = setTimeout(() => {
+      const num = parseFloat(val)
+      if (!isNaN(num) && num >= (min || 0)) {
+        onSave(dateStr, num)
+      }
+    }, 800)
+  }, [dateStr, onSave, min])
+
+  return (
+    <input
+      type="number"
+      inputMode="decimal"
+      className={styles.monthNumInput}
+      defaultValue={value ?? ""}
+      placeholder={placeholder}
+      step={step}
+      min={min}
+      max={max}
+      onChange={handleChange}
+    />
+  )
+}
+
 export default function HabitGrid({ year, month, habits, entries, onToggle, onSaveWeight, onSaveSleep }) {
   const totalDays = daysInMonth(year, month)
   const today = new Date()
   const todayStr = formatDate(today.getFullYear(), today.getMonth() + 1, today.getDate())
-  const weightTimers = useRef({})
-  const sleepTimers = useRef({})
-
-  const handleWeightChange = useCallback((dateStr, value) => {
-    if (weightTimers.current[dateStr]) clearTimeout(weightTimers.current[dateStr])
-    weightTimers.current[dateStr] = setTimeout(() => {
-      const num = parseFloat(value)
-      if (!isNaN(num) && num > 0) onSaveWeight(dateStr, num)
-    }, 800)
-  }, [onSaveWeight])
-
-  const handleSleepChange = useCallback((dateStr, value) => {
-    if (sleepTimers.current[dateStr]) clearTimeout(sleepTimers.current[dateStr])
-    sleepTimers.current[dateStr] = setTimeout(() => {
-      const num = parseFloat(value)
-      if (!isNaN(num) && num >= 0) onSaveSleep(dateStr, num)
-    }, 800)
-  }, [onSaveSleep])
 
   const dayDates = Array.from({ length: totalDays }, (_, i) => {
     const day = i + 1
@@ -43,7 +54,7 @@ export default function HabitGrid({ year, month, habits, entries, onToggle, onSa
     <div className={styles.weekWrapper}>
       <div
         className={styles.weekGrid}
-        style={{ gridTemplateColumns: `120px repeat(${totalDays}, 1fr) 45px` }}
+        style={{ gridTemplateColumns: `120px repeat(${totalDays}, minmax(32px, 1fr)) 45px` }}
       >
         {/* Header row: day numbers */}
         <div className={styles.weekDayHeader} style={{ position: "sticky", left: 0, background: "#0d0f1a", zIndex: 2 }} />
@@ -97,14 +108,13 @@ export default function HabitGrid({ year, month, habits, entries, onToggle, onSa
                 className={`${styles.weekCell} ${isToday ? styles.weekCellToday : ""}`}
                 style={{ cursor: "default" }}
               >
-                <input
-                  type="number"
-                  className={styles.weekWeightInput}
-                  defaultValue={entry.weight ?? ""}
+                <MonthInput
+                  dateStr={dateStr}
+                  value={entry.weight}
                   placeholder="–"
                   step="0.1"
-                  min="0"
-                  onChange={(e) => handleWeightChange(dateStr, e.target.value)}
+                  min={0}
+                  onSave={onSaveWeight}
                 />
               </div>
             )
@@ -125,15 +135,14 @@ export default function HabitGrid({ year, month, habits, entries, onToggle, onSa
                 className={`${styles.weekCell} ${isToday ? styles.weekCellToday : ""}`}
                 style={{ cursor: "default" }}
               >
-                <input
-                  type="number"
-                  className={styles.weekWeightInput}
-                  defaultValue={entry.sleep ?? ""}
+                <MonthInput
+                  dateStr={dateStr}
+                  value={entry.sleep}
                   placeholder="–"
                   step="0.5"
-                  min="0"
-                  max="24"
-                  onChange={(e) => handleSleepChange(dateStr, e.target.value)}
+                  min={0}
+                  max={24}
+                  onSave={onSaveSleep}
                 />
               </div>
             )
