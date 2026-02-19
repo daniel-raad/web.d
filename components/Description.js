@@ -8,7 +8,7 @@ export default function Description(){
                 <h2 className={styles.sectionHeader}>About</h2>
                 <div className={styles.bioText}>
                     <p>Hello there, my name is Daniel and it&apos;s lovely to meet you.</p>
-                    <p>I am a Forward Deployed Operations Engineer at Palantir.</p>
+                    <p>I am a Forward Deployed Operations Engineer at Palantir and CTO of Conversify.</p>
                 </div>
             </div>
 
