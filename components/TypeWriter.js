@@ -19,11 +19,11 @@ const TypeWriter = ({ content = "", speed = 1000 }) => {
         return index + 1;
       });
     }, speed);
-  }, []);
+  }, [content.length, speed]);
 
   useEffect(() => {
-    setDisplayedContent((displayedContent)=>displayedContent + content[index]) 
-  }, [index])
+    setDisplayedContent((displayedContent)=>displayedContent + content[index])
+  }, [index, content])
 
   return <pre className="type-writer">{displayedContent}</pre>;
 };

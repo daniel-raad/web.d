@@ -12,9 +12,12 @@ export default function ProjectList() {
           <div key={i} className={styles.card}>
             <div className={styles.cardTop}>
               <div className={styles.imageWrap}>
-                <img
+                <Image
                   src={project.featuredImage.url}
                   alt={project.title}
+                  width={44}
+                  height={44}
+                  objectFit="cover"
                   className={styles.image}
                 />
               </div>

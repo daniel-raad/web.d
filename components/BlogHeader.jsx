@@ -27,7 +27,7 @@ const BlogHeader = () => {
             </div> */}
             <div className="hidden md:float-left md:contents">
                 {categories.map((category) => (
-                    <Link key={category.slug} href={`/category/${category.slug}`}>
+                    <Link key={category.slug} href={`/category/${category.slug}`} passHref>
                         <span className="md:float-right mt-2 align-middle text-white ml-10 font-bold cursor-pointer">
                             {category.name}
                         </span>

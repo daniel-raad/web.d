@@ -28,6 +28,7 @@ export default function Description(){
             </div>
 
             <div className={styles.navButtons}>
+                {/* eslint-disable-next-line @next/next/no-html-link-for-pages */}
                 <a href="/api/cv" target="_blank" rel="noopener noreferrer" className={styles.navButton}>
                     My CV
                 </a>

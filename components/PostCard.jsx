@@ -1,24 +1,28 @@
 import React from 'react';
-import moment from 'moment'; 
+import moment from 'moment';
+import Image from 'next/image';
 import Link from 'next/link';
 const PostCard = ({ post }) => {
   return (
     <div className="bg-white shadow-lg rounded-lg pb-5 p-0 lg:p-8 ob-12 mb-8">
       <div className="relative overflow-hidden shadow-mb pb-80 mb-6">
-        <img 
-          src={post.featuredImage.url} 
-          alt={post.title} 
-          className="object-top absolute mt-3 h-80 w-full object-scale-down shadow rounded-t-lg lg:rounded-lg"/>  
+        <Image
+          src={post.featuredImage.url}
+          alt={post.title}
+          layout="fill"
+          objectFit="scale-down"
+          objectPosition="top"
+          className="mt-3 shadow rounded-t-lg lg:rounded-lg"/>
       </div>
       <h1 className="transition duration-500 text-center mb-8 cursor-default hover:text-pink-600 text-3xl font-semibold">
           {post.title} 
       </h1>
       <div className="block text-center items-center justify-center mb-8 w-full">
         <div className="flex items-center lg:pl-10 justify-center mb-3 w-full lg:w-auto mr-8">
-          <img 
+          <Image
             alt={post.author.name}
-            height="20px"
-            width="20px"
+            height={20}
+            width={20}
             className="align-middle rounded-full"
             src={post.author.photo.url}/>
             <p className="inline align-middle text-gray-700 ml-2 mb-0 font-medium text-lg">{post.author.name}</p>
@@ -33,7 +37,7 @@ const PostCard = ({ post }) => {
       <p className="text-center text-lg text-gray-700 font-normal px-4 lg:px-20 mb-8"> {post.excerpt}</p>
       { post.slug && 
         <div className="text-center">
-          <Link href={`/post/${post.slug}`}>
+          <Link href={`/post/${post.slug}`} passHref>
             <span className="transition duration-500 ease transform hover:-translate-y-1 mb-8 inline-block bg-pink-600 text-lg font-medium rounded-full text-white px-8 py-3 cursor-pointer">Continue Reading</span>
           </Link>
         </div>
