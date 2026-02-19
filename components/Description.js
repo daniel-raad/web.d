@@ -1,6 +1,5 @@
 import Link from "next/link";
 import styles from "../styles/Description.module.css";
-import CV from "./CV";
 
 export default function Description(){
     return (
@@ -10,7 +9,6 @@ export default function Description(){
                 <div className={styles.bioText}>
                     <p>Hello there, my name is Daniel and it&apos;s lovely to meet you.</p>
                     <p>I am a Forward Deployed Operations Engineer at Palantir.</p>
-                    <p>I am currently working on a number of different projects, some of which you can find <a href="#projects">below</a>.</p>
                 </div>
             </div>
 
@@ -29,10 +27,16 @@ export default function Description(){
                 </ul>
             </div>
 
-            <div className={styles.card}>
-                <div className={styles.cvWrapper}>
-                    <CV />
-                </div>
+            <div className={styles.navButtons}>
+                <a href="/api/cv" target="_blank" rel="noopener noreferrer" className={styles.navButton}>
+                    My CV
+                </a>
+                <Link href="/projects">
+                    <a className={styles.navButton}>My Projects</a>
+                </Link>
+                <Link href="/writings">
+                    <a className={styles.navButton}>My Writings</a>
+                </Link>
             </div>
         </div>
     )

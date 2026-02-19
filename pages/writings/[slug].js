@@ -18,7 +18,7 @@ export async function getStaticProps({ params }) {
   return { props: { post } }
 }
 
-export default function BlogPost({ post }) {
+export default function WritingsPost({ post }) {
   const router = useRouter()
 
   if (post.hidden && router.query.secret !== 'danny') {
@@ -28,7 +28,7 @@ export default function BlogPost({ post }) {
           <title>Not Found — Daniel Raad</title>
           <link rel="icon" href="/astro.png" />
         </Head>
-        <Header />
+        <Header compact />
         <div style={{ textAlign: 'center', padding: '4rem 1rem', color: 'rgba(255,255,255,0.5)' }}>
           This page doesn&apos;t exist.
         </div>
@@ -44,12 +44,9 @@ export default function BlogPost({ post }) {
         <link rel="icon" href="/astro.png" />
       </Head>
 
-      <Header />
+      <Header compact />
 
       <article className={styles.container}>
-        <Link href="/">
-          <a className={styles.backLink}>&larr; Back</a>
-        </Link>
 
         <header className={styles.header}>
           <h1 className={styles.title}>{post.title}</h1>

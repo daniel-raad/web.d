@@ -10,7 +10,7 @@ export async function getStaticProps() {
   return { props: { posts } }
 }
 
-export default function HiddenBlog({ posts }) {
+export default function HiddenWritings({ posts }) {
   const router = useRouter()
 
   if (router.query.secret !== 'danny') {
@@ -20,7 +20,7 @@ export default function HiddenBlog({ posts }) {
           <title>Not Found — Daniel Raad</title>
           <link rel="icon" href="/astro.png" />
         </Head>
-        <Header />
+        <Header compact />
         <div style={{ textAlign: 'center', padding: '4rem 1rem', color: 'rgba(255,255,255,0.5)' }}>
           This page doesn&apos;t exist.
         </div>
@@ -35,7 +35,7 @@ export default function HiddenBlog({ posts }) {
         <link rel="icon" href="/astro.png" />
       </Head>
 
-      <Header />
+      <Header compact />
 
       <div className="max-w-2xl mx-auto px-6 pb-10">
         <div className={styles.section}>
@@ -49,7 +49,7 @@ export default function HiddenBlog({ posts }) {
                 </div>
                 <p className={styles.excerpt}>{post.excerpt}</p>
                 <div className={styles.links}>
-                  <Link href={`/blog/${post.slug}?secret=danny`}>
+                  <Link href={`/writings/${post.slug}?secret=danny`}>
                     <a className={styles.link}>Read</a>
                   </Link>
                 </div>

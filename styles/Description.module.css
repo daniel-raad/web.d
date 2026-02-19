@@ -77,8 +77,33 @@
   color: inherit;
 }
 
-.cvWrapper {
+.navButtons {
+  display: flex;
+  gap: 1rem;
   margin-top: 0.5rem;
+}
+
+.navButton {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem 1.5rem;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  font-size: 0.95em;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.8);
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+
+.navButton:hover {
+  background: rgba(100, 180, 255, 0.1);
+  border-color: rgba(100, 180, 255, 0.3);
+  color: #ffffff;
+  transform: translateY(-2px);
 }
 
 @media (max-width: 600px) {
@@ -91,6 +116,10 @@
   }
 
   .linkList {
+    flex-direction: column;
+  }
+
+  .navButtons {
     flex-direction: column;
   }
 }
