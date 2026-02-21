@@ -21,10 +21,14 @@ Strike while the iron is hot. And if its not hot, strike anyway.
 A quick review of this week for myself. The midweek lapses need to stop. From today onwards, you will have a system in place to ensure that they don't occur. No more sleeping past 11. To function you need sleep - it supports everything, recovery, mood, cortisol. Without it, you're always running on fumes and your mood disolves into something terrible. You can see it happening before you. As soon as I got my sleep back under control this week everything changed for the better.
 
 During the week:
-6AM - 8AM: Ironman (whatever training you want to do, but it must be done) - In the gym, at home, on the road. Just DO IT.
-8AM - 6:30PM: Palantir - I love my job, and its fantastic experience around fantastic people. Learn. Grow.
-7PM - 10PM: Conversify - make this planned out, know what you want to accomplish everyday and get it done. Saturday and Sunday can be for larger tasks. This will be 8PM-10PM when I'm in the office, but is the only addendum. We DONT sacrifice sleep.
-10PM - 11PM: Read, R&R, Quick Journal Prep for Next Day.
+
+- 6AM - 8AM: Ironman (whatever training you want to do, but it must be done) - In the gym, at home, on the road. Just DO IT.
+
+- 8AM - 6:30PM: Palantir - I love my job, and its fantastic experience around fantastic people. Learn. Grow.
+
+- 7PM - 10PM: Conversify - make this planned out, know what you want to accomplish everyday and get it done. Saturday and Sunday can be for larger tasks. This will be 8PM-10PM when I'm in the office, but is the only addendum. We DONT sacrifice sleep.
+
+- 10PM - 11PM: Read, R&R, Quick Journal Prep for Next Day.
 
 ---
 
