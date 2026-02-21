@@ -7,8 +7,7 @@ export default function Description(){
             <div className={styles.card}>
                 <h2 className={styles.sectionHeader}>About</h2>
                 <div className={styles.bioText}>
-                    <p>Hello there, my name is Daniel and it&apos;s lovely to meet you.</p>
-                    <p>I am a Forward Deployed Operations Engineer at Palantir and CTO of Conversify.</p>
+                    <p>Hey, I'm Daniel. I build things at Palantir and Conversify.</p>
                 </div>
             </div>
 
