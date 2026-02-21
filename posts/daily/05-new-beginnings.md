@@ -22,13 +22,13 @@ A quick review of this week for myself. The midweek lapses need to stop. From to
 
 During the week:
 
-- 6AM - 8AM: Ironman (whatever training you want to do, but it must be done) - In the gym, at home, on the road. Just DO IT.
+- **6AM - 8AM:** Ironman (whatever training you want to do, but it must be done) - In the gym, at home, on the road. Just DO IT.
 
-- 8AM - 6:30PM: Palantir - I love my job, and its fantastic experience around fantastic people. Learn. Grow.
+- **8AM - 6:30PM:** Palantir - I love my job, and its fantastic experience around fantastic people. Learn. Grow.
 
-- 7PM - 10PM: Conversify - make this planned out, know what you want to accomplish everyday and get it done. Saturday and Sunday can be for larger tasks. This will be 8PM-10PM when I'm in the office, but is the only addendum. We DONT sacrifice sleep.
+- **7PM - 10PM:** Conversify - make this planned out, know what you want to accomplish everyday and get it done. Saturday and Sunday can be for larger tasks. This will be 8PM-10PM when I'm in the office, but is the only addendum. We DONT sacrifice sleep.
 
-- 10PM - 11PM: Read, R&R, Quick Journal Prep for Next Day.
+- **10PM - 11PM:** Read, R&R, Quick Journal Prep for Next Day.
 
 ---
 
