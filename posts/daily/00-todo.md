@@ -6,28 +6,43 @@ tags: ["general"]
 hidden: true
 ---
 
-This week:
+BLUF:
+Maintain my ToDos visibly - would you live life the way you were living it if a camera was on you. Well - put a camera on you then if not.
+
+This week (23rd of Feb):
+
+- buy a good lock [today (24th Feb)]
 
 Ironman
 
 - 15k run (slow)
+- 10k run (slow) (1 hour ish) [today (24th Feb)]
+- [x] 5k run
 - 20k cycle
--
+- 1 hour swim [tomorrow (25th Feb)]
+- 1 leg gym sessions
 
 Palantir
 
-- Heimdall launch to beta testers
-- Get CODEX working
+- [x] Heimdall launch to beta testers
+- [x] Get CODEX working
   - Coding Agent For New Task Types (WONT DO UNTIL CODEX)
-- Configurable Issues Agent in Swirl (using OpenCode and claude SDK backing)
-- Configurable Issues Agent UI
-- TPA to be able to run the agent
+- Configurable Issues Agent in Swirl (using OpenCode and claude SDK backing) [today!! (24th Feb)]
+- Configurable Issues Agent UI [today (24th Feb!)]
+- TPA to be able to run the agent [maybe today (24th Feb)]
+- Heimdall Bug Bash
 
 Conversify
 
-- Conversify Templates Set Up
 - Conversify GDPR
+- Conversify Templates Set Up
+- Conversify receipt scanner
 
 Brand:
 
 - 1 Video Created
+- Linkedin history update
+
+Website:
+
+- TODO manager on this website
