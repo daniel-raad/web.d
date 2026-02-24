@@ -3,7 +3,7 @@ title: "Daily TODO"
 date: "2026-02-22"
 excerpt: "My Daily To Do Tracker"
 tags: ["general"]
-hidden: true
+hidden: false
 ---
 
 BLUF:
