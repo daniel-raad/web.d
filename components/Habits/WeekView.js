@@ -48,7 +48,7 @@ export default function WeekView({ weekStart, habits, entries, onToggle, onSaveW
     <div className={styles.weekWrapper}>
       <div
         className={styles.weekGrid}
-        style={{ gridTemplateColumns: `120px repeat(7, 1fr) 45px` }}
+        style={{ gridTemplateColumns: `120px repeat(7, minmax(80px, 1fr)) 45px` }}
       >
         {/* Header row */}
         <div className={styles.weekDayHeader} style={{ position: "sticky", left: 0, background: "#0d0f1a", zIndex: 2 }} />
@@ -114,12 +114,11 @@ export default function WeekView({ weekStart, habits, entries, onToggle, onSaveW
                 style={{ cursor: "default" }}
               >
                 <input
-                  type="number"
+                  type="text"
+                  inputMode="decimal"
                   className={styles.weekWeightInput}
                   defaultValue={entry.weight ?? ""}
                   placeholder="–"
-                  step="0.1"
-                  min="0"
                   onChange={(e) => handleWeightChange(dateStr, e.target.value)}
                 />
               </div>
@@ -144,13 +143,11 @@ export default function WeekView({ weekStart, habits, entries, onToggle, onSaveW
                 style={{ cursor: "default" }}
               >
                 <input
-                  type="number"
+                  type="text"
+                  inputMode="decimal"
                   className={styles.weekWeightInput}
                   defaultValue={entry.sleep ?? ""}
                   placeholder="–"
-                  step="0.5"
-                  min="0"
-                  max="24"
                   onChange={(e) => handleSleepChange(dateStr, e.target.value)}
                 />
               </div>

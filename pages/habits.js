@@ -233,7 +233,11 @@ export default function Habits() {
       <div className={styles.page}>
         {/* Countdown hero */}
         <div className={styles.countdownHero}>
-          <div className={styles.countdownLabel}>IRONMAN 70.3</div>
+          <div className={styles.countdownLabel}>
+            <span className={styles.ironmanRed}>IRON</span>
+            <span className={styles.ironmanWhite}>MAN</span>
+            <span className={styles.ironmanRed}> 70.3</span>
+          </div>
           {daysToGo !== null && (
             <div className={styles.countdownNumber}>{daysToGo}</div>
           )}

@@ -1,5 +1,5 @@
 .page {
-  max-width: 1100px;
+  max-width: 1300px;
   margin: 0 auto;
   padding: 1rem 1.5rem 3rem;
 }
@@ -19,12 +19,19 @@
 }
 
 .countdownLabel {
-  font-size: 0.85rem;
-  font-weight: 700;
-  color: rgba(255, 255, 255, 0.5);
+  font-size: 1.1rem;
+  font-weight: 800;
   letter-spacing: 0.2em;
   text-transform: uppercase;
   margin-bottom: 0.25rem;
+}
+
+.ironmanRed {
+  color: #e02726;
+}
+
+.ironmanWhite {
+  color: #ffffff;
 }
 
 .countdownNumber {
@@ -788,7 +795,7 @@
 
 .weekGrid {
   display: grid;
-  min-width: 600px;
+  min-width: 700px;
 }
 
 .weekDayHeader {
@@ -828,7 +835,7 @@
 }
 
 .weekCell {
-  padding: 0.4rem;
+  padding: 0.4rem 0.5rem;
   text-align: center;
   border-bottom: 1px solid rgba(255, 255, 255, 0.06);
   cursor: pointer;
@@ -836,6 +843,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  overflow: visible;
 }
 
 .weekCell:hover {
@@ -859,22 +867,23 @@
 
 .weekWeightInput {
   width: 100%;
-  max-width: 50px;
-  background: rgba(255, 255, 255, 0.07);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: transparent;
+  border: 1px solid transparent;
   border-radius: 4px;
-  padding: 0.2rem 0.3rem;
+  padding: 0.25rem 0;
   color: #e0e0e0;
-  font-size: 0.75rem;
+  font-size: 0.85rem;
   font-family: inherit;
   text-align: center;
-  -moz-appearance: textfield;
 }
 
-.weekWeightInput::-webkit-outer-spin-button,
-.weekWeightInput::-webkit-inner-spin-button {
-  -webkit-appearance: none;
-  margin: 0;
+.weekWeightInput:hover {
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.weekWeightInput:focus {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(59, 130, 246, 0.4);
 }
 
 .weekWeightInput:focus {
@@ -889,23 +898,14 @@
 /* Month grid number inputs — compact for 28-31 columns */
 .monthNumInput {
   width: 100%;
-  max-width: 100%;
   background: transparent;
-  border: 1px solid transparent;
-  border-radius: 3px;
-  padding: 0.25rem 0.15rem;
+  border: none;
+  padding: 0.25rem 0;
   color: #e0e0e0;
-  font-size: 0.65rem;
+  font-size: 0.7rem;
   font-family: inherit;
   text-align: center;
-  -moz-appearance: textfield;
-  transition: border-color 0.2s, background 0.2s;
-}
-
-.monthNumInput::-webkit-outer-spin-button,
-.monthNumInput::-webkit-inner-spin-button {
-  -webkit-appearance: none;
-  margin: 0;
+  transition: background 0.2s;
 }
 
 .monthNumInput:hover {
@@ -914,7 +914,6 @@
 
 .monthNumInput:focus {
   outline: none;
-  border-color: rgba(139, 92, 246, 0.5);
   background: rgba(255, 255, 255, 0.08);
 }
 

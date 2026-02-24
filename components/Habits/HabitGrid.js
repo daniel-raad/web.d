@@ -25,14 +25,11 @@ function MonthInput({ dateStr, value, placeholder, step, min, max, onSave }) {
 
   return (
     <input
-      type="number"
+      type="text"
       inputMode="decimal"
       className={styles.monthNumInput}
       defaultValue={value ?? ""}
       placeholder={placeholder}
-      step={step}
-      min={min}
-      max={max}
       onChange={handleChange}
     />
   )
@@ -54,7 +51,7 @@ export default function HabitGrid({ year, month, habits, entries, onToggle, onSa
     <div className={styles.weekWrapper}>
       <div
         className={styles.weekGrid}
-        style={{ gridTemplateColumns: `120px repeat(${totalDays}, minmax(32px, 1fr)) 45px` }}
+        style={{ gridTemplateColumns: `120px repeat(${totalDays}, minmax(48px, 1fr)) 45px` }}
       >
         {/* Header row: day numbers */}
         <div className={styles.weekDayHeader} style={{ position: "sticky", left: 0, background: "#0d0f1a", zIndex: 2 }} />
