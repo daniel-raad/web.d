@@ -211,14 +211,13 @@ export default function Habits() {
       `}</style>
 
       <div className={styles.page}>
-        {/* Header with countdown and settings */}
-        <div className={styles.header}>
-          <div className={styles.countdown}>
-            Ironman 70.3
-            {daysToGo !== null && (
-              <> — <span className={styles.countdownDays}>{daysToGo}</span> days to go</>
-            )}
-          </div>
+        {/* Countdown hero */}
+        <div className={styles.countdownHero}>
+          <div className={styles.countdownLabel}>IRONMAN 70.3</div>
+          {daysToGo !== null && (
+            <div className={styles.countdownNumber}>{daysToGo}</div>
+          )}
+          <div className={styles.countdownSubtext}>days to go</div>
           <button className={styles.settingsBtn} onClick={() => setShowSettings(true)}>
             ⚙ Settings
           </button>

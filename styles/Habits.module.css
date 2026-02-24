@@ -4,34 +4,58 @@
   padding: 1rem 1.5rem 3rem;
 }
 
-/* --- Header / Countdown --- */
-.header {
+/* --- Countdown Hero --- */
+.countdownHero {
   display: flex;
-  justify-content: space-between;
+  flex-direction: column;
   align-items: center;
+  justify-content: center;
+  padding: 2rem 1rem 1.5rem;
   margin-bottom: 1.5rem;
+  background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(139, 92, 246, 0.08));
+  border: 1px solid rgba(59, 130, 246, 0.2);
+  border-radius: 12px;
+  position: relative;
 }
 
-.countdown {
-  font-size: 1.1rem;
-  font-weight: 600;
-  color: #fff;
-  letter-spacing: 0.04em;
+.countdownLabel {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.5);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  margin-bottom: 0.25rem;
 }
 
-.countdownDays {
+.countdownNumber {
+  font-size: 5rem;
+  font-weight: 800;
   color: #3b82f6;
-  font-size: 1.3rem;
+  line-height: 1;
+  letter-spacing: -0.02em;
+  text-shadow: 0 0 40px rgba(59, 130, 246, 0.3);
+}
+
+.countdownSubtext {
+  font-size: 1.1rem;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.5);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-top: 0.25rem;
 }
 
 .settingsBtn {
-  background: rgba(255, 255, 255, 0.1);
-  border: 1px solid rgba(255, 255, 255, 0.16);
-  color: rgba(255, 255, 255, 0.7);
+  position: absolute;
+  top: 0.75rem;
+  right: 0.75rem;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: rgba(255, 255, 255, 0.5);
   border-radius: 6px;
   padding: 0.4rem 0.8rem;
   cursor: pointer;
-  font-size: 0.9rem;
+  font-size: 0.8rem;
   transition: all 0.2s;
 }
 
@@ -122,18 +146,16 @@
     padding: 0.75rem 1rem 2rem;
   }
 
-  .header {
-    flex-wrap: wrap;
-    gap: 0.5rem;
+  .countdownHero {
+    padding: 1.5rem 1rem 1.25rem;
   }
 
-  .countdown {
-    font-size: 0.95rem;
+  .countdownNumber {
+    font-size: 3.5rem;
   }
 
-  .settingsBtn {
-    font-size: 0.8rem;
-    padding: 0.3rem 0.6rem;
+  .countdownSubtext {
+    font-size: 0.9rem;
   }
 
   .monthSelector {
