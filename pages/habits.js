@@ -173,13 +173,33 @@ export default function Habits() {
     setLoading(true)
   }
 
-  // Countdown calculation
-  let daysToGo = null
-  if (config && config.targetDate) {
-    const target = new Date(config.targetDate + "T00:00:00")
-    const diff = target - now
-    daysToGo = Math.max(0, Math.ceil(diff / (1000 * 60 * 60 * 24)))
-  }
+  // Live countdown timer
+  const [countdown, setCountdown] = useState({ days: null, hours: "00", minutes: "00", seconds: "00" })
+
+  useEffect(() => {
+    if (!config || !config.targetDate) return
+    // Target date at midnight GMT
+    const target = new Date(config.targetDate + "T00:00:00Z")
+
+    function tick() {
+      const diff = target - new Date()
+      if (diff <= 0) {
+        setCountdown({ days: 0, hours: "00", minutes: "00", seconds: "00" })
+        return
+      }
+      const days = Math.floor(diff / (1000 * 60 * 60 * 24))
+      const hours = String(Math.floor((diff / (1000 * 60 * 60)) % 24)).padStart(2, "0")
+      const minutes = String(Math.floor((diff / (1000 * 60)) % 60)).padStart(2, "0")
+      const seconds = String(Math.floor((diff / 1000) % 60)).padStart(2, "0")
+      setCountdown({ days, hours, minutes, seconds })
+    }
+
+    tick()
+    const interval = setInterval(tick, 1000)
+    return () => clearInterval(interval)
+  }, [config])
+
+  const daysToGo = countdown.days
 
   const viewToggle = (
     <div className={styles.viewToggle}>
@@ -218,6 +238,24 @@ export default function Habits() {
             <div className={styles.countdownNumber}>{daysToGo}</div>
           )}
           <div className={styles.countdownSubtext}>days to go</div>
+          {daysToGo !== null && (
+            <div className={styles.countdownTimer}>
+              <div className={styles.timerSegment}>
+                <span className={styles.timerValue}>{countdown.hours}</span>
+                <span className={styles.timerLabel}>hrs</span>
+              </div>
+              <span className={styles.timerSep}>:</span>
+              <div className={styles.timerSegment}>
+                <span className={styles.timerValue}>{countdown.minutes}</span>
+                <span className={styles.timerLabel}>min</span>
+              </div>
+              <span className={styles.timerSep}>:</span>
+              <div className={styles.timerSegment}>
+                <span className={styles.timerValue}>{countdown.seconds}</span>
+                <span className={styles.timerLabel}>sec</span>
+              </div>
+            </div>
+          )}
           <button className={styles.settingsBtn} onClick={() => setShowSettings(true)}>
             ⚙ Settings
           </button>
