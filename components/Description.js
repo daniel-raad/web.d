@@ -23,6 +23,9 @@ export default function Description(){
                     <li className={styles.linkItem}>
                         <Link href="/habits">Habits</Link>
                     </li>
+                    <li className={styles.linkItem}>
+                        <Link href="/todos">Todos</Link>
+                    </li>
                 </ul>
             </div>
 

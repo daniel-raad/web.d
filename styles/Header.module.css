@@ -98,11 +98,14 @@
   border-radius: 50%;
   border: 2px solid rgba(255, 255, 255, 0.15);
   filter: drop-shadow(0 0 8px rgba(100, 180, 255, 0.3));
-  animation: float 4s ease-in-out infinite;
-  transition: border-color 0.2s;
+  transition: border-color 0.2s, transform 0.2s;
 }
 
 .compactSpaceman:hover {
+  transform: scale(1.08);
+}
+
+.compactLink:hover .compactSpaceman {
   border-color: rgba(100, 180, 255, 0.5);
 }
 

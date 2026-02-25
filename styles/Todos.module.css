@@ -1,0 +1,563 @@
+.page {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 1rem 1.5rem 3rem;
+}
+
+/* --- View Toggle --- */
+.viewToggle {
+  display: flex;
+  background: rgba(255, 255, 255, 0.06);
+  border-radius: 6px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  margin-bottom: 1.5rem;
+}
+
+.viewToggleBtn {
+  background: none;
+  border: none;
+  color: rgba(255, 255, 255, 0.5);
+  padding: 0.45rem 1.2rem;
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-weight: 500;
+  transition: all 0.2s;
+  letter-spacing: 0.02em;
+}
+
+.viewToggleBtn:hover {
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.viewToggleActive {
+  background: rgba(59, 130, 246, 0.2);
+  color: #3b82f6;
+}
+
+/* --- Category Section --- */
+.categorySection {
+  margin-bottom: 1.5rem;
+}
+
+.categoryHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.5rem;
+}
+
+.categoryName {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.7);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.categoryActions {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.categoryCount {
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.35);
+  font-weight: 500;
+}
+
+.categoryActionBtn {
+  background: none;
+  border: none;
+  color: rgba(255, 255, 255, 0.15);
+  cursor: pointer;
+  padding: 0.15rem 0.3rem;
+  font-size: 0.8rem;
+  transition: color 0.2s;
+  opacity: 0;
+}
+
+.categoryHeader:hover .categoryActionBtn {
+  opacity: 1;
+}
+
+.categoryActionBtn:hover {
+  color: #3b82f6;
+}
+
+.categoryDeleteBtn:hover {
+  color: #ef4444;
+}
+
+.categoryRenameInput {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(59, 130, 246, 0.5);
+  border-radius: 4px;
+  padding: 0.2rem 0.5rem;
+  color: #fff;
+  font-size: 0.85rem;
+  font-weight: 700;
+  font-family: inherit;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.todoList {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+/* --- Completed in Category --- */
+.completedInCategory {
+  margin-top: 0.3rem;
+  padding-top: 0.3rem;
+}
+
+.completedToggle {
+  background: none;
+  border: none;
+  color: rgba(255, 255, 255, 0.35);
+  cursor: pointer;
+  font-size: 0.78rem;
+  padding: 0.25rem 0.4rem;
+  transition: color 0.2s;
+}
+
+.completedToggle:hover {
+  color: rgba(255, 255, 255, 0.6);
+}
+
+/* --- Todo Item --- */
+.todoItem {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.55rem 0.7rem;
+  border-radius: 6px;
+  transition: background 0.15s;
+}
+
+.todoItem:hover {
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.checkbox {
+  width: 22px;
+  height: 22px;
+  border-radius: 5px;
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: all 0.15s;
+  font-size: 0.7rem;
+  color: transparent;
+}
+
+.checkbox:hover {
+  border-color: #3b82f6;
+}
+
+.checkboxDone {
+  background: #3b82f6;
+  border-color: #3b82f6;
+  color: #fff;
+  box-shadow: 0 0 6px rgba(59, 130, 246, 0.3);
+}
+
+.todoText {
+  flex: 1;
+  font-size: 0.9rem;
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.todoTextDone {
+  text-decoration: line-through;
+  color: rgba(255, 255, 255, 0.35);
+}
+
+.todoDueDate {
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.4);
+  white-space: nowrap;
+}
+
+.todoDueDateOverdue {
+  color: #ef4444;
+}
+
+.todoDueDateToday {
+  color: #3b82f6;
+  font-weight: 600;
+}
+
+.todoDueDateAdd {
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.2);
+  cursor: pointer;
+  white-space: nowrap;
+  transition: color 0.2s;
+  opacity: 0;
+}
+
+.todoItem:hover .todoDueDateAdd {
+  opacity: 1;
+}
+
+.todoDueDateAdd:hover {
+  color: #3b82f6;
+}
+
+.todoDueDate,
+.todoDueDateOverdue,
+.todoDueDateToday {
+  cursor: pointer;
+}
+
+.todoDateInline {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(59, 130, 246, 0.4);
+  border-radius: 4px;
+  padding: 0.2rem 0.4rem;
+  color: #e0e0e0;
+  font-size: 0.75rem;
+  font-family: inherit;
+  width: 130px;
+}
+
+.todoDateInline:focus {
+  outline: none;
+  border-color: rgba(59, 130, 246, 0.6);
+}
+
+.deleteBtn {
+  background: none;
+  border: none;
+  color: rgba(255, 255, 255, 0.15);
+  cursor: pointer;
+  padding: 0.2rem 0.3rem;
+  font-size: 0.8rem;
+  transition: color 0.2s;
+  opacity: 0;
+}
+
+.todoItem:hover .deleteBtn {
+  opacity: 1;
+}
+
+.deleteBtn:hover {
+  color: #ef4444;
+}
+
+/* --- Add Todo Form --- */
+.addForm {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 0.4rem;
+  padding: 0.2rem 0;
+}
+
+.addInput {
+  flex: 1;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 5px;
+  padding: 0.4rem 0.6rem;
+  color: #e0e0e0;
+  font-size: 0.85rem;
+  font-family: inherit;
+}
+
+.addInput:focus {
+  outline: none;
+  border-color: rgba(59, 130, 246, 0.5);
+}
+
+.addInput::placeholder {
+  color: rgba(255, 255, 255, 0.25);
+}
+
+.addDateInput {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 5px;
+  padding: 0.4rem 0.5rem;
+  color: #e0e0e0;
+  font-size: 0.8rem;
+  font-family: inherit;
+  width: 140px;
+}
+
+.addDateInput:focus {
+  outline: none;
+  border-color: rgba(59, 130, 246, 0.5);
+}
+
+.addBtn {
+  background: rgba(59, 130, 246, 0.15);
+  border: 1px solid rgba(59, 130, 246, 0.3);
+  color: #3b82f6;
+  border-radius: 5px;
+  padding: 0.4rem 0.7rem;
+  cursor: pointer;
+  font-size: 0.8rem;
+  font-weight: 500;
+  transition: all 0.2s;
+}
+
+.addBtn:hover {
+  background: rgba(59, 130, 246, 0.25);
+}
+
+/* --- Add Category --- */
+.addCategoryForm {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+
+.addCategoryInput {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px dashed rgba(255, 255, 255, 0.15);
+  border-radius: 5px;
+  padding: 0.4rem 0.6rem;
+  color: #e0e0e0;
+  font-size: 0.85rem;
+  font-family: inherit;
+  width: 200px;
+}
+
+.addCategoryInput:focus {
+  outline: none;
+  border-color: rgba(59, 130, 246, 0.5);
+  border-style: solid;
+}
+
+.addCategoryInput::placeholder {
+  color: rgba(255, 255, 255, 0.25);
+}
+
+/* --- Week View --- */
+.weekNav {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.weekNav button {
+  background: none;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  color: rgba(255, 255, 255, 0.7);
+  border-radius: 4px;
+  padding: 0.3rem 0.7rem;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: all 0.2s;
+}
+
+.weekNav button:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+}
+
+.weekLabel {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #fff;
+  min-width: 200px;
+  text-align: center;
+}
+
+.weekGrid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 1px;
+  background: rgba(255, 255, 255, 0.06);
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.weekDay {
+  background: rgba(13, 15, 26, 0.9);
+  min-height: 160px;
+  display: flex;
+  flex-direction: column;
+}
+
+.weekDayHeader {
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.5);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  text-align: center;
+  padding: 0.5rem 0.4rem 0.3rem;
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.weekDayToday {
+  color: #3b82f6;
+  background: rgba(59, 130, 246, 0.08);
+}
+
+.weekDayDate {
+  font-size: 0.85rem;
+  font-weight: 500;
+  display: block;
+  margin-top: 0.15rem;
+}
+
+.weekDayItems {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 0.3rem;
+}
+
+.weekTodoItem {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.25rem 0.3rem;
+  border-radius: 3px;
+  cursor: pointer;
+  transition: background 0.15s;
+  font-size: 0.75rem;
+}
+
+.weekTodoItem:hover {
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.weekTodoCheckbox {
+  width: 14px;
+  height: 14px;
+  border-radius: 3px;
+  border: 1.5px solid rgba(255, 255, 255, 0.2);
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.55rem;
+  color: transparent;
+}
+
+.weekTodoCheckboxDone {
+  background: #3b82f6;
+  border-color: #3b82f6;
+  color: #fff;
+}
+
+.weekTodoText {
+  color: rgba(255, 255, 255, 0.75);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.weekTodoTextDone {
+  text-decoration: line-through;
+  color: rgba(255, 255, 255, 0.3);
+}
+
+.weekCategory {
+  font-size: 0.6rem;
+  color: rgba(255, 255, 255, 0.3);
+  padding: 0.1rem 0.3rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.unscheduledSection {
+  margin-top: 1.5rem;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  padding: 1rem;
+}
+
+.unscheduledTitle {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.5);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-bottom: 0.5rem;
+}
+
+/* --- Completed View --- */
+.completedGroup {
+  margin-bottom: 1.5rem;
+}
+
+.completedDate {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.5);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  margin-bottom: 0.4rem;
+  padding-bottom: 0.3rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+/* --- Empty State --- */
+.emptyState {
+  text-align: center;
+  padding: 3rem 1rem;
+  color: rgba(255, 255, 255, 0.35);
+  font-size: 0.9rem;
+}
+
+/* --- Loading --- */
+.loading {
+  text-align: center;
+  padding: 4rem 0;
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 0.9rem;
+}
+
+/* --- Responsive --- */
+@media (max-width: 600px) {
+  .page {
+    padding: 0.75rem 1rem 2rem;
+  }
+
+  .viewToggle {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .viewToggleBtn {
+    flex: 1;
+    text-align: center;
+  }
+
+  .weekGrid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .addForm {
+    flex-wrap: wrap;
+  }
+
+  .addDateInput {
+    width: 100%;
+  }
+
+  .addCategoryForm {
+    flex-wrap: wrap;
+  }
+
+  .addCategoryInput {
+    width: 100%;
+  }
+}

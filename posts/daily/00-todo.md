@@ -16,7 +16,7 @@ This week (23rd of Feb):
 Ironman
 
 - 15k run (slow)
-- 10k run (slow) (1 hour ish) [today (24th Feb)]
+- [x] 10k run (slow) (1 hour ish) [today (24th Feb)]
 - [x] 5k run
 - 20k cycle
 - 1 hour swim [tomorrow (25th Feb)]
@@ -28,8 +28,8 @@ Palantir
 - [x] Get CODEX working
   - Coding Agent For New Task Types (WONT DO UNTIL CODEX)
 - Configurable Issues Agent in Swirl (using OpenCode and claude SDK backing) [today!! (24th Feb)]
-- Configurable Issues Agent UI [today (24th Feb!)]
-- TPA to be able to run the agent [maybe today (24th Feb)]
+- [x] Configurable Issues Agent UI [today (24th Feb!)]
+- [x] TPA to be able to run the agent [maybe today (24th Feb)]
 - Heimdall Bug Bash
 
 Conversify
