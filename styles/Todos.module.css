@@ -373,6 +373,11 @@
   text-align: center;
 }
 
+.weekGridWrapper {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
 .weekGrid {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
@@ -556,26 +561,41 @@
     opacity: 1;
   }
 
-  /* Week view: stack days vertically */
+  /* Week view: keep 7-column layout, allow horizontal scroll */
   .weekGrid {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(7, 1fr);
+    min-width: 500px;
   }
 
   .weekDay {
-    min-height: auto;
+    min-height: 120px;
   }
 
   .weekDayHeader {
-    text-align: left;
-    padding: 0.4rem 0.6rem;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
+    text-align: center;
+    padding: 0.3rem 0.15rem 0.2rem;
+    font-size: 0.6rem;
   }
 
   .weekDayDate {
-    display: inline;
-    margin-top: 0;
+    font-size: 0.75rem;
+  }
+
+  .weekDayItems {
+    padding: 0.15rem;
+  }
+
+  .weekTodoItem {
+    font-size: 0.65rem;
+    padding: 0.15rem 0.15rem;
+    gap: 0.15rem;
+  }
+
+  .weekTodoCheckbox {
+    width: 11px;
+    height: 11px;
+    border-radius: 2px;
+    font-size: 0.45rem;
   }
 
   .weekNav {
