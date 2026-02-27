@@ -54,36 +54,38 @@ export default function WeekView({ todos, onToggle }) {
         <span className={styles.weekLabel}>{formatWeekRange(weekStart)}</span>
       </div>
 
-      <div className={styles.weekGrid}>
-        {days.map((day) => {
-          const isToday = day.dateStr === todayStr
-          const dayTodos = todos.filter((t) => t.dueDate === day.dateStr)
+      <div className={styles.weekGridWrapper}>
+        <div className={styles.weekGrid}>
+          {days.map((day) => {
+            const isToday = day.dateStr === todayStr
+            const dayTodos = todos.filter((t) => t.dueDate === day.dateStr)
 
-          return (
-            <div key={day.dateStr} className={styles.weekDay}>
-              <div className={`${styles.weekDayHeader} ${isToday ? styles.weekDayToday : ""}`}>
-                {day.label}
-                <span className={styles.weekDayDate}>{day.date.getDate()}</span>
-              </div>
-              <div className={styles.weekDayItems}>
-                {dayTodos.map((todo) => (
-                  <div
-                    key={todo.id}
-                    className={styles.weekTodoItem}
-                    onClick={() => onToggle(todo.id, !todo.completed)}
-                  >
-                    <div className={`${styles.weekTodoCheckbox} ${todo.completed ? styles.weekTodoCheckboxDone : ""}`}>
-                      {todo.completed && "✓"}
+            return (
+              <div key={day.dateStr} className={styles.weekDay}>
+                <div className={`${styles.weekDayHeader} ${isToday ? styles.weekDayToday : ""}`}>
+                  {day.label}
+                  <span className={styles.weekDayDate}>{day.date.getDate()}</span>
+                </div>
+                <div className={styles.weekDayItems}>
+                  {dayTodos.map((todo) => (
+                    <div
+                      key={todo.id}
+                      className={styles.weekTodoItem}
+                      onClick={() => onToggle(todo.id, !todo.completed)}
+                    >
+                      <div className={`${styles.weekTodoCheckbox} ${todo.completed ? styles.weekTodoCheckboxDone : ""}`}>
+                        {todo.completed && "✓"}
+                      </div>
+                      <span className={`${styles.weekTodoText} ${todo.completed ? styles.weekTodoTextDone : ""}`}>
+                        {todo.text}
+                      </span>
                     </div>
-                    <span className={`${styles.weekTodoText} ${todo.completed ? styles.weekTodoTextDone : ""}`}>
-                      {todo.text}
-                    </span>
-                  </div>
-                ))}
+                  ))}
+                </div>
               </div>
-            </div>
-          )
-        })}
+            )
+          })}
+        </div>
       </div>
 
       {unscheduled.length > 0 && (
