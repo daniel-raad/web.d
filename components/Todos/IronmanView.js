@@ -4,12 +4,18 @@ import styles from "../../styles/Todos.module.css"
 
 const STORAGE_KEY = "ironman-plan-checked"
 const START_DATE_KEY = "ironman-plan-start"
+const DAY_ORDER_KEY = "ironman-day-orders"
+const SESSION_MOVES_KEY = "ironman-session-moves"
+
+function getStored(key, fallback) {
+  if (typeof window === "undefined") return fallback
+  try {
+    return JSON.parse(localStorage.getItem(key) || JSON.stringify(fallback))
+  } catch { return fallback }
+}
 
 function getStoredChecks() {
-  if (typeof window === "undefined") return {}
-  try {
-    return JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}")
-  } catch { return {} }
+  return getStored(STORAGE_KEY, {})
 }
 
 function getStoredStart() {
@@ -40,17 +46,20 @@ function formatDateFull(date) {
   return date.toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" })
 }
 
-const DAY_OFFSETS = { Monday: 0, Tuesday: 1, Wednesday: 2, Thursday: 3, Friday: 4, Saturday: 5, Sunday: 6 }
-
 export default function IronmanView() {
   const [checked, setChecked] = useState({})
   const [startDate, setStartDate] = useState(null)
   const [expandedWeeks, setExpandedWeeks] = useState({})
   const [expandedSessions, setExpandedSessions] = useState({})
   const [editingStart, setEditingStart] = useState(false)
+  const [dayOrders, setDayOrders] = useState({})       // { weekNum: [origDayIndices] }
+  const [sessionMoves, setSessionMoves] = useState({})  // { "w1-d0-s1": targetDayIdx }
+  const [movingSession, setMovingSession] = useState(null) // key of session being moved
 
   useEffect(() => {
     setChecked(getStoredChecks())
+    setDayOrders(getStored(DAY_ORDER_KEY, {}))
+    setSessionMoves(getStored(SESSION_MOVES_KEY, {}))
     const stored = getStoredStart()
     if (stored) {
       setStartDate(stored)
@@ -90,6 +99,68 @@ export default function IronmanView() {
 
   const toggleSession = (key) => {
     setExpandedSessions((prev) => ({ ...prev, [key]: !prev[key] }))
+  }
+
+  // Day ordering
+  const getDayOrder = (weekNum, dayCount) => {
+    return dayOrders[weekNum] || Array.from({ length: dayCount }, (_, i) => i)
+  }
+
+  const swapDays = (weekNum, dayCount, posA, posB) => {
+    const order = [...getDayOrder(weekNum, dayCount)]
+    ;[order[posA], order[posB]] = [order[posB], order[posA]]
+    setDayOrders((prev) => {
+      const next = { ...prev, [weekNum]: order }
+      localStorage.setItem(DAY_ORDER_KEY, JSON.stringify(next))
+      return next
+    })
+  }
+
+  const resetWeekOrder = (weekNum) => {
+    setDayOrders((prev) => {
+      const next = { ...prev }
+      delete next[weekNum]
+      localStorage.setItem(DAY_ORDER_KEY, JSON.stringify(next))
+      return next
+    })
+    // Also clear session moves for this week
+    setSessionMoves((prev) => {
+      const next = {}
+      for (const [k, v] of Object.entries(prev)) {
+        if (!k.startsWith(`w${weekNum}-`)) next[k] = v
+      }
+      localStorage.setItem(SESSION_MOVES_KEY, JSON.stringify(next))
+      return next
+    })
+  }
+
+  // Session moving
+  const moveSession = (sessionKey, targetOrigDayIdx) => {
+    setSessionMoves((prev) => {
+      const next = { ...prev, [sessionKey]: targetOrigDayIdx }
+      // If moving back to original day, remove the override
+      const origDayIdx = parseInt(sessionKey.split("-")[1].slice(1))
+      if (targetOrigDayIdx === origDayIdx) delete next[sessionKey]
+      localStorage.setItem(SESSION_MOVES_KEY, JSON.stringify(next))
+      return next
+    })
+    setMovingSession(null)
+  }
+
+  // Get sessions for a given original day index, accounting for moves
+  const getSessionsForDay = (weekNum, origDayIdx, allDays) => {
+    const results = []
+    allDays.forEach((day, di) => {
+      day.sessions.forEach((session, si) => {
+        const key = `w${weekNum}-d${di}-s${si}`
+        const movedTo = sessionMoves[key]
+        const belongsHere = movedTo !== undefined ? movedTo === origDayIdx : di === origDayIdx
+        if (belongsHere) {
+          results.push({ session, origDayIdx: di, origSessionIdx: si, key })
+        }
+      })
+    })
+    return results
   }
 
   const handleStartDateChange = (e) => {
@@ -209,87 +280,137 @@ export default function IronmanView() {
             </button>
 
             {/* Week days */}
-            {expanded && (
-              <div className={styles.ironmanDays}>
-                {w.days.map((day, di) => {
-                  const dayDate = addDays(weekStart, DAY_OFFSETS[day.day] ?? di)
-                  const isToday = dayDate.toDateString() === new Date().toDateString()
+            {expanded && (() => {
+              const order = getDayOrder(w.week, w.days.length)
+              const isCustomOrder = !!dayOrders[w.week] || Object.keys(sessionMoves).some((k) => k.startsWith(`w${w.week}-`))
 
-                  return (
-                    <div key={di} className={`${styles.ironmanDay} ${isToday ? styles.ironmanDayToday : ""}`}>
-                      <div className={styles.ironmanDayHeader}>
-                        <span className={styles.ironmanDayName}>{day.day}</span>
-                        <span className={styles.ironmanDayDate}>{formatDate(dayDate)}</span>
-                      </div>
-                      <div className={styles.ironmanSessions}>
-                        {day.sessions.map((session, si) => {
-                          const key = `w${w.week}-d${di}-s${si}`
-                          const done = checked[key]
-                          const info = DISCIPLINE_INFO[session.d] || { label: session.d, icon: "📋", color: "#6b7280" }
-                          const sessionExpanded = expandedSessions[key]
-
-                          return (
-                            <div key={si} className={styles.ironmanSession}>
-                              <div className={styles.ironmanSessionRow}>
-                                <div
-                                  className={`${styles.ironmanCheck} ${done ? styles.ironmanCheckDone : ""}`}
-                                  onClick={() => toggle(key)}
-                                >
-                                  {done && "✓"}
-                                </div>
-                                <span className={styles.ironmanIcon}>{info.icon}</span>
-                                <span
-                                  className={styles.ironmanDiscipline}
-                                  style={{ color: info.color }}
-                                >
-                                  {info.label}
-                                </span>
-                                <span className={`${styles.ironmanDur} ${done ? styles.ironmanTextDone : ""}`}>
-                                  {session.dur}
-                                </span>
-                                {session.z !== "-" && (
-                                  <span className={styles.ironmanZone}>{session.z}</span>
-                                )}
-                                <button
-                                  className={styles.ironmanExpandBtn}
-                                  onClick={() => toggleSession(key)}
-                                >
-                                  {sessionExpanded ? "−" : "+"}
-                                </button>
-                              </div>
-                              {sessionExpanded && (
-                                <div className={styles.ironmanDetails}>
-                                  <div className={styles.ironmanDetailRow}>
-                                    <span className={styles.ironmanDetailLabel}>Workout</span>
-                                    <span>{session.workout}</span>
-                                  </div>
-                                  {session.sets !== "-" && (
-                                    <div className={styles.ironmanDetailRow}>
-                                      <span className={styles.ironmanDetailLabel}>Sets</span>
-                                      <span>{session.sets}</span>
-                                    </div>
-                                  )}
-                                  {session.rest !== "-" && (
-                                    <div className={styles.ironmanDetailRow}>
-                                      <span className={styles.ironmanDetailLabel}>Rest</span>
-                                      <span>{session.rest}</span>
-                                    </div>
-                                  )}
-                                  <div className={styles.ironmanDetailRow}>
-                                    <span className={styles.ironmanDetailLabel}>Purpose</span>
-                                    <span>{session.purpose}</span>
-                                  </div>
-                                </div>
-                              )}
-                            </div>
-                          )
-                        })}
-                      </div>
+              return (
+                <div className={styles.ironmanDays}>
+                  {isCustomOrder && (
+                    <div className={styles.ironmanResetRow}>
+                      <button className={styles.ironmanResetBtn} onClick={() => resetWeekOrder(w.week)}>
+                        Reset order
+                      </button>
                     </div>
-                  )
-                })}
-              </div>
-            )}
+                  )}
+                  {order.map((origDayIdx, displayPos) => {
+                    const day = w.days[origDayIdx]
+                    if (!day) return null
+                    const dayDate = addDays(weekStart, displayPos)
+                    const isToday = dayDate.toDateString() === new Date().toDateString()
+                    const sessions = getSessionsForDay(w.week, origDayIdx, w.days)
+
+                    return (
+                      <div key={origDayIdx} className={`${styles.ironmanDay} ${isToday ? styles.ironmanDayToday : ""}`}>
+                        <div className={styles.ironmanDayHeader}>
+                          <div className={styles.ironmanDayLeft}>
+                            <span className={styles.ironmanDayName}>{day.day}</span>
+                            <span className={styles.ironmanDayDate}>{formatDate(dayDate)}</span>
+                          </div>
+                          <div className={styles.ironmanDayArrows}>
+                            <button
+                              className={styles.ironmanArrowBtn}
+                              onClick={() => swapDays(w.week, w.days.length, displayPos, displayPos - 1)}
+                              disabled={displayPos === 0}
+                            >▲</button>
+                            <button
+                              className={styles.ironmanArrowBtn}
+                              onClick={() => swapDays(w.week, w.days.length, displayPos, displayPos + 1)}
+                              disabled={displayPos === order.length - 1}
+                            >▼</button>
+                          </div>
+                        </div>
+                        <div className={styles.ironmanSessions}>
+                          {sessions.map(({ session, origDayIdx, key }) => {
+                            const done = checked[key]
+                            const info = DISCIPLINE_INFO[session.d] || { label: session.d, icon: "📋", color: "#6b7280" }
+                            const sessionExpanded = expandedSessions[key]
+                            const isMoving = movingSession === key
+                            const isMoved = sessionMoves[key] !== undefined
+
+                            return (
+                              <div key={key} className={`${styles.ironmanSession} ${isMoved ? styles.ironmanSessionMoved : ""}`}>
+                                <div className={styles.ironmanSessionRow}>
+                                  <div
+                                    className={`${styles.ironmanCheck} ${done ? styles.ironmanCheckDone : ""}`}
+                                    onClick={() => toggle(key)}
+                                  >
+                                    {done && "✓"}
+                                  </div>
+                                  <span className={styles.ironmanIcon}>{info.icon}</span>
+                                  <span className={styles.ironmanDiscipline} style={{ color: info.color }}>
+                                    {info.label}
+                                  </span>
+                                  <span className={`${styles.ironmanDur} ${done ? styles.ironmanTextDone : ""}`}>
+                                    {session.dur}
+                                  </span>
+                                  {session.z !== "-" && (
+                                    <span className={styles.ironmanZone}>{session.z}</span>
+                                  )}
+                                  <button
+                                    className={`${styles.ironmanMoveBtn} ${isMoving ? styles.ironmanMoveBtnActive : ""}`}
+                                    onClick={() => setMovingSession(isMoving ? null : key)}
+                                    title="Move to another day"
+                                  >↕</button>
+                                  <button
+                                    className={styles.ironmanExpandBtn}
+                                    onClick={() => toggleSession(key)}
+                                  >
+                                    {sessionExpanded ? "−" : "+"}
+                                  </button>
+                                </div>
+                                {isMoving && (
+                                  <div className={styles.ironmanMoveMenu}>
+                                    <span className={styles.ironmanMoveLabel}>Move to:</span>
+                                    {order.map((targetDayIdx) => {
+                                      const targetDay = w.days[targetDayIdx]
+                                      if (targetDayIdx === origDayIdx && !sessionMoves[key]) return null
+                                      return (
+                                        <button
+                                          key={targetDayIdx}
+                                          className={`${styles.ironmanMoveOption} ${targetDayIdx === origDayIdx ? styles.ironmanMoveOriginal : ""}`}
+                                          onClick={() => moveSession(key, targetDayIdx)}
+                                        >
+                                          {targetDay?.day}{targetDayIdx === origDayIdx ? " (original)" : ""}
+                                        </button>
+                                      )
+                                    })}
+                                  </div>
+                                )}
+                                {sessionExpanded && (
+                                  <div className={styles.ironmanDetails}>
+                                    <div className={styles.ironmanDetailRow}>
+                                      <span className={styles.ironmanDetailLabel}>Workout</span>
+                                      <span>{session.workout}</span>
+                                    </div>
+                                    {session.sets !== "-" && (
+                                      <div className={styles.ironmanDetailRow}>
+                                        <span className={styles.ironmanDetailLabel}>Sets</span>
+                                        <span>{session.sets}</span>
+                                      </div>
+                                    )}
+                                    {session.rest !== "-" && (
+                                      <div className={styles.ironmanDetailRow}>
+                                        <span className={styles.ironmanDetailLabel}>Rest</span>
+                                        <span>{session.rest}</span>
+                                      </div>
+                                    )}
+                                    <div className={styles.ironmanDetailRow}>
+                                      <span className={styles.ironmanDetailLabel}>Purpose</span>
+                                      <span>{session.purpose}</span>
+                                    </div>
+                                  </div>
+                                )}
+                              </div>
+                            )
+                          })}
+                        </div>
+                      </div>
+                    )
+                  })}
+                </div>
+              )
+            })()}
           </div>
         )
       })}

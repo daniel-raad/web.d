@@ -751,11 +751,78 @@
   border-top-color: rgba(59, 130, 246, 0.15);
 }
 
+.ironmanResetRow {
+  display: flex;
+  justify-content: flex-end;
+  padding: 0.3rem 0.75rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.ironmanResetBtn {
+  background: none;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.35);
+  font-size: 0.65rem;
+  padding: 0.15rem 0.5rem;
+  border-radius: 3px;
+  cursor: pointer;
+  font-family: inherit;
+  transition: all 0.15s;
+}
+
+.ironmanResetBtn:hover {
+  color: #f59e0b;
+  border-color: rgba(245, 158, 11, 0.3);
+}
+
 .ironmanDayHeader {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  justify-content: space-between;
   margin-bottom: 0.3rem;
+}
+
+.ironmanDayLeft {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.ironmanDayArrows {
+  display: flex;
+  gap: 0.15rem;
+  opacity: 0;
+  transition: opacity 0.15s;
+}
+
+.ironmanDay:hover .ironmanDayArrows {
+  opacity: 1;
+}
+
+.ironmanArrowBtn {
+  background: none;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.3);
+  width: 20px;
+  height: 18px;
+  border-radius: 3px;
+  cursor: pointer;
+  font-size: 0.55rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  transition: all 0.15s;
+}
+
+.ironmanArrowBtn:hover:not(:disabled) {
+  color: #3b82f6;
+  border-color: rgba(59, 130, 246, 0.3);
+}
+
+.ironmanArrowBtn:disabled {
+  opacity: 0.2;
+  cursor: default;
 }
 
 .ironmanDayName {
@@ -879,6 +946,86 @@
 .ironmanExpandBtn:hover {
   color: #3b82f6;
   border-color: rgba(59, 130, 246, 0.3);
+}
+
+/* Move session */
+.ironmanMoveBtn {
+  background: none;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.25);
+  width: 20px;
+  height: 20px;
+  border-radius: 3px;
+  cursor: pointer;
+  font-size: 0.7rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: all 0.15s;
+  padding: 0;
+  line-height: 1;
+  opacity: 0;
+}
+
+.ironmanSessionRow:hover .ironmanMoveBtn {
+  opacity: 1;
+}
+
+.ironmanMoveBtn:hover {
+  color: #f59e0b;
+  border-color: rgba(245, 158, 11, 0.3);
+}
+
+.ironmanMoveBtnActive {
+  opacity: 1;
+  color: #f59e0b;
+  border-color: rgba(245, 158, 11, 0.4);
+  background: rgba(245, 158, 11, 0.1);
+}
+
+.ironmanSessionMoved {
+  border-left: 2px solid rgba(245, 158, 11, 0.3);
+  padding-left: 0.2rem;
+}
+
+.ironmanMoveMenu {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.3rem 0.5rem 0.3rem 2.8rem;
+  flex-wrap: wrap;
+}
+
+.ironmanMoveLabel {
+  font-size: 0.65rem;
+  color: rgba(255, 255, 255, 0.4);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.ironmanMoveOption {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 0.68rem;
+  padding: 0.2rem 0.5rem;
+  border-radius: 4px;
+  cursor: pointer;
+  font-family: inherit;
+  transition: all 0.15s;
+}
+
+.ironmanMoveOption:hover {
+  background: rgba(59, 130, 246, 0.15);
+  border-color: rgba(59, 130, 246, 0.3);
+  color: #3b82f6;
+}
+
+.ironmanMoveOriginal {
+  border-color: rgba(245, 158, 11, 0.3);
+  color: #f59e0b;
 }
 
 /* Session details */
@@ -1075,6 +1222,18 @@
   .ironmanExpandBtn {
     width: 18px;
     height: 18px;
+  }
+
+  .ironmanDayArrows {
+    opacity: 1;
+  }
+
+  .ironmanMoveBtn {
+    opacity: 1;
+  }
+
+  .ironmanMoveMenu {
+    padding-left: 2rem;
   }
 
   /* Todo item: prevent overflow */
