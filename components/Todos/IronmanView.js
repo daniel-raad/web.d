@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from "react"
+import { useState, useEffect, useMemo, useRef } from "react"
 import { WEEKS, PHASES, DISCIPLINE_INFO } from "./ironmanData"
 import styles from "../../styles/Todos.module.css"
 
@@ -7,15 +7,13 @@ const START_DATE_KEY = "ironman-plan-start"
 const DAY_ORDER_KEY = "ironman-day-orders"
 const SESSION_MOVES_KEY = "ironman-session-moves"
 
+const WEEKDAYS = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
+
 function getStored(key, fallback) {
   if (typeof window === "undefined") return fallback
   try {
     return JSON.parse(localStorage.getItem(key) || JSON.stringify(fallback))
   } catch { return fallback }
-}
-
-function getStoredChecks() {
-  return getStored(STORAGE_KEY, {})
 }
 
 function getStoredStart() {
@@ -52,12 +50,16 @@ export default function IronmanView() {
   const [expandedWeeks, setExpandedWeeks] = useState({})
   const [expandedSessions, setExpandedSessions] = useState({})
   const [editingStart, setEditingStart] = useState(false)
-  const [dayOrders, setDayOrders] = useState({})       // { weekNum: [origDayIndices] }
-  const [sessionMoves, setSessionMoves] = useState({})  // { "w1-d0-s1": targetDayIdx }
-  const [movingSession, setMovingSession] = useState(null) // key of session being moved
+  const [dayOrders, setDayOrders] = useState({})
+  const [sessionMoves, setSessionMoves] = useState({})
+
+  // Drag state
+  const [dragOverDay, setDragOverDay] = useState(null)     // "weekNum-displayPos"
+  const [dragOverSession, setDragOverSession] = useState(null) // "weekNum-origDayIdx" (target day for session drop)
+  const dragTypeRef = useRef(null) // "day" or "session"
 
   useEffect(() => {
-    setChecked(getStoredChecks())
+    setChecked(getStored(STORAGE_KEY, {}))
     setDayOrders(getStored(DAY_ORDER_KEY, {}))
     setSessionMoves(getStored(SESSION_MOVES_KEY, {}))
     const stored = getStoredStart()
@@ -71,7 +73,6 @@ export default function IronmanView() {
     }
   }, [])
 
-  // Determine current week number
   const currentWeekNum = useMemo(() => {
     if (!startDate) return 1
     const start = getMonday(new Date(startDate))
@@ -80,7 +81,6 @@ export default function IronmanView() {
     return Math.max(1, Math.min(24, diff + 1))
   }, [startDate])
 
-  // Auto-expand current week on mount
   useEffect(() => {
     setExpandedWeeks((prev) => ({ ...prev, [currentWeekNum]: true }))
   }, [currentWeekNum])
@@ -106,9 +106,11 @@ export default function IronmanView() {
     return dayOrders[weekNum] || Array.from({ length: dayCount }, (_, i) => i)
   }
 
-  const swapDays = (weekNum, dayCount, posA, posB) => {
+  const moveDayToPos = (weekNum, dayCount, fromPos, toPos) => {
+    if (fromPos === toPos) return
     const order = [...getDayOrder(weekNum, dayCount)]
-    ;[order[posA], order[posB]] = [order[posB], order[posA]]
+    const [moved] = order.splice(fromPos, 1)
+    order.splice(toPos, 0, moved)
     setDayOrders((prev) => {
       const next = { ...prev, [weekNum]: order }
       localStorage.setItem(DAY_ORDER_KEY, JSON.stringify(next))
@@ -123,7 +125,6 @@ export default function IronmanView() {
       localStorage.setItem(DAY_ORDER_KEY, JSON.stringify(next))
       return next
     })
-    // Also clear session moves for this week
     setSessionMoves((prev) => {
       const next = {}
       for (const [k, v] of Object.entries(prev)) {
@@ -138,16 +139,13 @@ export default function IronmanView() {
   const moveSession = (sessionKey, targetOrigDayIdx) => {
     setSessionMoves((prev) => {
       const next = { ...prev, [sessionKey]: targetOrigDayIdx }
-      // If moving back to original day, remove the override
       const origDayIdx = parseInt(sessionKey.split("-")[1].slice(1))
       if (targetOrigDayIdx === origDayIdx) delete next[sessionKey]
       localStorage.setItem(SESSION_MOVES_KEY, JSON.stringify(next))
       return next
     })
-    setMovingSession(null)
   }
 
-  // Get sessions for a given original day index, accounting for moves
   const getSessionsForDay = (weekNum, origDayIdx, allDays) => {
     const results = []
     allDays.forEach((day, di) => {
@@ -156,11 +154,77 @@ export default function IronmanView() {
         const movedTo = sessionMoves[key]
         const belongsHere = movedTo !== undefined ? movedTo === origDayIdx : di === origDayIdx
         if (belongsHere) {
-          results.push({ session, origDayIdx: di, origSessionIdx: si, key })
+          results.push({ session, origDayIdx: di, key })
         }
       })
     })
     return results
+  }
+
+  // Day drag handlers
+  const onDayDragStart = (e, weekNum, displayPos) => {
+    dragTypeRef.current = "day"
+    e.dataTransfer.effectAllowed = "move"
+    e.dataTransfer.setData("text/plain", JSON.stringify({ type: "day", weekNum, displayPos }))
+    e.currentTarget.style.opacity = "0.4"
+  }
+
+  const onDayDragEnd = (e) => {
+    e.currentTarget.style.opacity = "1"
+    setDragOverDay(null)
+    dragTypeRef.current = null
+  }
+
+  const onDayDragOver = (e, weekNum, displayPos) => {
+    if (dragTypeRef.current !== "day") return
+    e.preventDefault()
+    e.dataTransfer.dropEffect = "move"
+    setDragOverDay(`${weekNum}-${displayPos}`)
+  }
+
+  const onDayDrop = (e, weekNum, dayCount, toPos) => {
+    e.preventDefault()
+    setDragOverDay(null)
+    try {
+      const data = JSON.parse(e.dataTransfer.getData("text/plain"))
+      if (data.type === "day" && data.weekNum === weekNum) {
+        moveDayToPos(weekNum, dayCount, data.displayPos, toPos)
+      }
+    } catch {}
+  }
+
+  // Session drag handlers
+  const onSessionDragStart = (e, weekNum, sessionKey) => {
+    dragTypeRef.current = "session"
+    e.dataTransfer.effectAllowed = "move"
+    e.dataTransfer.setData("text/plain", JSON.stringify({ type: "session", weekNum, sessionKey }))
+    e.stopPropagation() // Don't trigger day drag
+    e.currentTarget.style.opacity = "0.4"
+  }
+
+  const onSessionDragEnd = (e) => {
+    e.currentTarget.style.opacity = "1"
+    setDragOverSession(null)
+    dragTypeRef.current = null
+  }
+
+  const onSessionDragOver = (e, weekNum, origDayIdx) => {
+    if (dragTypeRef.current !== "session") return
+    e.preventDefault()
+    e.dataTransfer.dropEffect = "move"
+    setDragOverSession(`${weekNum}-${origDayIdx}`)
+  }
+
+  const onSessionDrop = (e, weekNum, targetOrigDayIdx) => {
+    e.preventDefault()
+    e.stopPropagation()
+    setDragOverSession(null)
+    try {
+      const data = JSON.parse(e.dataTransfer.getData("text/plain"))
+      if (data.type === "session" && data.weekNum === weekNum) {
+        moveSession(data.sessionKey, targetOrigDayIdx)
+      }
+    } catch {}
   }
 
   const handleStartDateChange = (e) => {
@@ -174,7 +238,6 @@ export default function IronmanView() {
     setEditingStart(false)
   }
 
-  // Stats
   const stats = useMemo(() => {
     let total = 0
     let done = 0
@@ -189,7 +252,6 @@ export default function IronmanView() {
     return { total, done, pct: total ? Math.round((done / total) * 100) : 0 }
   }, [checked])
 
-  // Week stats
   const weekStats = (w) => {
     let total = 0, done = 0
     w.days.forEach((day, di) => {
@@ -264,7 +326,6 @@ export default function IronmanView() {
             key={w.week}
             className={`${styles.ironmanWeek} ${isCurrent ? styles.ironmanWeekCurrent : ""} ${isPast && ws.done === ws.total && ws.total > 0 ? styles.ironmanWeekDone : ""}`}
           >
-            {/* Week header */}
             <button className={styles.ironmanWeekHeader} onClick={() => toggleWeek(w.week)}>
               <div className={styles.ironmanWeekLeft}>
                 <span className={styles.ironmanWeekChevron}>{expanded ? "▾" : "▸"}</span>
@@ -279,7 +340,6 @@ export default function IronmanView() {
               </div>
             </button>
 
-            {/* Week days */}
             {expanded && (() => {
               const order = getDayOrder(w.week, w.days.length)
               const isCustomOrder = !!dayOrders[w.week] || Object.keys(sessionMoves).some((k) => k.startsWith(`w${w.week}-`))
@@ -299,25 +359,34 @@ export default function IronmanView() {
                     const dayDate = addDays(weekStart, displayPos)
                     const isToday = dayDate.toDateString() === new Date().toDateString()
                     const sessions = getSessionsForDay(w.week, origDayIdx, w.days)
+                    const dayName = WEEKDAYS[dayDate.getDay()]
+                    const isDayDropTarget = dragOverDay === `${w.week}-${displayPos}`
+                    const isSessionDropTarget = dragOverSession === `${w.week}-${origDayIdx}`
 
                     return (
-                      <div key={origDayIdx} className={`${styles.ironmanDay} ${isToday ? styles.ironmanDayToday : ""}`}>
-                        <div className={styles.ironmanDayHeader}>
+                      <div
+                        key={origDayIdx}
+                        className={`${styles.ironmanDay} ${isToday ? styles.ironmanDayToday : ""} ${isDayDropTarget ? styles.ironmanDayDropTarget : ""} ${isSessionDropTarget ? styles.ironmanDaySessionDropTarget : ""}`}
+                        onDragOver={(e) => {
+                          onDayDragOver(e, w.week, displayPos)
+                          onSessionDragOver(e, w.week, origDayIdx)
+                        }}
+                        onDragLeave={() => { setDragOverDay(null); setDragOverSession(null) }}
+                        onDrop={(e) => {
+                          onDayDrop(e, w.week, w.days.length, displayPos)
+                          onSessionDrop(e, w.week, origDayIdx)
+                        }}
+                      >
+                        <div
+                          className={styles.ironmanDayHeader}
+                          draggable
+                          onDragStart={(e) => onDayDragStart(e, w.week, displayPos)}
+                          onDragEnd={onDayDragEnd}
+                        >
                           <div className={styles.ironmanDayLeft}>
-                            <span className={styles.ironmanDayName}>{day.day}</span>
+                            <span className={styles.ironmanDragHandle} title="Drag to reorder day">⠿</span>
+                            <span className={styles.ironmanDayName}>{dayName}</span>
                             <span className={styles.ironmanDayDate}>{formatDate(dayDate)}</span>
-                          </div>
-                          <div className={styles.ironmanDayArrows}>
-                            <button
-                              className={styles.ironmanArrowBtn}
-                              onClick={() => swapDays(w.week, w.days.length, displayPos, displayPos - 1)}
-                              disabled={displayPos === 0}
-                            >▲</button>
-                            <button
-                              className={styles.ironmanArrowBtn}
-                              onClick={() => swapDays(w.week, w.days.length, displayPos, displayPos + 1)}
-                              disabled={displayPos === order.length - 1}
-                            >▼</button>
                           </div>
                         </div>
                         <div className={styles.ironmanSessions}>
@@ -325,12 +394,17 @@ export default function IronmanView() {
                             const done = checked[key]
                             const info = DISCIPLINE_INFO[session.d] || { label: session.d, icon: "📋", color: "#6b7280" }
                             const sessionExpanded = expandedSessions[key]
-                            const isMoving = movingSession === key
                             const isMoved = sessionMoves[key] !== undefined
 
                             return (
                               <div key={key} className={`${styles.ironmanSession} ${isMoved ? styles.ironmanSessionMoved : ""}`}>
-                                <div className={styles.ironmanSessionRow}>
+                                <div
+                                  className={styles.ironmanSessionRow}
+                                  draggable
+                                  onDragStart={(e) => onSessionDragStart(e, w.week, key)}
+                                  onDragEnd={onSessionDragEnd}
+                                >
+                                  <span className={styles.ironmanSessionGrip} title="Drag to move session">⋮⋮</span>
                                   <div
                                     className={`${styles.ironmanCheck} ${done ? styles.ironmanCheckDone : ""}`}
                                     onClick={() => toggle(key)}
@@ -348,35 +422,12 @@ export default function IronmanView() {
                                     <span className={styles.ironmanZone}>{session.z}</span>
                                   )}
                                   <button
-                                    className={`${styles.ironmanMoveBtn} ${isMoving ? styles.ironmanMoveBtnActive : ""}`}
-                                    onClick={() => setMovingSession(isMoving ? null : key)}
-                                    title="Move to another day"
-                                  >↕</button>
-                                  <button
                                     className={styles.ironmanExpandBtn}
                                     onClick={() => toggleSession(key)}
                                   >
                                     {sessionExpanded ? "−" : "+"}
                                   </button>
                                 </div>
-                                {isMoving && (
-                                  <div className={styles.ironmanMoveMenu}>
-                                    <span className={styles.ironmanMoveLabel}>Move to:</span>
-                                    {order.map((targetDayIdx) => {
-                                      const targetDay = w.days[targetDayIdx]
-                                      if (targetDayIdx === origDayIdx && !sessionMoves[key]) return null
-                                      return (
-                                        <button
-                                          key={targetDayIdx}
-                                          className={`${styles.ironmanMoveOption} ${targetDayIdx === origDayIdx ? styles.ironmanMoveOriginal : ""}`}
-                                          onClick={() => moveSession(key, targetDayIdx)}
-                                        >
-                                          {targetDay?.day}{targetDayIdx === origDayIdx ? " (original)" : ""}
-                                        </button>
-                                      )
-                                    })}
-                                  </div>
-                                )}
                                 {sessionExpanded && (
                                   <div className={styles.ironmanDetails}>
                                     <div className={styles.ironmanDetailRow}>
