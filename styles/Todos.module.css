@@ -530,6 +530,384 @@
   font-size: 0.9rem;
 }
 
+/* --- Ironman View --- */
+.ironmanContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.ironmanHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.25rem;
+}
+
+.ironmanTitle {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #fff;
+}
+
+.ironmanSubtitle {
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.4);
+}
+
+.ironmanStartBtn {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 5px;
+  padding: 0.3rem 0.6rem;
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 0.75rem;
+  cursor: pointer;
+  font-family: inherit;
+  transition: all 0.2s;
+}
+
+.ironmanStartBtn:hover {
+  color: #fff;
+  border-color: rgba(59, 130, 246, 0.4);
+}
+
+.ironmanDateInput {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(59, 130, 246, 0.5);
+  border-radius: 5px;
+  padding: 0.3rem 0.5rem;
+  color: #e0e0e0;
+  font-size: 0.75rem;
+  font-family: inherit;
+}
+
+.ironmanProgress {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.ironmanProgressBar {
+  flex: 1;
+  height: 6px;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.ironmanProgressFill {
+  height: 100%;
+  background: linear-gradient(90deg, #3b82f6, #8b5cf6);
+  border-radius: 3px;
+  transition: width 0.3s;
+}
+
+.ironmanProgressText {
+  font-size: 0.72rem;
+  color: rgba(255, 255, 255, 0.45);
+  white-space: nowrap;
+}
+
+.ironmanPhases {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 0.25rem;
+}
+
+.ironmanPhase {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.1rem;
+  flex: 1;
+  padding: 0.35rem 0.3rem;
+  border-radius: 5px;
+  background: rgba(255, 255, 255, 0.03);
+  border-top: 2px solid;
+  font-size: 0.7rem;
+  font-weight: 600;
+}
+
+.ironmanPhaseWeeks {
+  font-size: 0.6rem;
+  color: rgba(255, 255, 255, 0.35);
+  font-weight: 400;
+}
+
+/* Week */
+.ironmanWeek {
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 8px;
+  overflow: hidden;
+  transition: border-color 0.2s;
+}
+
+.ironmanWeekCurrent {
+  border-color: rgba(59, 130, 246, 0.35);
+  box-shadow: 0 0 12px rgba(59, 130, 246, 0.08);
+}
+
+.ironmanWeekDone {
+  opacity: 0.6;
+}
+
+.ironmanWeekHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 0.6rem 0.75rem;
+  background: rgba(255, 255, 255, 0.03);
+  border: none;
+  cursor: pointer;
+  font-family: inherit;
+  transition: background 0.15s;
+}
+
+.ironmanWeekHeader:hover {
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.ironmanWeekLeft {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.ironmanWeekChevron {
+  color: rgba(255, 255, 255, 0.35);
+  font-size: 0.8rem;
+  width: 1rem;
+}
+
+.ironmanWeekNum {
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.7);
+  border-left: 3px solid;
+  padding-left: 0.4rem;
+}
+
+.ironmanWeekTitle {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.ironmanCurrentBadge {
+  font-size: 0.6rem;
+  font-weight: 600;
+  color: #3b82f6;
+  background: rgba(59, 130, 246, 0.15);
+  padding: 0.1rem 0.4rem;
+  border-radius: 3px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.ironmanWeekRight {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.ironmanWeekDates {
+  font-size: 0.7rem;
+  color: rgba(255, 255, 255, 0.35);
+}
+
+.ironmanWeekHours {
+  font-size: 0.7rem;
+  color: rgba(255, 255, 255, 0.45);
+  font-weight: 600;
+}
+
+.ironmanWeekProgress {
+  font-size: 0.7rem;
+  color: rgba(255, 255, 255, 0.4);
+  font-weight: 500;
+  min-width: 2.5rem;
+  text-align: right;
+}
+
+/* Days */
+.ironmanDays {
+  display: flex;
+  flex-direction: column;
+}
+
+.ironmanDay {
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  padding: 0.5rem 0.75rem;
+}
+
+.ironmanDayToday {
+  background: rgba(59, 130, 246, 0.04);
+  border-top-color: rgba(59, 130, 246, 0.15);
+}
+
+.ironmanDayHeader {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.3rem;
+}
+
+.ironmanDayName {
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.55);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  width: 5rem;
+}
+
+.ironmanDayDate {
+  font-size: 0.68rem;
+  color: rgba(255, 255, 255, 0.3);
+}
+
+/* Sessions */
+.ironmanSessions {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.ironmanSession {
+  border-radius: 5px;
+  transition: background 0.15s;
+}
+
+.ironmanSessionRow {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.35rem 0.4rem;
+  border-radius: 5px;
+}
+
+.ironmanSessionRow:hover {
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.ironmanCheck {
+  width: 20px;
+  height: 20px;
+  border-radius: 4px;
+  border: 2px solid rgba(255, 255, 255, 0.18);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  flex-shrink: 0;
+  font-size: 0.65rem;
+  color: transparent;
+  transition: all 0.15s;
+}
+
+.ironmanCheck:hover {
+  border-color: #3b82f6;
+}
+
+.ironmanCheckDone {
+  background: #3b82f6;
+  border-color: #3b82f6;
+  color: #fff;
+  box-shadow: 0 0 6px rgba(59, 130, 246, 0.3);
+}
+
+.ironmanIcon {
+  font-size: 0.85rem;
+  flex-shrink: 0;
+  width: 1.2rem;
+  text-align: center;
+}
+
+.ironmanDiscipline {
+  font-size: 0.75rem;
+  font-weight: 700;
+  min-width: 3.5rem;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.ironmanDur {
+  font-size: 0.8rem;
+  color: rgba(255, 255, 255, 0.75);
+  flex: 1;
+}
+
+.ironmanTextDone {
+  text-decoration: line-through;
+  color: rgba(255, 255, 255, 0.3);
+}
+
+.ironmanZone {
+  font-size: 0.65rem;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.5);
+  background: rgba(255, 255, 255, 0.06);
+  padding: 0.1rem 0.35rem;
+  border-radius: 3px;
+  letter-spacing: 0.02em;
+}
+
+.ironmanExpandBtn {
+  background: none;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.35);
+  width: 20px;
+  height: 20px;
+  border-radius: 3px;
+  cursor: pointer;
+  font-size: 0.75rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: all 0.15s;
+  padding: 0;
+  line-height: 1;
+}
+
+.ironmanExpandBtn:hover {
+  color: #3b82f6;
+  border-color: rgba(59, 130, 246, 0.3);
+}
+
+/* Session details */
+.ironmanDetails {
+  padding: 0.4rem 0.5rem 0.5rem 2.8rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.ironmanDetailRow {
+  display: flex;
+  gap: 0.5rem;
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.6);
+  line-height: 1.4;
+}
+
+.ironmanDetailLabel {
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.4);
+  min-width: 4rem;
+  flex-shrink: 0;
+  text-transform: uppercase;
+  font-size: 0.65rem;
+  letter-spacing: 0.04em;
+  padding-top: 0.05rem;
+}
+
 /* --- Responsive --- */
 @media (max-width: 600px) {
   .page {
@@ -631,6 +1009,72 @@
     flex: 1;
     width: auto;
     min-width: 0;
+  }
+
+  /* Ironman mobile */
+  .ironmanHeader {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.4rem;
+  }
+
+  .ironmanPhases {
+    flex-wrap: wrap;
+    gap: 0.3rem;
+  }
+
+  .ironmanPhase {
+    flex: 1 1 40%;
+    min-width: 0;
+  }
+
+  .ironmanWeekHeader {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.3rem;
+    padding: 0.5rem 0.6rem;
+  }
+
+  .ironmanWeekRight {
+    padding-left: 1.5rem;
+    gap: 0.5rem;
+  }
+
+  .ironmanWeekTitle {
+    font-size: 0.75rem;
+  }
+
+  .ironmanDayName {
+    width: 3.5rem;
+    font-size: 0.65rem;
+  }
+
+  .ironmanSessionRow {
+    gap: 0.3rem;
+    padding: 0.3rem 0.2rem;
+  }
+
+  .ironmanCheck {
+    width: 18px;
+    height: 18px;
+  }
+
+  .ironmanDiscipline {
+    font-size: 0.68rem;
+    min-width: 2.8rem;
+  }
+
+  .ironmanDur {
+    font-size: 0.72rem;
+  }
+
+  .ironmanDetails {
+    padding-left: 2rem;
+  }
+
+  .ironmanExpandBtn {
+    width: 18px;
+    height: 18px;
   }
 
   /* Todo item: prevent overflow */
