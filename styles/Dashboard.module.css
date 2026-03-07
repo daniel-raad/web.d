@@ -1,0 +1,271 @@
+/* === Dashboard Terminal Styling === */
+
+.dashboard {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 1rem 1.5rem 3rem;
+  font-family: "JetBrains Mono", "SF Mono", "Fira Code", "Courier New", monospace;
+}
+
+/* --- Countdown Hero --- */
+.countdownHero {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 1.5rem 1rem 1.25rem;
+  margin-bottom: 1.25rem;
+  background: rgba(100, 180, 255, 0.04);
+  border: 1px solid rgba(100, 180, 255, 0.15);
+  border-radius: 3px;
+}
+
+.countdownLabel {
+  font-size: 0.9rem;
+  font-weight: 700;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  margin-bottom: 0.2rem;
+}
+
+.ironmanRed {
+  color: #e02726;
+}
+
+.ironmanWhite {
+  color: #ffffff;
+}
+
+.countdownNumber {
+  font-size: 4rem;
+  font-weight: 800;
+  color: rgb(100, 180, 255);
+  line-height: 1;
+  letter-spacing: -0.02em;
+  text-shadow: 0 0 30px rgba(100, 180, 255, 0.25);
+}
+
+.countdownSubtext {
+  font-size: 0.85rem;
+  font-weight: 400;
+  color: rgba(255, 255, 255, 0.4);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  margin-top: 0.15rem;
+}
+
+.countdownTimer {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  margin-top: 0.75rem;
+}
+
+.timerSegment {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.timerValue {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.8);
+  letter-spacing: 0.05em;
+  min-width: 2.4ch;
+  text-align: center;
+}
+
+.timerSep {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: rgba(100, 180, 255, 0.4);
+  margin-bottom: 0.8rem;
+}
+
+.timerUnit {
+  font-size: 0.55rem;
+  font-weight: 400;
+  color: rgba(255, 255, 255, 0.3);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-top: 0.05rem;
+}
+
+/* --- Tab Bar --- */
+.tabBar {
+  display: flex;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  margin-bottom: 1.25rem;
+  gap: 0;
+}
+
+.tab {
+  background: none;
+  border: none;
+  border-bottom: 2px solid transparent;
+  color: rgba(255, 255, 255, 0.4);
+  padding: 0.5rem 1.2rem;
+  cursor: pointer;
+  font-size: 0.8rem;
+  font-weight: 500;
+  font-family: inherit;
+  letter-spacing: 0.04em;
+  transition: all 0.15s;
+  text-transform: uppercase;
+}
+
+.tab:hover {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.tabActive {
+  color: rgb(100, 180, 255);
+  border-bottom-color: rgb(100, 180, 255);
+}
+
+.tabContent {
+  min-height: 400px;
+}
+
+/* --- Sub-navigation (habits views, month nav) --- */
+.subNav {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+  flex-wrap: wrap;
+}
+
+.navArrow {
+  background: none;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: rgba(255, 255, 255, 0.5);
+  border-radius: 2px;
+  padding: 0.2rem 0.5rem;
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-family: inherit;
+  transition: all 0.15s;
+}
+
+.navArrow:hover {
+  color: #fff;
+  border-color: rgba(100, 180, 255, 0.3);
+}
+
+.navLabel {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.8);
+  min-width: 160px;
+  text-align: center;
+}
+
+/* --- Sub-view toggle (today/week/month/routine) --- */
+.subViewToggle {
+  display: flex;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.subViewBtn {
+  background: none;
+  border: none;
+  border-right: 1px solid rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.4);
+  padding: 0.3rem 0.8rem;
+  cursor: pointer;
+  font-size: 0.72rem;
+  font-weight: 500;
+  font-family: inherit;
+  letter-spacing: 0.03em;
+  transition: all 0.15s;
+}
+
+.subViewBtn:last-child {
+  border-right: none;
+}
+
+.subViewBtn:hover {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.subViewActive {
+  background: rgba(100, 180, 255, 0.12);
+  color: rgb(100, 180, 255);
+}
+
+.settingsBtn {
+  margin-left: auto;
+  background: none;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.35);
+  border-radius: 2px;
+  padding: 0.3rem 0.6rem;
+  cursor: pointer;
+  font-size: 0.7rem;
+  font-family: inherit;
+  transition: all 0.15s;
+}
+
+.settingsBtn:hover {
+  color: rgba(255, 255, 255, 0.7);
+  border-color: rgba(100, 180, 255, 0.3);
+}
+
+/* --- Loading --- */
+.loadingState {
+  text-align: center;
+  padding: 3rem 0;
+  color: rgba(255, 255, 255, 0.4);
+  font-size: 0.8rem;
+}
+
+/* --- Responsive --- */
+@media (max-width: 600px) {
+  .dashboard {
+    padding: 0.75rem 1rem 2rem;
+  }
+
+  .countdownHero {
+    padding: 1.25rem 0.75rem 1rem;
+  }
+
+  .countdownNumber {
+    font-size: 3rem;
+  }
+
+  .timerValue {
+    font-size: 1rem;
+  }
+
+  .timerSep {
+    font-size: 1rem;
+    margin-bottom: 0.6rem;
+  }
+
+  .tabBar {
+    gap: 0;
+  }
+
+  .tab {
+    flex: 1;
+    text-align: center;
+    padding: 0.5rem 0.5rem;
+    font-size: 0.75rem;
+  }
+
+  .subNav {
+    gap: 0.4rem;
+  }
+
+  .subViewToggle {
+    width: 100%;
+  }
+
+  .subViewBtn {
+    flex: 1;
+    text-align: center;
+  }
+}

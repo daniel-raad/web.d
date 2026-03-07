@@ -1,25 +1,11 @@
 import { useState, useEffect, useMemo, useRef } from "react"
 import { WEEKS, PHASES, DISCIPLINE_INFO } from "./ironmanData"
+import { getIronmanPlan, saveIronmanPlan } from "../../lib/firestore"
 import styles from "../../styles/Todos.module.css"
-
-const STORAGE_KEY = "ironman-plan-checked"
-const START_DATE_KEY = "ironman-plan-start"
-const DAY_ORDER_KEY = "ironman-day-orders"
-const SESSION_MOVES_KEY = "ironman-session-moves"
 
 const WEEKDAYS = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
 
-function getStored(key, fallback) {
-  if (typeof window === "undefined") return fallback
-  try {
-    return JSON.parse(localStorage.getItem(key) || JSON.stringify(fallback))
-  } catch { return fallback }
-}
-
-function getStoredStart() {
-  if (typeof window === "undefined") return null
-  return localStorage.getItem(START_DATE_KEY) || null
-}
+const DEFAULT_START = "2026-03-08"
 
 function getMonday(date) {
   const d = new Date(date)
@@ -46,37 +32,71 @@ function formatDateFull(date) {
 
 export default function IronmanView() {
   const [checked, setChecked] = useState({})
-  const [startDate, setStartDate] = useState(null)
+  const [startDate, setStartDate] = useState(DEFAULT_START)
   const [expandedWeeks, setExpandedWeeks] = useState({})
   const [expandedSessions, setExpandedSessions] = useState({})
   const [editingStart, setEditingStart] = useState(false)
   const [dayOrders, setDayOrders] = useState({})
   const [sessionMoves, setSessionMoves] = useState({})
+  const [loading, setLoading] = useState(true)
 
   // Drag state
-  const [dragOverDay, setDragOverDay] = useState(null)     // "weekNum-displayPos"
-  const [dragOverSession, setDragOverSession] = useState(null) // "weekNum-origDayIdx" (target day for session drop)
-  const dragTypeRef = useRef(null) // "day" or "session"
+  const [dragOverDay, setDragOverDay] = useState(null)
+  const [dragOverSession, setDragOverSession] = useState(null)
+  const dragTypeRef = useRef(null)
 
   useEffect(() => {
-    setChecked(getStored(STORAGE_KEY, {}))
-    setDayOrders(getStored(DAY_ORDER_KEY, {}))
-    setSessionMoves(getStored(SESSION_MOVES_KEY, {}))
-    const stored = getStoredStart()
-    if (stored) {
-      setStartDate(stored)
-    } else {
-      const monday = getMonday(new Date())
-      const iso = monday.toISOString().split("T")[0]
-      setStartDate(iso)
-      localStorage.setItem(START_DATE_KEY, iso)
+    async function load() {
+      try {
+        const data = await getIronmanPlan()
+
+        // One-time localStorage migration
+        if (typeof window !== "undefined") {
+          const lsChecked = localStorage.getItem("ironman-plan-checked")
+          const lsDayOrders = localStorage.getItem("ironman-day-orders")
+          const lsSessionMoves = localStorage.getItem("ironman-session-moves")
+          const hasLocal = lsChecked || lsDayOrders || lsSessionMoves
+          const isFirestoreEmpty = !data.checked || Object.keys(data.checked).length === 0
+
+          if (hasLocal && isFirestoreEmpty) {
+            const migrated = {
+              checked: lsChecked ? JSON.parse(lsChecked) : {},
+              startDate: localStorage.getItem("ironman-plan-start") || DEFAULT_START,
+              dayOrders: lsDayOrders ? JSON.parse(lsDayOrders) : {},
+              sessionMoves: lsSessionMoves ? JSON.parse(lsSessionMoves) : {},
+            }
+            setChecked(migrated.checked)
+            setStartDate(migrated.startDate)
+            setDayOrders(migrated.dayOrders)
+            setSessionMoves(migrated.sessionMoves)
+            saveIronmanPlan(migrated)
+            localStorage.removeItem("ironman-plan-checked")
+            localStorage.removeItem("ironman-plan-start")
+            localStorage.removeItem("ironman-day-orders")
+            localStorage.removeItem("ironman-session-moves")
+            setLoading(false)
+            return
+          }
+        }
+
+        setChecked(data.checked || {})
+        setStartDate(data.startDate || DEFAULT_START)
+        setDayOrders(data.dayOrders || {})
+        setSessionMoves(data.sessionMoves || {})
+      } catch {
+        // Fallback to defaults
+      }
+      setLoading(false)
     }
+    load()
   }, [])
 
   const currentWeekNum = useMemo(() => {
     if (!startDate) return 1
-    const start = getMonday(new Date(startDate))
-    const now = getMonday(new Date())
+    const start = new Date(startDate)
+    start.setHours(0, 0, 0, 0)
+    const now = new Date()
+    now.setHours(0, 0, 0, 0)
     const diff = Math.floor((now - start) / (7 * 24 * 60 * 60 * 1000))
     return Math.max(1, Math.min(24, diff + 1))
   }, [startDate])
@@ -88,7 +108,7 @@ export default function IronmanView() {
   const toggle = (key) => {
     setChecked((prev) => {
       const next = { ...prev, [key]: !prev[key] }
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(next))
+      saveIronmanPlan({ checked: next })
       return next
     })
   }
@@ -101,7 +121,6 @@ export default function IronmanView() {
     setExpandedSessions((prev) => ({ ...prev, [key]: !prev[key] }))
   }
 
-  // Day ordering
   const getDayOrder = (weekNum, dayCount) => {
     return dayOrders[weekNum] || Array.from({ length: dayCount }, (_, i) => i)
   }
@@ -113,7 +132,7 @@ export default function IronmanView() {
     order.splice(toPos, 0, moved)
     setDayOrders((prev) => {
       const next = { ...prev, [weekNum]: order }
-      localStorage.setItem(DAY_ORDER_KEY, JSON.stringify(next))
+      saveIronmanPlan({ dayOrders: next })
       return next
     })
   }
@@ -122,7 +141,7 @@ export default function IronmanView() {
     setDayOrders((prev) => {
       const next = { ...prev }
       delete next[weekNum]
-      localStorage.setItem(DAY_ORDER_KEY, JSON.stringify(next))
+      saveIronmanPlan({ dayOrders: next })
       return next
     })
     setSessionMoves((prev) => {
@@ -130,18 +149,17 @@ export default function IronmanView() {
       for (const [k, v] of Object.entries(prev)) {
         if (!k.startsWith(`w${weekNum}-`)) next[k] = v
       }
-      localStorage.setItem(SESSION_MOVES_KEY, JSON.stringify(next))
+      saveIronmanPlan({ sessionMoves: next })
       return next
     })
   }
 
-  // Session moving
   const moveSession = (sessionKey, targetOrigDayIdx) => {
     setSessionMoves((prev) => {
       const next = { ...prev, [sessionKey]: targetOrigDayIdx }
       const origDayIdx = parseInt(sessionKey.split("-")[1].slice(1))
       if (targetOrigDayIdx === origDayIdx) delete next[sessionKey]
-      localStorage.setItem(SESSION_MOVES_KEY, JSON.stringify(next))
+      saveIronmanPlan({ sessionMoves: next })
       return next
     })
   }
@@ -161,7 +179,6 @@ export default function IronmanView() {
     return results
   }
 
-  // Day drag handlers
   const onDayDragStart = (e, weekNum, displayPos) => {
     dragTypeRef.current = "day"
     e.dataTransfer.effectAllowed = "move"
@@ -193,12 +210,11 @@ export default function IronmanView() {
     } catch {}
   }
 
-  // Session drag handlers
   const onSessionDragStart = (e, weekNum, sessionKey) => {
     dragTypeRef.current = "session"
     e.dataTransfer.effectAllowed = "move"
     e.dataTransfer.setData("text/plain", JSON.stringify({ type: "session", weekNum, sessionKey }))
-    e.stopPropagation() // Don't trigger day drag
+    e.stopPropagation()
     e.currentTarget.style.opacity = "0.4"
   }
 
@@ -230,10 +246,8 @@ export default function IronmanView() {
   const handleStartDateChange = (e) => {
     const val = e.target.value
     if (val) {
-      const monday = getMonday(new Date(val))
-      const iso = monday.toISOString().split("T")[0]
-      setStartDate(iso)
-      localStorage.setItem(START_DATE_KEY, iso)
+      setStartDate(val)
+      saveIronmanPlan({ startDate: val })
     }
     setEditingStart(false)
   }
@@ -263,13 +277,13 @@ export default function IronmanView() {
     return { total, done }
   }
 
-  if (!startDate) return null
+  if (loading) return <div className={styles.loading}>Loading...</div>
 
-  const startMon = getMonday(new Date(startDate))
+  const startDay = new Date(startDate)
+  startDay.setHours(0, 0, 0, 0)
 
   return (
     <div className={styles.ironmanContainer}>
-      {/* Header */}
       <div className={styles.ironmanHeader}>
         <div className={styles.ironmanTitle}>
           <span>Ironman 70.3 Training Plan</span>
@@ -293,7 +307,6 @@ export default function IronmanView() {
         </div>
       </div>
 
-      {/* Progress bar */}
       <div className={styles.ironmanProgress}>
         <div className={styles.ironmanProgressBar}>
           <div className={styles.ironmanProgressFill} style={{ width: `${stats.pct}%` }} />
@@ -301,7 +314,6 @@ export default function IronmanView() {
         <span className={styles.ironmanProgressText}>{stats.done}/{stats.total} sessions ({stats.pct}%)</span>
       </div>
 
-      {/* Phase labels */}
       <div className={styles.ironmanPhases}>
         {PHASES.map((p) => (
           <div key={p.name} className={styles.ironmanPhase} style={{ borderColor: p.color }}>
@@ -311,10 +323,9 @@ export default function IronmanView() {
         ))}
       </div>
 
-      {/* Weeks */}
       {WEEKS.map((w) => {
         const ws = weekStats(w)
-        const weekStart = addDays(startMon, (w.week - 1) * 7)
+        const weekStart = addDays(startDay, (w.week - 1) * 7)
         const weekEnd = addDays(weekStart, 6)
         const isCurrent = w.week === currentWeekNum
         const isPast = w.week < currentWeekNum
@@ -334,7 +345,7 @@ export default function IronmanView() {
                 {isCurrent && <span className={styles.ironmanCurrentBadge}>Current</span>}
               </div>
               <div className={styles.ironmanWeekRight}>
-                <span className={styles.ironmanWeekDates}>{formatDate(weekStart)} – {formatDate(weekEnd)}</span>
+                <span className={styles.ironmanWeekDates}>{formatDate(weekStart)} - {formatDate(weekEnd)}</span>
                 <span className={styles.ironmanWeekHours}>{w.hours}h</span>
                 <span className={styles.ironmanWeekProgress}>{ws.done}/{ws.total}</span>
               </div>
@@ -384,7 +395,7 @@ export default function IronmanView() {
                           onDragEnd={onDayDragEnd}
                         >
                           <div className={styles.ironmanDayLeft}>
-                            <span className={styles.ironmanDragHandle} title="Drag to reorder day">⠿</span>
+                            <span className={styles.ironmanDragHandle} title="Drag to reorder day">&#x2807;</span>
                             <span className={styles.ironmanDayName}>{dayName}</span>
                             <span className={styles.ironmanDayDate}>{formatDate(dayDate)}</span>
                           </div>
@@ -392,7 +403,7 @@ export default function IronmanView() {
                         <div className={styles.ironmanSessions}>
                           {sessions.map(({ session, origDayIdx, key }) => {
                             const done = checked[key]
-                            const info = DISCIPLINE_INFO[session.d] || { label: session.d, icon: "📋", color: "#6b7280" }
+                            const info = DISCIPLINE_INFO[session.d] || { label: session.d, icon: "\uD83D\uDCCB", color: "#6b7280" }
                             const sessionExpanded = expandedSessions[key]
                             const isMoved = sessionMoves[key] !== undefined
 
@@ -404,12 +415,12 @@ export default function IronmanView() {
                                   onDragStart={(e) => onSessionDragStart(e, w.week, key)}
                                   onDragEnd={onSessionDragEnd}
                                 >
-                                  <span className={styles.ironmanSessionGrip} title="Drag to move session">⋮⋮</span>
+                                  <span className={styles.ironmanSessionGrip} title="Drag to move session">&#x22EE;&#x22EE;</span>
                                   <div
                                     className={`${styles.ironmanCheck} ${done ? styles.ironmanCheckDone : ""}`}
                                     onClick={() => toggle(key)}
                                   >
-                                    {done && "✓"}
+                                    {done && "\u2713"}
                                   </div>
                                   <span className={styles.ironmanIcon}>{info.icon}</span>
                                   <span className={styles.ironmanDiscipline} style={{ color: info.color }}>
@@ -425,7 +436,7 @@ export default function IronmanView() {
                                     className={styles.ironmanExpandBtn}
                                     onClick={() => toggleSession(key)}
                                   >
-                                    {sessionExpanded ? "−" : "+"}
+                                    {sessionExpanded ? "&#x2212;" : "+"}
                                   </button>
                                 </div>
                                 {sessionExpanded && (

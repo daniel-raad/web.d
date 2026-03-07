@@ -146,31 +146,36 @@
 .viewToggle {
   display: flex;
   margin-left: auto;
-  background: rgba(255, 255, 255, 0.06);
-  border-radius: 6px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 2px;
   overflow: hidden;
-  border: 1px solid rgba(255, 255, 255, 0.12);
 }
 
 .viewToggleBtn {
   background: none;
   border: none;
-  color: rgba(255, 255, 255, 0.5);
+  border-right: 1px solid rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.4);
   padding: 0.35rem 0.8rem;
   cursor: pointer;
-  font-size: 0.8rem;
+  font-size: 0.78rem;
   font-weight: 500;
-  transition: all 0.2s;
-  letter-spacing: 0.02em;
+  font-family: inherit;
+  transition: all 0.15s;
+  letter-spacing: 0.03em;
+}
+
+.viewToggleBtn:last-child {
+  border-right: none;
 }
 
 .viewToggleBtn:hover {
-  color: rgba(255, 255, 255, 0.8);
+  color: rgba(255, 255, 255, 0.7);
 }
 
 .viewToggleActive {
-  background: rgba(59, 130, 246, 0.2);
-  color: #3b82f6;
+  background: rgba(100, 180, 255, 0.12);
+  color: rgb(100, 180, 255);
 }
 
 /* --- Layout: Grid + Chart side by side --- */

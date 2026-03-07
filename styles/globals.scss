@@ -3,6 +3,7 @@
 @tailwind utilities;
 
 @import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&display=swap");
 
 html,
 body {
@@ -46,6 +47,14 @@ a {
 
 * {
   box-sizing: border-box;
+}
+
+.terminal {
+  font-family: "JetBrains Mono", "SF Mono", "Fira Code", "Courier New", monospace;
+
+  input, button, select, textarea {
+    font-family: inherit;
+  }
 }
 
 @keyframes blink {

@@ -2,7 +2,6 @@ import { useState, useEffect, useCallback } from "react"
 import ActiveView from "./ActiveView"
 import WeekView from "./WeekView"
 import CompletedView from "./CompletedView"
-import IronmanView from "./IronmanView"
 import { getTodos, addTodo, updateTodo, deleteTodo, getTodoCategories, saveTodoCategories } from "../../lib/firestore"
 import styles from "../../styles/Todos.module.css"
 
@@ -87,13 +86,13 @@ export default function TodoPage() {
   return (
     <div className={styles.page}>
       <div className={styles.viewToggle}>
-        {["active", "week", "completed", "ironman"].map((mode) => (
+        {["active", "week", "completed"].map((mode) => (
           <button
             key={mode}
             className={`${styles.viewToggleBtn} ${view === mode ? styles.viewToggleActive : ""}`}
             onClick={() => setView(mode)}
           >
-            {mode === "ironman" ? "Ironman" : mode.charAt(0).toUpperCase() + mode.slice(1)}
+            {mode.charAt(0).toUpperCase() + mode.slice(1)}
           </button>
         ))}
       </div>
@@ -121,7 +120,6 @@ export default function TodoPage() {
           {view === "completed" && (
             <CompletedView todos={todos} onToggle={handleToggle} onDelete={handleDelete} onUpdateDate={handleUpdateDate} />
           )}
-          {view === "ironman" && <IronmanView />}
         </>
       )}
     </div>
