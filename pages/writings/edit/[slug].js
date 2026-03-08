@@ -138,6 +138,18 @@ export default function EditPost() {
       <Header compact />
 
       <div className={styles.container}>
+        <a
+          onClick={() => router.back()}
+          style={{
+            color: 'rgba(255,255,255,0.4)',
+            fontSize: '0.85em',
+            textDecoration: 'none',
+            transition: 'color 0.2s',
+            display: 'inline-block',
+            marginBottom: '1.5rem',
+            cursor: 'pointer',
+          }}
+        >&larr; Back</a>
         <div className={styles.titleRow}>
           <h1 className={styles.pageTitle}>Edit Post</h1>
           {status && <span className={styles.status}>{status}</span>}
