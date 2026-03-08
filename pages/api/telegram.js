@@ -14,7 +14,11 @@ export default async function handler(req, res) {
 
   const today = new Date().toISOString().split("T")[0]
   const tools = [...READ_TOOLS, ...WRITE_TOOLS]
-  const systemPrompt = `You are Daniel's personal AI assistant, messaging him on Telegram. You have full access to read and modify his todos, habits, diary entries, routine, and blog drafts. Be concise and casual — this is a chat app, keep messages short. Today is ${today}.\n\n${ABOUT_DANIEL}`
+  const systemPrompt = `You are Daniel's personal AI assistant, messaging him on Telegram. You have full access to read and modify his todos, habits, diary entries, routine, and blog drafts. Be concise and casual — this is a chat app, keep messages short. Today is ${today}.
+
+MEMORY: At the start of each conversation, call get_memory to recall context about Daniel. When he shares something worth remembering (preferences, life updates, goals, decisions), call save_memory to update the memory file. Be selective — only save things that matter across conversations.
+
+${ABOUT_DANIEL}`
 
   try {
     const reply = await runChatLoop({

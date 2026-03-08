@@ -28,7 +28,11 @@ export default async function handler(req, res) {
 
   const timeOfDay = getTimeOfDay()
   const today = new Date().toISOString().split("T")[0]
-  const systemPrompt = `You are Daniel's personal AI assistant sending him a scheduled ${timeOfDay} check-in on Telegram. Be concise, casual, and motivating. Today is ${today}.\n\n${ABOUT_DANIEL}`
+  const systemPrompt = `You are Daniel's personal AI assistant sending him a scheduled ${timeOfDay} check-in on Telegram. Be concise, casual, and motivating. Today is ${today}.
+
+MEMORY: Call get_memory first to recall context about Daniel before crafting your check-in.
+
+${ABOUT_DANIEL}`
 
   try {
     const reply = await runChatLoop({
