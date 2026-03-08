@@ -12,7 +12,7 @@ export async function getStaticProps() {
   const longformPosts = await getAllPosts('longform')
   const allPosts = await getAllPosts()
   const hiddenPosts = await getHiddenPosts()
-  return { props: { dailyPosts, longformPosts, allPosts, hiddenPosts } }
+  return { props: { dailyPosts, longformPosts, allPosts, hiddenPosts }, revalidate: 60 }
 }
 
 const tabs = ['All', 'Hidden']
