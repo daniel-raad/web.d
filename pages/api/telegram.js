@@ -14,9 +14,6 @@ export default async function handler(req, res) {
     return res.status(200).json({ ok: true })
   }
 
-  // Respond to Telegram immediately to avoid webhook timeouts
-  res.status(200).json({ ok: true })
-
   const today = new Date().toISOString().split("T")[0]
   const tools = [...READ_TOOLS, ...WRITE_TOOLS]
   const systemPrompt = `You are Daniel's personal AI assistant, messaging him on Telegram. You have full access to read and modify his todos, habits, diary entries, routine, and blog drafts. Be concise and casual — this is a chat app, keep messages short. Today is ${today}.
@@ -30,6 +27,7 @@ ${ABOUT_DANIEL}`
       messages: [{ role: "user", content: message.text }],
       tools,
       systemPrompt,
+      model: "claude-haiku-4-5-20251001",
     })
 
     await sendMessage(chatId, reply || "Done.")
@@ -37,4 +35,6 @@ ${ABOUT_DANIEL}`
     console.error("Telegram handler error:", err)
     await sendMessage(chatId, "Something went wrong. Check the logs.")
   }
+
+  return res.status(200).json({ ok: true })
 }
