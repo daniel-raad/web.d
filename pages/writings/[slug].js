@@ -1,4 +1,3 @@
-import { useRouter } from 'next/router'
 import Head from 'next/head'
 import Link from 'next/link'
 import Header from '../../components/Header'
@@ -21,10 +20,9 @@ export async function getStaticProps({ params }) {
 }
 
 export default function WritingsPost({ post }) {
-  const router = useRouter()
   const { user } = useAuth()
 
-  if (post.hidden && router.query.secret !== 'danny') {
+  if (post.hidden && !user) {
     return (
       <div>
         <Head>
