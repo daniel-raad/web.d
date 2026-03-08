@@ -1,6 +1,8 @@
 import { ABOUT_DANIEL, READ_TOOLS, WRITE_TOOLS, runChatLoop } from "../../lib/chatEngine"
 import { sendMessage } from "../../lib/telegram"
 
+export const config = { maxDuration: 60 }
+
 export default async function handler(req, res) {
   if (req.method !== "POST") return res.status(405).end()
 
@@ -11,6 +13,9 @@ export default async function handler(req, res) {
   if (chatId !== process.env.TELEGRAM_CHAT_ID) {
     return res.status(200).json({ ok: true })
   }
+
+  // Respond to Telegram immediately to avoid webhook timeouts
+  res.status(200).json({ ok: true })
 
   const today = new Date().toISOString().split("T")[0]
   const tools = [...READ_TOOLS, ...WRITE_TOOLS]
@@ -32,6 +37,4 @@ ${ABOUT_DANIEL}`
     console.error("Telegram handler error:", err)
     await sendMessage(chatId, "Something went wrong. Check the logs.")
   }
-
-  return res.status(200).json({ ok: true })
 }

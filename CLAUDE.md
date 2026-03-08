@@ -5,12 +5,12 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ## Commands
 
 - `npm run dev` — Start dev server
-- `npm run build` — Production build (static export to `out/`)
+- `npm run build` — Production build
 - `npm run lint` — Run ESLint (extends `next/core-web-vitals`)
 
 ## Deployment
 
-Firebase Hosting via GitHub Actions. Pushes to `main` trigger `npm ci && npm run build` then deploy to Firebase project `danielsweb3d`. The static export in `out/` is what gets deployed.
+Vercel. Pushes to `main` trigger automatic builds and deployments. API routes (`pages/api/`) are deployed as serverless functions.
 
 ## Architecture
 
