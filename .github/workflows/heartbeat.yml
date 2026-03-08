@@ -1,0 +1,20 @@
+name: Heartbeat Reminders
+
+on:
+  schedule:
+    # 7AM, 1PM, 9PM GMT
+    - cron: "0 7 * * *"
+    - cron: "0 13 * * *"
+    - cron: "0 21 * * *"
+  workflow_dispatch:
+
+jobs:
+  heartbeat:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Send heartbeat
+        run: |
+          curl -X POST \
+            -H "x-heartbeat-secret: ${{ secrets.HEARTBEAT_SECRET }}" \
+            -H "Content-Type: application/json" \
+            https://www.danielraad.co.uk/api/heartbeat
