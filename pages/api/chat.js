@@ -45,6 +45,11 @@ const READ_TOOLS = [
     description: "Get information about Daniel Raad",
     input_schema: { type: "object", properties: {} },
   },
+  {
+    name: "get_ironman_plan",
+    description: "Get Daniel's Ironman 70.3 training plan including weekly schedule, checked-off sessions, and progress",
+    input_schema: { type: "object", properties: {} },
+  },
 ]
 
 const WRITE_TOOLS = [
@@ -182,6 +187,10 @@ async function executeTool(name, input) {
     }
     case "get_about": {
       return { bio: ABOUT_DANIEL }
+    }
+    case "get_ironman_plan": {
+      const doc = await adminDb.collection("ironman").doc("plan").get()
+      return doc.exists ? doc.data() : { checked: {}, startDate: "2026-03-08", dayOrders: {}, sessionMoves: {} }
     }
     case "add_todo": {
       const ref = await adminDb.collection("todos").add({
