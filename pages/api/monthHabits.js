@@ -1,4 +1,5 @@
 import { adminDb } from "../../lib/firebaseAdmin"
+import { requireAuth } from "../../lib/authMiddleware"
 
 export default async function handler(req, res) {
   const { year, month } = req.query
@@ -39,6 +40,8 @@ export default async function handler(req, res) {
   }
 
   if (req.method === "POST") {
+    const user = await requireAuth(req, res)
+    if (!user) return
     const { name, emoji, order } = req.body
     const doc = await adminDb.collection("monthHabits").doc(docId).get()
     const habits = doc.exists ? (doc.data().habits || []) : []

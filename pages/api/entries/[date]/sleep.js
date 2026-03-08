@@ -1,7 +1,11 @@
 import { adminDb } from "../../../../lib/firebaseAdmin"
+import { requireAuth } from "../../../../lib/authMiddleware"
 
 export default async function handler(req, res) {
   if (req.method !== "POST") return res.status(405).end()
+
+  const user = await requireAuth(req, res)
+  if (!user) return
 
   const { date } = req.query
   const { sleep } = req.body

@@ -1,4 +1,5 @@
 import { adminDb } from "../../lib/firebaseAdmin"
+import { requireAuth } from "../../lib/authMiddleware"
 
 const DEFAULTS = {
   checked: {},
@@ -14,6 +15,8 @@ export default async function handler(req, res) {
   }
 
   if (req.method === "POST") {
+    const user = await requireAuth(req, res)
+    if (!user) return
     await adminDb.collection("ironman").doc("plan").set(req.body, { merge: true })
     return res.json({ ok: true })
   }

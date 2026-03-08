@@ -1,4 +1,5 @@
 import { adminDb } from "../../../lib/firebaseAdmin"
+import { requireAuth } from "../../../lib/authMiddleware"
 
 export default async function handler(req, res) {
   const docRef = adminDb.collection("todoCategories").doc("config")
@@ -12,6 +13,8 @@ export default async function handler(req, res) {
   }
 
   if (req.method === "PUT") {
+    const user = await requireAuth(req, res)
+    if (!user) return
     const { categories } = req.body
     await docRef.set({ categories })
     return res.json({ ok: true })

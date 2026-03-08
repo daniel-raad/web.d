@@ -1,4 +1,5 @@
 import { adminDb } from "../../lib/firebaseAdmin"
+import { requireAuth } from "../../lib/authMiddleware"
 
 export default async function handler(req, res) {
   if (req.method === "GET") {
@@ -8,6 +9,8 @@ export default async function handler(req, res) {
   }
 
   if (req.method === "POST") {
+    const user = await requireAuth(req, res)
+    if (!user) return
     const { text, category, dueDate } = req.body
     const ref = await adminDb.collection("todos").add({
       text,

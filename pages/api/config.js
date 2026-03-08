@@ -1,4 +1,5 @@
 import { adminDb } from "../../lib/firebaseAdmin"
+import { requireAuth } from "../../lib/authMiddleware"
 
 export default async function handler(req, res) {
   const ref = adminDb.collection("habitConfig").doc("settings")
@@ -10,6 +11,8 @@ export default async function handler(req, res) {
   }
 
   if (req.method === "POST") {
+    const user = await requireAuth(req, res)
+    if (!user) return
     await ref.set(req.body, { merge: true })
     return res.json({ ok: true })
   }

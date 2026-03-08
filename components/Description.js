@@ -21,10 +21,7 @@ export default function Description(){
                         <a href="https://github.com/daniel-raad" target="_blank" rel="noopener noreferrer">GitHub</a>
                     </li>
                     <li className={styles.linkItem}>
-                        <Link href="/habits">Habits</Link>
-                    </li>
-                    <li className={styles.linkItem}>
-                        <Link href="/todos">Todos</Link>
+                        <Link href="/dashboard">Dashboard</Link>
                     </li>
                 </ul>
             </div>

@@ -1,4 +1,5 @@
 import { adminDb } from "../../lib/firebaseAdmin"
+import { requireAuth } from "../../lib/authMiddleware"
 
 const EMPTY_ROUTINE = {
   monday: [],
@@ -17,6 +18,8 @@ export default async function handler(req, res) {
   }
 
   if (req.method === "POST") {
+    const user = await requireAuth(req, res)
+    if (!user) return
     await adminDb.collection("weeklyRoutine").doc("default").set(req.body)
     return res.json({ ok: true })
   }

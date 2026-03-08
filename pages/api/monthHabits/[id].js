@@ -1,6 +1,10 @@
 import { adminDb } from "../../../lib/firebaseAdmin"
+import { requireAuth } from "../../../lib/authMiddleware"
 
 export default async function handler(req, res) {
+  const user = await requireAuth(req, res)
+  if (!user) return
+
   const { id, year, month } = req.query
 
   if (!year || !month) {
