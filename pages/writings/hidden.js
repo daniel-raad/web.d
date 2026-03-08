@@ -6,7 +6,7 @@ import { getHiddenPosts } from '../../lib/posts'
 import styles from '../../styles/BlogList.module.css'
 
 export async function getStaticProps() {
-  const posts = getHiddenPosts()
+  const posts = await getHiddenPosts()
   return { props: { posts } }
 }
 

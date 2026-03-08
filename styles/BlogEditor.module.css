@@ -1,0 +1,184 @@
+.container {
+  max-width: 42rem;
+  margin: 0 auto;
+  padding: 2rem 1.5rem 4rem;
+}
+
+.titleRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 2rem;
+}
+
+.pageTitle {
+  font-size: 1.4em;
+  font-weight: 700;
+  color: #fff;
+  margin: 0;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.label {
+  font-size: 0.75em;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.5);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+.input {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  padding: 0.6rem 0.8rem;
+  color: #fff;
+  font-size: 0.9em;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.input:focus {
+  border-color: rgba(100, 180, 255, 0.4);
+}
+
+.textarea {
+  composes: input;
+  min-height: 300px;
+  resize: vertical;
+  font-family: 'SF Mono', 'Fira Code', monospace;
+  font-size: 0.85em;
+  line-height: 1.6;
+}
+
+.row {
+  display: flex;
+  gap: 1rem;
+}
+
+.row > * {
+  flex: 1;
+}
+
+.select {
+  composes: input;
+  cursor: pointer;
+}
+
+.checkboxRow {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.checkboxRow input[type="checkbox"] {
+  accent-color: rgba(100, 180, 255, 0.8);
+}
+
+.checkboxLabel {
+  font-size: 0.85em;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.actions {
+  display: flex;
+  gap: 0.8rem;
+  margin-top: 0.5rem;
+}
+
+.saveBtn {
+  padding: 0.5rem 1.5rem;
+  border-radius: 8px;
+  background: rgba(100, 180, 255, 0.15);
+  border: 1px solid rgba(100, 180, 255, 0.3);
+  color: rgba(100, 180, 255, 0.9);
+  font-size: 0.85em;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.saveBtn:hover {
+  background: rgba(100, 180, 255, 0.25);
+  color: #fff;
+}
+
+.saveBtn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.deleteBtn {
+  composes: saveBtn;
+  background: rgba(255, 80, 80, 0.1);
+  border-color: rgba(255, 80, 80, 0.3);
+  color: rgba(255, 80, 80, 0.8);
+}
+
+.deleteBtn:hover {
+  background: rgba(255, 80, 80, 0.2);
+  color: #fff;
+}
+
+.previewToggle {
+  composes: saveBtn;
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 255, 255, 0.15);
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.previewToggle:hover {
+  color: #fff;
+}
+
+.preview {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 8px;
+  padding: 1.5rem;
+  min-height: 200px;
+  font-size: 0.95em;
+  line-height: 1.8;
+  color: rgba(255, 255, 255, 0.75);
+}
+
+.preview h1, .preview h2, .preview h3 {
+  color: #fff;
+}
+
+.preview a {
+  color: rgba(100, 180, 255, 0.9);
+}
+
+.status {
+  font-size: 0.8em;
+  color: rgba(100, 255, 150, 0.7);
+  margin-left: auto;
+}
+
+.error {
+  font-size: 0.8em;
+  color: rgba(255, 80, 80, 0.8);
+  margin-left: auto;
+}
+
+@media (max-width: 600px) {
+  .container {
+    padding: 1.5rem 1rem 3rem;
+  }
+
+  .row {
+    flex-direction: column;
+  }
+}

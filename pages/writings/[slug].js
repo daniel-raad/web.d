@@ -3,23 +3,26 @@ import Head from 'next/head'
 import Link from 'next/link'
 import Header from '../../components/Header'
 import { getAllSlugs, getPostBySlug } from '../../lib/posts'
+import { useAuth } from '../../lib/AuthContext'
 import styles from '../../styles/BlogPost.module.css'
 
 export async function getStaticPaths() {
-  const slugs = getAllSlugs()
+  const slugs = await getAllSlugs()
   return {
     paths: slugs.map((slug) => ({ params: { slug } })),
-    fallback: false,
+    fallback: 'blocking',
   }
 }
 
 export async function getStaticProps({ params }) {
   const post = await getPostBySlug(params.slug)
+  if (!post) return { notFound: true }
   return { props: { post } }
 }
 
 export default function WritingsPost({ post }) {
   const router = useRouter()
+  const { user } = useAuth()
 
   if (post.hidden && router.query.secret !== 'danny') {
     return (
@@ -49,7 +52,20 @@ export default function WritingsPost({ post }) {
       <article className={styles.container}>
 
         <header className={styles.header}>
-          <h1 className={styles.title}>{post.title}</h1>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+            <h1 className={styles.title}>{post.title}</h1>
+            {user && post.source === 'firestore' && (
+              <Link href={`/writings/edit/${post.slug}`}>
+                <a style={{
+                  color: 'rgba(255,255,255,0.4)',
+                  fontSize: '0.9em',
+                  textDecoration: 'none',
+                  transition: 'color 0.2s',
+                  flexShrink: 0,
+                }} title="Edit post">&#9998;</a>
+              </Link>
+            )}
+          </div>
           <div className={styles.meta}>
             <span className={styles.date}>{post.date}</span>
             {post.tags && (
