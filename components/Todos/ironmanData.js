@@ -737,6 +737,53 @@ export const WEEKS = [
 ]
 
 // Discipline display info
+const WEEKDAYS = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
+
+export function getCurrentWeek(startDate) {
+  const start = new Date(startDate)
+  start.setHours(0, 0, 0, 0)
+  const now = new Date()
+  now.setHours(0, 0, 0, 0)
+  const diff = Math.floor((now - start) / (7 * 24 * 60 * 60 * 1000))
+  return Math.max(1, Math.min(24, diff + 1))
+}
+
+export function getWeekWithDates(weekNum, startDate, checked = {}) {
+  const weekData = WEEKS.find(w => w.week === weekNum)
+  if (!weekData) return null
+
+  const start = new Date(startDate)
+  start.setHours(0, 0, 0, 0)
+  const weekStart = new Date(start)
+  weekStart.setDate(weekStart.getDate() + (weekNum - 1) * 7)
+
+  const days = weekData.days.map((day, di) => {
+    const dayDate = new Date(weekStart)
+    dayDate.setDate(dayDate.getDate() + di)
+    return {
+      ...day,
+      day: WEEKDAYS[dayDate.getDay()],
+      date: dayDate.toISOString().split("T")[0],
+      sessions: day.sessions.map((session, si) => ({
+        ...session,
+        checked: !!checked[`w${weekNum}-d${di}-s${si}`],
+      })),
+    }
+  })
+
+  const totalSessions = days.reduce((sum, d) => sum + d.sessions.length, 0)
+  const completedSessions = days.reduce((sum, d) => sum + d.sessions.filter(s => s.checked).length, 0)
+
+  return {
+    week: weekData.week,
+    phase: weekData.phase,
+    title: weekData.title,
+    hours: weekData.hours,
+    progress: `${completedSessions}/${totalSessions}`,
+    days,
+  }
+}
+
 export const DISCIPLINE_INFO = {
   [S]:    { label: "Swim",     icon: "🏊", color: "#3b82f6" },
   [B]:    { label: "Bike",     icon: "🚴", color: "#22c55e" },

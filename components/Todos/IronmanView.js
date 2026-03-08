@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo, useRef } from "react"
-import { WEEKS, PHASES, DISCIPLINE_INFO } from "./ironmanData"
+import { WEEKS, PHASES, DISCIPLINE_INFO, getCurrentWeek } from "./ironmanData"
 import { getIronmanPlan, saveIronmanPlan } from "../../lib/firestore"
 import styles from "../../styles/Todos.module.css"
 
@@ -93,12 +93,7 @@ export default function IronmanView() {
 
   const currentWeekNum = useMemo(() => {
     if (!startDate) return 1
-    const start = new Date(startDate)
-    start.setHours(0, 0, 0, 0)
-    const now = new Date()
-    now.setHours(0, 0, 0, 0)
-    const diff = Math.floor((now - start) / (7 * 24 * 60 * 60 * 1000))
-    return Math.max(1, Math.min(24, diff + 1))
+    return getCurrentWeek(startDate)
   }, [startDate])
 
   useEffect(() => {
