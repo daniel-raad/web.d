@@ -48,6 +48,16 @@ export default function WritingsPost({ post }) {
       <Header compact />
 
       <article className={styles.container}>
+        <Link href="/writings">
+          <a style={{
+            color: 'rgba(255,255,255,0.4)',
+            fontSize: '0.85em',
+            textDecoration: 'none',
+            transition: 'color 0.2s',
+            display: 'inline-block',
+            marginBottom: '1.5rem',
+          }}>&larr; Back to writings</a>
+        </Link>
 
         <header className={styles.header}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
