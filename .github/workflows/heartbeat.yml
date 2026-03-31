@@ -14,7 +14,7 @@ jobs:
     steps:
       - name: Send heartbeat
         run: |
-          curl -X POST \
+          curl -f -X POST \
             -H "x-heartbeat-secret: ${{ secrets.HEARTBEAT_SECRET }}" \
             -H "Content-Type: application/json" \
             https://www.danielraad.co.uk/api/heartbeat
