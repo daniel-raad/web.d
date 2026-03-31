@@ -1,8 +1,8 @@
 import { adminDb } from "../../lib/firebaseAdmin"
-import { ABOUT_DANIEL, READ_TOOLS, runChatLoop } from "../../lib/chatEngine"
+import { ABOUT_DANIEL, READ_TOOLS, WRITE_TOOLS, runChatLoop } from "../../lib/chatEngine"
 import { sendMessage } from "../../lib/telegram"
 
-export const config = { maxDuration: 60 }
+export const config = { maxDuration: 120 }
 
 async function getHabitsForDate(date) {
   const [year, month] = date.split("-")
@@ -104,6 +104,60 @@ async function detectNudges() {
   return nudges
 }
 
+// Todo maintenance tools — read everything, but only allow category updates and deletes for cleanup
+const MAINTENANCE_TOOLS = [
+  ...READ_TOOLS,
+  ...WRITE_TOOLS.filter((t) => ["update_todo", "delete_todo"].includes(t.name)),
+]
+
+const MAINTENANCE_SYSTEM_PROMPT = `You are a todo queue maintenance agent for Daniel Raad. Your job is to keep his todo list clean, organised, and useful. You run automatically every few hours.
+
+${ABOUT_DANIEL}
+
+EVERY TIME you run, regardless of what triggered you, do the following:
+
+1. Call get_todos to see all current todos.
+2. Call get_todo_categories to see the official category list.
+3. Review the queue and take action:
+
+CATEGORY HYGIENE:
+- If a todo has an empty category or "Uncategorized", assign it to the best matching official category based on its text.
+- If a todo's category doesn't match the official list (typo, old name), fix it to the closest official category.
+- Use your judgement — "Fix deploy pipeline" is Conversify or Palantir depending on context. When ambiguous, leave it and flag it.
+
+DUPLICATE DETECTION:
+- Look for todos that are duplicates or near-duplicates (same intent, different wording).
+- If you find clear duplicates, keep the one with more detail (or the one with a due date) and delete the other.
+- If they're similar but not exact duplicates, flag them in your report but don't delete — Daniel should decide.
+
+STALE ITEMS:
+- Flag todos that have been open for a very long time with no due date — they might need to be archived or re-prioritised.
+- Do NOT auto-complete or delete stale items. Just flag them.
+
+RULES:
+- Be conservative with deletes — only delete obvious duplicates where intent is clearly identical.
+- When fixing categories, use the official category list. Don't invent new categories.
+- If there are no issues, just say "Queue is clean" and stop.
+
+RESPOND with a brief maintenance report:
+- What you fixed (category changes, duplicates removed)
+- What needs Daniel's attention (ambiguous categories, possible duplicates, stale items)
+- Keep it to a few bullet points max. If nothing needed fixing, say so in one line.`
+
+async function runTodoMaintenance() {
+  try {
+    const report = await runChatLoop({
+      messages: [{ role: "user", content: "Run your todo queue maintenance check now." }],
+      tools: MAINTENANCE_TOOLS,
+      systemPrompt: MAINTENANCE_SYSTEM_PROMPT,
+    })
+    return report || null
+  } catch (err) {
+    console.error("Todo maintenance error:", err)
+    return null
+  }
+}
+
 export default async function handler(req, res) {
   if (req.method !== "POST") return res.status(405).end()
 
@@ -116,9 +170,13 @@ export default async function handler(req, res) {
   if (!chatId) return res.status(500).json({ error: "TELEGRAM_CHAT_ID not set" })
 
   try {
-    const nudges = await detectNudges()
+    // Always run todo maintenance, regardless of nudge triggers
+    const [nudges, maintenanceReport] = await Promise.all([detectNudges(), runTodoMaintenance()])
 
-    if (nudges.length === 0) {
+    const hasMaintenanceActions =
+      maintenanceReport && !maintenanceReport.toLowerCase().includes("queue is clean")
+
+    if (nudges.length === 0 && !hasMaintenanceActions) {
       return res.status(200).json({ ok: true, nudged: false, reason: "Nothing worth nudging about" })
     }
 
@@ -129,10 +187,21 @@ export default async function handler(req, res) {
 
 ${ABOUT_DANIEL}`
 
-    const userPrompt = `The following patterns were detected that might be worth nudging Daniel about. Craft a short, helpful Telegram message. Only mention what's actually useful — don't pad it. If a streak is at risk, make that feel urgent but not naggy.
+    let userPrompt = ""
+
+    if (nudges.length > 0) {
+      userPrompt += `The following patterns were detected that might be worth nudging Daniel about. Only mention what's actually useful — don't pad it. If a streak is at risk, make that feel urgent but not naggy.
 
 Detected:
 ${nudgeSummary}`
+    }
+
+    if (hasMaintenanceActions) {
+      userPrompt += `${nudges.length > 0 ? "\n\n" : ""}The todo maintenance agent just ran and made some changes or has items that need Daniel's attention. Include a brief section about this — keep it matter-of-fact, not dramatic.
+
+Maintenance report:
+${maintenanceReport}`
+    }
 
     const reply = await runChatLoop({
       messages: [{ role: "user", content: userPrompt }],
@@ -141,7 +210,12 @@ ${nudgeSummary}`
     })
 
     await sendMessage(chatId, reply || "Quick nudge — check your habits today.")
-    return res.status(200).json({ ok: true, nudged: true, nudges: nudges.map((n) => n.type) })
+    return res.status(200).json({
+      ok: true,
+      nudged: true,
+      nudges: nudges.map((n) => n.type),
+      maintenance: hasMaintenanceActions,
+    })
   } catch (err) {
     console.error("Nudge error:", err)
     return res.status(500).json({ error: "Nudge failed" })
