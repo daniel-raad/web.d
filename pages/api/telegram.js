@@ -1,4 +1,5 @@
 import { ABOUT_DANIEL, READ_TOOLS, WRITE_TOOLS, runChatLoop } from "../../lib/chatEngine"
+import { getRecentHistory, saveMessages } from "../../lib/chatHistory"
 import { sendMessage } from "../../lib/telegram"
 
 export const config = { maxDuration: 60 }
@@ -23,12 +24,23 @@ MEMORY: At the start of each conversation, call get_memory to recall context abo
 ${ABOUT_DANIEL}`
 
   try {
+    // Load recent conversation history
+    const history = await getRecentHistory(chatId)
+    const messages = [...history, { role: "user", content: message.text }]
+
     const reply = await runChatLoop({
-      messages: [{ role: "user", content: message.text }],
+      messages,
       tools,
       systemPrompt,
       model: "claude-haiku-4-5-20251001",
     })
+
+    // Save updated history (user message + assistant reply)
+    await saveMessages(chatId, [
+      ...history,
+      { role: "user", content: message.text },
+      { role: "assistant", content: reply || "Done." },
+    ])
 
     await sendMessage(chatId, reply || "Done.")
   } catch (err) {
