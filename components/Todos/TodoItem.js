@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useState, useEffect, useRef } from "react"
 import styles from "../../styles/Todos.module.css"
 
 function formatDueDate(dueDate) {
@@ -17,7 +17,20 @@ export default function TodoItem({ todo, onToggle, onDelete, onUpdateDate }) {
   const [editingDate, setEditingDate] = useState(false)
   const [showNoteInput, setShowNoteInput] = useState(false)
   const [note, setNote] = useState("")
+  const dateRef = useRef(null)
   const due = formatDueDate(todo.dueDate)
+
+  // Close date picker only when clicking outside the input entirely
+  useEffect(() => {
+    if (!editingDate) return
+    const handleClickOutside = (e) => {
+      if (dateRef.current && !dateRef.current.contains(e.target)) {
+        setEditingDate(false)
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside)
+    return () => document.removeEventListener("mousedown", handleClickOutside)
+  }, [editingDate])
 
   const handleDateChange = (e) => {
     onUpdateDate(todo.id, e.target.value)
@@ -67,11 +80,11 @@ export default function TodoItem({ todo, onToggle, onDelete, onUpdateDate }) {
           <>
             {editingDate ? (
               <input
+                ref={dateRef}
                 type="date"
                 className={styles.todoDateInline}
                 value={todo.dueDate || ""}
                 onChange={handleDateChange}
-                onBlur={() => setEditingDate(false)}
                 autoFocus
               />
             ) : (
