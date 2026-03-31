@@ -15,6 +15,8 @@ function formatDueDate(dueDate) {
 
 export default function TodoItem({ todo, onToggle, onDelete, onUpdateDate }) {
   const [editingDate, setEditingDate] = useState(false)
+  const [showNoteInput, setShowNoteInput] = useState(false)
+  const [note, setNote] = useState("")
   const due = formatDueDate(todo.dueDate)
 
   const handleDateChange = (e) => {
@@ -22,39 +24,85 @@ export default function TodoItem({ todo, onToggle, onDelete, onUpdateDate }) {
     setEditingDate(false)
   }
 
+  const handleToggle = () => {
+    if (!todo.completed) {
+      // Completing — show note input
+      setShowNoteInput(true)
+    } else {
+      // Uncompleting
+      onToggle(todo.id, false, null)
+    }
+  }
+
+  const handleComplete = () => {
+    onToggle(todo.id, true, note.trim() || null)
+    setShowNoteInput(false)
+    setNote("")
+  }
+
+  const handleSkipNote = () => {
+    onToggle(todo.id, true, null)
+    setShowNoteInput(false)
+    setNote("")
+  }
+
   return (
-    <div className={styles.todoItem}>
-      <div
-        className={`${styles.checkbox} ${todo.completed ? styles.checkboxDone : ""}`}
-        onClick={() => onToggle(todo.id, !todo.completed)}
-      >
-        {todo.completed && "✓"}
-      </div>
-      <span className={`${styles.todoText} ${todo.completed ? styles.todoTextDone : ""}`}>
-        {todo.text}
-      </span>
-      {!todo.completed && (
-        <>
-          {editingDate ? (
-            <input
-              type="date"
-              className={styles.todoDateInline}
-              value={todo.dueDate || ""}
-              onChange={handleDateChange}
-              onBlur={() => setEditingDate(false)}
-              autoFocus
-            />
-          ) : (
-            <span
-              className={due ? due.className : styles.todoDueDateAdd}
-              onClick={() => setEditingDate(true)}
-            >
-              {due ? due.label : "+ date"}
-            </span>
+    <div>
+      <div className={styles.todoItem}>
+        <div
+          className={`${styles.checkbox} ${todo.completed ? styles.checkboxDone : ""}`}
+          onClick={handleToggle}
+        >
+          {todo.completed && "✓"}
+        </div>
+        <div className={styles.todoContent}>
+          <span className={`${styles.todoText} ${todo.completed ? styles.todoTextDone : ""}`}>
+            {todo.text}
+          </span>
+          {todo.completed && todo.note && (
+            <span className={styles.todoNote}>{todo.note}</span>
           )}
-        </>
+        </div>
+        {!todo.completed && (
+          <>
+            {editingDate ? (
+              <input
+                type="date"
+                className={styles.todoDateInline}
+                value={todo.dueDate || ""}
+                onChange={handleDateChange}
+                onBlur={() => setEditingDate(false)}
+                autoFocus
+              />
+            ) : (
+              <span
+                className={due ? due.className : styles.todoDueDateAdd}
+                onClick={() => setEditingDate(true)}
+              >
+                {due ? due.label : "+ date"}
+              </span>
+            )}
+          </>
+        )}
+        <button className={styles.deleteBtn} onClick={() => onDelete(todo.id)}>✕</button>
+      </div>
+      {showNoteInput && (
+        <div className={styles.noteInputRow}>
+          <input
+            className={styles.noteInput}
+            placeholder="Add a note (optional)..."
+            value={note}
+            onChange={(e) => setNote(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") handleComplete()
+              if (e.key === "Escape") handleSkipNote()
+            }}
+            autoFocus
+          />
+          <button className={styles.noteBtn} onClick={handleComplete}>Done</button>
+          <button className={styles.noteSkipBtn} onClick={handleSkipNote}>Skip</button>
+        </div>
       )}
-      <button className={styles.deleteBtn} onClick={() => onDelete(todo.id)}>✕</button>
     </div>
   )
 }

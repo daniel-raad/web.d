@@ -174,8 +174,15 @@
   box-shadow: 0 0 6px rgba(59, 130, 246, 0.3);
 }
 
-.todoText {
+.todoContent {
   flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  min-width: 0;
+}
+
+.todoText {
   font-size: 0.9rem;
   color: rgba(255, 255, 255, 0.85);
 }
@@ -183,6 +190,71 @@
 .todoTextDone {
   text-decoration: line-through;
   color: rgba(255, 255, 255, 0.35);
+}
+
+.todoNote {
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.35);
+  font-style: italic;
+}
+
+.noteInputRow {
+  display: flex;
+  gap: 0.4rem;
+  padding: 0.2rem 0.7rem 0.5rem 2.8rem;
+}
+
+.noteInput {
+  flex: 1;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 5px;
+  padding: 0.35rem 0.5rem;
+  color: #e0e0e0;
+  font-size: 0.8rem;
+  font-family: inherit;
+}
+
+.noteInput:focus {
+  outline: none;
+  border-color: rgba(59, 130, 246, 0.5);
+}
+
+.noteInput::placeholder {
+  color: rgba(255, 255, 255, 0.25);
+}
+
+.noteBtn {
+  background: rgba(59, 130, 246, 0.15);
+  border: 1px solid rgba(59, 130, 246, 0.3);
+  color: #3b82f6;
+  border-radius: 5px;
+  padding: 0.3rem 0.6rem;
+  cursor: pointer;
+  font-size: 0.75rem;
+  font-weight: 500;
+  font-family: inherit;
+  transition: all 0.2s;
+}
+
+.noteBtn:hover {
+  background: rgba(59, 130, 246, 0.25);
+}
+
+.noteSkipBtn {
+  background: none;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.4);
+  border-radius: 5px;
+  padding: 0.3rem 0.6rem;
+  cursor: pointer;
+  font-size: 0.75rem;
+  font-family: inherit;
+  transition: all 0.2s;
+}
+
+.noteSkipBtn:hover {
+  color: rgba(255, 255, 255, 0.6);
 }
 
 .todoDueDate {

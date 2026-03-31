@@ -1,5 +1,6 @@
 import { getAuth } from "firebase-admin/auth"
 import { ABOUT_DANIEL, READ_TOOLS, WRITE_TOOLS, runChatLoop } from "../../lib/chatEngine"
+import { checkRateLimit } from "../../lib/rateLimit"
 
 const AUTHORIZED_EMAIL = "danielraadsw@gmail.com"
 
@@ -23,6 +24,15 @@ export default async function handler(req, res) {
       }
     } catch (e) {
       // Not authed, continue as public
+    }
+  }
+
+  // Rate limit public visitors only
+  if (!isAuthed) {
+    const ip = req.headers["x-forwarded-for"] || req.socket?.remoteAddress || "unknown"
+    const { allowed, retryAfter } = await checkRateLimit(ip)
+    if (!allowed) {
+      return res.status(429).json({ error: "Rate limit exceeded", retryAfter })
     }
   }
 
