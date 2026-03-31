@@ -43,8 +43,8 @@ Keep it punchy and actionable. This should feel like a standup, not a novel.`,
   evening: `Evening check-in. Do the following:
 
 1. Call get_habits to see what got done today and what didn't.
-2. Call get_todos to see open tasks.
-3. Summarize the day: what got done, what didn't, honest but encouraging.
+2. Call get_todos to see open and recently completed tasks. Completed todos may have a "note" field — if any todos were completed today with notes, surface those notes in your summary (e.g. "Finished X — note: deployed to staging").
+3. Summarize the day: what got done (including any completion notes), what didn't, honest but encouraging.
 
 Then end with a PLANNING QUESTION — ask Daniel what he wants to prioritize tomorrow. Be specific, e.g.:
 "What's the #1 thing you want to get done tomorrow? Any tasks to carry over, or anything new on the plate?"
