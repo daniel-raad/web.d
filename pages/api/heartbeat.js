@@ -89,7 +89,10 @@ export default async function handler(req, res) {
   if (!chatId) return res.status(500).json({ error: "TELEGRAM_CHAT_ID not set" })
 
   const timeOfDay = getTimeOfDay()
-  const today = new Date().toISOString().split("T")[0]
+  const now = new Date()
+  const today = now.toISOString().split("T")[0]
+  const dayName = now.toLocaleDateString("en-US", { weekday: "long", timeZone: "UTC" })
+  const currentTime = `${String(now.getUTCHours()).padStart(2, "0")}:${String(now.getUTCMinutes()).padStart(2, "0")} GMT`
 
   // Sunday evening = weekly reflection instead of normal evening
   const isWeeklyReflection = timeOfDay === "evening" && isSunday()
@@ -103,7 +106,7 @@ export default async function handler(req, res) {
     prompt = prompt.replace("this week's date range", `startDate: "${start}", endDate: "${end}"`)
   }
 
-  const systemPrompt = `You are Daniel's personal AI assistant sending him a scheduled ${isWeeklyReflection ? "weekly reflection" : `${timeOfDay} check-in`} on Telegram. Be concise, casual, and motivating. Today is ${today}.
+  const systemPrompt = `You are Daniel's personal AI assistant sending him a scheduled ${isWeeklyReflection ? "weekly reflection" : `${timeOfDay} check-in`} on Telegram. Be concise, casual, and motivating. Today is ${dayName} ${today}, current time is ${currentTime}.
 
 MEMORY: Call get_memory first to recall context about Daniel before crafting your check-in.
 

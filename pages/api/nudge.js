@@ -32,7 +32,7 @@ async function detectNudges() {
   if (hour >= 14 && todayHabits.total > 0 && todayHabits.completed < todayHabits.total / 2) {
     nudges.push({
       type: "low_habits",
-      detail: `Only ${todayHabits.completed}/${todayHabits.total} habits done and it's past 2PM`,
+      detail: `Only ${todayHabits.completed}/${todayHabits.total} habits done and it's ${hour}:00 GMT`,
     })
   }
 
@@ -180,10 +180,13 @@ export default async function handler(req, res) {
       return res.status(200).json({ ok: true, nudged: false, reason: "Nothing worth nudging about" })
     }
 
-    const today = new Date().toISOString().split("T")[0]
+    const now = new Date()
+    const today = now.toISOString().split("T")[0]
+    const dayName = now.toLocaleDateString("en-US", { weekday: "long", timeZone: "UTC" })
+    const currentTime = `${String(now.getUTCHours()).padStart(2, "0")}:${String(now.getUTCMinutes()).padStart(2, "0")} GMT`
     const nudgeSummary = nudges.map((n) => `- [${n.type}] ${n.detail}`).join("\n")
 
-    const systemPrompt = `You are Daniel's personal AI assistant sending him a smart nudge on Telegram. You're not a scheduled check-in — you're reaching out because you noticed something that deserves attention. Be concise, casual, and helpful. Don't be preachy. Today is ${today}.
+    const systemPrompt = `You are Daniel's personal AI assistant sending him a smart nudge on Telegram. You're not a scheduled check-in — you're reaching out because you noticed something that deserves attention. Be concise, casual, and helpful. Don't be preachy. Today is ${dayName} ${today}, current time is ${currentTime}.
 
 ${ABOUT_DANIEL}`
 
