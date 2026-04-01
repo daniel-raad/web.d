@@ -1,3 +1,4 @@
+import { adminDb } from "../../lib/firebaseAdmin"
 import { ABOUT_DANIEL, READ_TOOLS, runChatLoop } from "../../lib/chatEngine"
 import { sendMessage } from "../../lib/telegram"
 
@@ -27,11 +28,13 @@ function getWeekRange() {
 const PROMPTS = {
   morning: `Good morning Daniel! This is his daily standup. Do the following:
 
-1. Call get_ironman_plan with the current week number to get TODAY's specific training sessions. Tell him exactly what workout is scheduled (e.g. "45min easy run + 20min strength"), not just "training".
-2. Call get_todos to get his task list. Give him a work standup: what are the key open tasks across Palantir, Conversify, and personal? Focus on what's due soon or overdue.
-3. Call get_habits to see today's habit list.
+1. Call get_recent_checkins (limit 3) to see what was discussed in last night's evening check-in. If Daniel replied with plans or priorities, hold him to them.
+2. Call get_ironman_plan with the current week number to get TODAY's specific training sessions. Tell him exactly what workout is scheduled (e.g. "45min easy run + 20min strength"), not just "training".
+3. Call get_todos to get his task list. Give him a work standup: what are the key open tasks across Palantir, Conversify, and personal? Focus on what's due soon or overdue.
+4. Call get_habits to see today's habit list.
 
 Format it as a clear morning brief:
+- Accountability (if he said he'd do something last night, lead with that)
 - Today's training (specific sessions)
 - Work standup (top 3-5 actionable tasks for today)
 - Habits to tick off
@@ -42,9 +45,13 @@ Keep it punchy and actionable. This should feel like a standup, not a novel.`,
 
   evening: `Evening check-in. Do the following:
 
-1. Call get_habits to see what got done today and what didn't.
-2. Call get_todos to see open and recently completed tasks. Completed todos may have a "note" field — if any todos were completed today with notes, surface those notes in your summary (e.g. "Finished X — note: deployed to staging").
-3. Summarize the day: what got done (including any completion notes), what didn't, honest but encouraging.
+1. Call get_recent_checkins (limit 3) to see what was said in this morning's standup — what did Daniel commit to today?
+2. Call get_habits to see what got done today and what didn't.
+3. Call get_completed_todos with today's date as both startDate and endDate to see what was actually finished today.
+4. Call get_todos to see what's still open.
+5. Compare what Daniel said he'd do (from morning check-in) vs what actually got done. Be honest about the gap if there is one.
+
+Summarize the day: what got done (including any completion notes on todos), what didn't, honest but encouraging.
 
 Then end with a PLANNING QUESTION — ask Daniel what he wants to prioritize tomorrow. Be specific, e.g.:
 "What's the #1 thing you want to get done tomorrow? Any tasks to carry over, or anything new on the plate?"
@@ -55,7 +62,9 @@ This should prompt him to think about and reply with tomorrow's plan. Keep it co
 
 1. Call get_week_summary with this week's date range to get the full picture.
 2. Call get_ironman_plan to see training progress.
-3. Call get_todos to see what got completed and what's still open.
+3. Call get_completed_todos with the same date range to see everything completed this week.
+4. Call get_todos to see what's still open.
+5. Call get_recent_checkins (limit 10) to review the week's check-in history — what did Daniel commit to vs what happened?
 
 Give Daniel an honest weekly review:
 - Habit completion rate (% and trend vs. what you'd expect)
@@ -105,9 +114,20 @@ ${ABOUT_DANIEL}`
       messages: [{ role: "user", content: prompt }],
       tools: READ_TOOLS,
       systemPrompt,
+      maxTokens: isWeeklyReflection ? 2048 : 1024,
     })
 
-    await sendMessage(chatId, reply || "Heartbeat check-in had nothing to report.")
+    const message = reply || "Heartbeat check-in had nothing to report."
+    await sendMessage(chatId, message)
+
+    // Store check-in for continuity — so future check-ins can reference past ones
+    await adminDb.collection("checkins").add({
+      date: today,
+      timeOfDay: isWeeklyReflection ? "weekly_reflection" : timeOfDay,
+      content: message,
+      timestamp: Date.now(),
+    })
+
     return res.status(200).json({ ok: true, timeOfDay, isWeeklyReflection })
   } catch (err) {
     console.error("Heartbeat error:", err)

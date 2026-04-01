@@ -32,7 +32,8 @@ ${ABOUT_DANIEL}`
       messages,
       tools,
       systemPrompt,
-      model: "claude-haiku-4-5-20251001",
+      model: "claude-sonnet-4-20250514",
+      maxTokens: 2048,
     })
 
     // Save updated history (user message + assistant reply)
