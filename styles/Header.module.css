@@ -4,7 +4,7 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 5rem 2rem 3rem;
+  padding: 5rem 2rem 1rem;
   overflow: hidden;
   background: var(--bg);
 }
@@ -66,21 +66,28 @@
 
 .tooltip {
   position: absolute;
-  bottom: -28px;
+  bottom: -36px;
   left: 50%;
-  transform: translateX(-50%);
-  font-size: 0.72rem;
-  font-weight: 500;
-  color: var(--text-faint);
+  transform: translateX(-50%) scale(0.92);
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: #e2e8f0;
+  background: rgba(15, 20, 40, 0.8);
+  backdrop-filter: blur(6px);
+  padding: 3px 10px;
+  border-radius: 20px;
+  border: 1px solid rgba(100, 180, 255, 0.2);
   white-space: nowrap;
   opacity: 0;
-  transition: opacity 0.2s;
+  transition: opacity 0.2s, transform 0.2s;
   pointer-events: none;
   z-index: 10;
 }
 
 .spacePortal:hover .tooltip {
   opacity: 1;
+  transform: translateX(-50%) scale(1);
 }
 
 @keyframes float {
