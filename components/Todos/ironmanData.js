@@ -15,29 +15,29 @@ export const WEEKS = [
   {
     week: 1, phase: "Base Building", title: "Foundation + Half Marathon", hours: 6.0,
     days: [
-      { day: "Monday", sessions: [
-        { d: S, dur: "1500m", z: "Z2", workout: "Warm-up: 300m easy (200m freestyle + 4x25m build). Main: 8x100m Z2 steady. Cool-down: 300m easy choice", sets: "8x100m", rest: "15s", purpose: "Aerobic capacity building. Long strokes, bilateral breathing every 3rd stroke" },
-        { d: C, dur: "15 min", z: "-", workout: "Planks: 3x30s standard + 2x10 single-arm reaches. Side Planks: 2x20s each side + 10 hip dips. Dead Bugs: 2x10 each side, 3s holds", sets: "3 sets each", rest: "30s", purpose: "Anti-extension strength for swim body position" },
-      ]},
-      { day: "Tuesday", sessions: [
-        { d: B, dur: "45 min", z: "Z2", workout: "Warm-up: 10min easy + 3x1min builds. Main: 30min steady Z2. Cool-down: 5min easy", sets: "1x30min", rest: "-", purpose: "Aerobic base development. Target: 85-95 RPM, smooth pedal stroke" },
-        { d: ST, dur: "30 min", z: "-", workout: "Goblet Squats: 3x12-15. Walking Lunges: 3x10 each leg. Push-ups: 3x8-15. Bent Rows: 3x12-15", sets: "3 sets each", rest: "60-90s", purpose: "Foundation strength patterns. Perfect form over weight/reps" },
-      ]},
-      { day: "Wednesday", sessions: [
-        { d: R, dur: "30 min", z: "Z2", workout: "Warm-up: 10min easy + 4x15s strides. Main: 15min steady Z2. Cool-down: 5min walk/easy jog", sets: "1x15min", rest: "-", purpose: "Movement pattern establishment. Midfoot landing, 180 steps/min cadence" },
-        { d: F, dur: "15 min", z: "-", workout: "Hip Flexor Stretch: 2x30s each leg. Hamstring Stretch: 2x30s each leg. Calf Stretch: 2x30s each leg. IT Band: 2x30s each side", sets: "2 sets each", rest: "-", purpose: "Mobility maintenance for tri-specific positions" },
-      ]},
-      { day: "Thursday", sessions: [
-        { d: S, dur: "1800m", z: "Z2", workout: "Warm-up: 400m easy (300m free + 4x25m drill). Main: 6x200m Z2 steady. Cool-down: 200m easy", sets: "6x200m", rest: "30s", purpose: "Volume progression with technique focus. Practice sighting every 6 strokes" },
-      ]},
       { day: "Friday", sessions: [
-        { d: REST, dur: "-", z: "-", workout: "Complete physical and mental rest", sets: "-", rest: "-", purpose: "Recovery and adaptation. Light meal prep and hydration focus" },
+        { d: REST, dur: "-", z: "-", workout: "Complete rest before race weekend", sets: "-", rest: "-", purpose: "Pre-race rest. Hydrate well, prepare race kit and nutrition" },
       ]},
       { day: "Saturday", sessions: [
         { d: R, dur: "20 min", z: "Z1-Z2", workout: "Pre-race shakeout: 10min easy jog + 4x15s strides. 5min walk. Dynamic stretches", sets: "4x15s strides", rest: "45s easy", purpose: "Pre-race activation. Loosen legs, stay fresh for tomorrow's half marathon" },
       ]},
       { day: "Sunday", sessions: [
         { d: "RACE", dur: "Half Marathon (21km)", z: "Race", workout: "Half marathon race. Warm-up: 10min easy jog + dynamic stretches. Race: 21km. Cool-down: 10min walk + stretching", sets: "-", rest: "-", purpose: "Half marathon race. Conservative first 10km, build through second half. Practice pacing and nutrition strategy for Ironman" },
+      ]},
+      { day: "Monday", sessions: [
+        { d: S, dur: "1500m", z: "Z2", workout: "Warm-up: 300m easy (200m freestyle + 4x25m build). Main: 8x100m Z2 steady. Cool-down: 300m easy choice", sets: "8x100m", rest: "15s", purpose: "Post-race recovery swim. Easy effort, focus on loosening up" },
+        { d: C, dur: "15 min", z: "-", workout: "Planks: 3x30s standard + 2x10 single-arm reaches. Side Planks: 2x20s each side + 10 hip dips. Dead Bugs: 2x10 each side, 3s holds", sets: "3 sets each", rest: "30s", purpose: "Light core activation to aid recovery" },
+      ]},
+      { day: "Tuesday", sessions: [
+        { d: AR, dur: "30 min", z: "Z1", workout: "Easy walk or 1000m easy swim", sets: "-", rest: "-", purpose: "Active recovery. Let the legs recover from race effort" },
+      ]},
+      { day: "Wednesday", sessions: [
+        { d: B, dur: "45 min", z: "Z2", workout: "Warm-up: 10min easy + 3x1min builds. Main: 30min steady Z2. Cool-down: 5min easy", sets: "1x30min", rest: "-", purpose: "Aerobic base development. Target: 85-95 RPM, smooth pedal stroke" },
+        { d: ST, dur: "30 min", z: "-", workout: "Goblet Squats: 3x12-15. Walking Lunges: 3x10 each leg. Push-ups: 3x8-15. Bent Rows: 3x12-15", sets: "3 sets each", rest: "60-90s", purpose: "Foundation strength patterns. Perfect form over weight/reps" },
+      ]},
+      { day: "Thursday", sessions: [
+        { d: R, dur: "30 min", z: "Z2", workout: "Warm-up: 10min easy + 4x15s strides. Main: 15min steady Z2. Cool-down: 5min walk/easy jog", sets: "1x15min", rest: "-", purpose: "First easy run post-race. Midfoot landing, 180 steps/min cadence" },
+        { d: F, dur: "15 min", z: "-", workout: "Hip Flexor Stretch: 2x30s each leg. Hamstring Stretch: 2x30s each leg. Calf Stretch: 2x30s each leg. IT Band: 2x30s each side", sets: "2 sets each", rest: "-", purpose: "Mobility maintenance for tri-specific positions" },
       ]},
     ],
   },
@@ -255,29 +255,30 @@ export const WEEKS = [
   {
     week: 9, phase: "Build Phase", title: "Sprint Triathlon Week", hours: 10.5,
     days: [
-      { day: "Monday", sessions: [
-        { d: S, dur: "2500m", z: "Z3-Z4", workout: "Warm-up: 700m easy + 8x25m fast. Main: 8x200m Z3-Z4 steady. Cool-down: 300m easy", sets: "8x200m", rest: "20s", purpose: "VO2 max swimming. Z4 at 1500m race pace" },
-        { d: C, dur: "30 min", z: "-", workout: "Advanced Core Work: 5x45s weighted planks. Rotational Power: 4x10 each side. Stability Challenges: 3x45s holds. Integration: 3x12 complex moves", sets: "5 sets each", rest: "60s", purpose: "Peak core strength development" },
-      ]},
-      { day: "Tuesday", sessions: [
-        { d: B, dur: "95 min", z: "Z2-Z4", workout: "Warm-up: 20min easy + 4x3min builds. Main: 8x3min Z4 intervals. Cool-down: 15min easy", sets: "8x3min", rest: "3min", purpose: "Classic VO2 max bike intervals. Z4 at 90-95% of 20min power" },
-        { d: ST, dur: "40 min", z: "-", workout: "Explosive Squats: 4x6 (focus on speed). Single-leg Power: 3x6 each leg. Plyometric Push-ups: 3x6-8. Olympic Lift Variations: 4x5. Power Endurance: 3x30s", sets: "4 sets each", rest: "3min", purpose: "Explosive strength. Speed and power development" },
-      ]},
-      { day: "Wednesday", sessions: [
-        { d: R, dur: "65 min", z: "Z2-Z3", workout: "Warm-up: 20min easy + 8x15s strides. Main: 40min with 25min tempo Z3. Cool-down: 5min walk", sets: "1x25min", rest: "-", purpose: "Extended tempo run. 25min Z3 at race pace" },
-        { d: F, dur: "30 min", z: "-", workout: "Extended Flow: 20min advanced yoga. Deep Tissue: 10min intensive. Meditation: 5min stress management", sets: "-", rest: "-", purpose: "Enhanced flexibility. Longer, more challenging poses" },
-      ]},
-      { day: "Thursday", sessions: [
-        { d: S, dur: "2700m", z: "Z2-Z3", workout: "Warm-up: 800m easy + 6x50m build. Main: 4x400m Z2-Z3 race pace. Cool-down: 300m easy", sets: "4x400m", rest: "60s", purpose: "Race pace consolidation. Practice open water sighting and drafting" },
-      ]},
       { day: "Friday", sessions: [
-        { d: AR, dur: "30 min", z: "Z1", workout: "Easy movement or complete rest", sets: "-", rest: "-", purpose: "Recovery priority. Complete rest if needed" },
+        { d: S, dur: "1500m", z: "Z2", workout: "Warm-up: 400m easy + 4x25m build. Main: 6x100m Z2 smooth. Cool-down: 300m easy", sets: "6x100m", rest: "20s", purpose: "Pre-race volume reduction. Smooth technique, stay loose" },
+        { d: C, dur: "15 min", z: "-", workout: "Light Planks: 3x30s. Glute Activation: 2x10. Gentle Stretching: 5min", sets: "3 sets each", rest: "-", purpose: "Light activation only. Don't create fatigue before race" },
       ]},
       { day: "Saturday", sessions: [
         { d: R, dur: "20 min", z: "Z1-Z2", workout: "Pre-race shakeout: 10min easy jog + 4x15s strides. 5min walk. Dynamic stretches", sets: "4x15s strides", rest: "45s easy", purpose: "Pre-race activation. Loosen legs, stay fresh for tomorrow's sprint triathlon" },
       ]},
       { day: "Sunday", sessions: [
         { d: "RACE", dur: "Sprint Triathlon", z: "Race", workout: "750m swim, 20km bike, 5km run. Race as a build-up event for Ironman 70.3", sets: "-", rest: "-", purpose: "Sprint triathlon race. Practice transitions, pacing, and race-day execution. Treat as Ironman dress rehearsal" },
+      ]},
+      { day: "Monday", sessions: [
+        { d: S, dur: "2000m", z: "Z2", workout: "Warm-up: 500m easy + 6x25m build. Main: 6x200m Z2 steady. Cool-down: 300m easy", sets: "6x200m", rest: "30s", purpose: "Post-race recovery swim. Easy effort, loosen up" },
+        { d: C, dur: "20 min", z: "-", workout: "Core Activation: 3x30s planks. Side Planks: 2x20s each. Dead Bugs: 2x10 each side", sets: "3 sets each", rest: "30s", purpose: "Light core work post-race" },
+      ]},
+      { day: "Tuesday", sessions: [
+        { d: AR, dur: "30 min", z: "Z1", workout: "Easy walk or gentle swim", sets: "-", rest: "-", purpose: "Active recovery from sprint triathlon" },
+      ]},
+      { day: "Wednesday", sessions: [
+        { d: B, dur: "95 min", z: "Z2-Z3", workout: "Warm-up: 20min easy + 4x3min builds. Main: 60min with 20min Z3 tempo. Cool-down: 15min easy", sets: "1x20min", rest: "-", purpose: "Return to build intensity. Tempo block at race pace" },
+        { d: ST, dur: "30 min", z: "-", workout: "Squats: 3x10. Lunges: 3x8 each leg. Push-ups: 3x10. Rows: 3x12", sets: "3 sets each", rest: "90s", purpose: "Strength maintenance post-race week" },
+      ]},
+      { day: "Thursday", sessions: [
+        { d: R, dur: "50 min", z: "Z2-Z3", workout: "Warm-up: 15min easy + 6x15s strides. Main: 30min with 15min tempo Z3. Cool-down: 5min walk", sets: "1x15min", rest: "-", purpose: "Tempo run to rebuild after race. Controlled effort" },
+        { d: F, dur: "20 min", z: "-", workout: "Extended Flow: 15min yoga. Deep Stretching: 5min problem areas", sets: "-", rest: "-", purpose: "Flexibility and recovery" },
       ]},
     ],
   },
