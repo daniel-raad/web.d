@@ -4,7 +4,8 @@ import Image from 'next/image'
 import { useTheme } from '../lib/ThemeContext'
 
 export default function Header({ compact }){
-    const { toggleTheme } = useTheme()
+    const { theme, toggleTheme } = useTheme()
+    const tooltipText = theme === 'dark' ? 'Day mode' : 'Night mode'
 
     const handleSpacemanClick = (e) => {
         const rect = e.currentTarget.getBoundingClientRect()
@@ -29,6 +30,7 @@ export default function Header({ compact }){
         <section className={styles.hero}>
             <div className={styles.spacePortal} onClick={handleSpacemanClick} role="button" tabIndex={0}>
                 <Image src="/astro.png" width="140" height="140" className={styles.spaceman} alt="Toggle theme" />
+                <span className={styles.tooltip}>{tooltipText}</span>
             </div>
             <h1 className={styles.name}>Daniel Raad</h1>
             <p className={styles.tagline}>Building things...</p>

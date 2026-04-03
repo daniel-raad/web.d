@@ -3,7 +3,7 @@ import { requireAuth } from "../../lib/authMiddleware"
 
 const DEFAULTS = {
   checked: {},
-  startDate: "2026-03-08",
+  startDate: "2026-03-30",
   dayOrders: {},
   sessionMoves: {},
 }
@@ -18,6 +18,13 @@ export default async function handler(req, res) {
     const user = await requireAuth(req, res)
     if (!user) return
     await adminDb.collection("ironman").doc("plan").set(req.body, { merge: true })
+    return res.json({ ok: true })
+  }
+
+  if (req.method === "PUT") {
+    const user = await requireAuth(req, res)
+    if (!user) return
+    await adminDb.collection("ironman").doc("plan").set(req.body)
     return res.json({ ok: true })
   }
 

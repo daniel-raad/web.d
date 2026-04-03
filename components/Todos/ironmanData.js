@@ -1,19 +1,19 @@
-// 24-Week Ironman 70.3 Training Plan
-// Phases: Base Building (1-8), Build Phase (9-16), Peak Phase (17-20), Taper (21-24)
+// 21-Week Ironman 70.3 Training Plan
+// Phases: Base Building (1-6), Build Phase (7-14), Peak Phase (15-18), Taper (19-21)
 
 const S = "Swim", B = "Bike", R = "Run", C = "Core", ST = "Strength", F = "Flexibility", AR = "Active Recovery", REST = "Rest"
 
 export const PHASES = [
-  { name: "Base Building", weeks: [1, 8], color: "#22c55e" },
-  { name: "Build Phase", weeks: [9, 16], color: "#f59e0b" },
-  { name: "Peak Phase", weeks: [17, 20], color: "#ef4444" },
-  { name: "Taper", weeks: [21, 24], color: "#8b5cf6" },
+  { name: "Base Building", weeks: [1, 6], color: "#22c55e" },
+  { name: "Build Phase", weeks: [7, 14], color: "#f59e0b" },
+  { name: "Peak Phase", weeks: [15, 18], color: "#ef4444" },
+  { name: "Taper", weeks: [19, 21], color: "#8b5cf6" },
 ]
 
 export const WEEKS = [
-  // ===== PHASE 1: BASE BUILDING (Weeks 1-8) =====
+  // ===== PHASE 1: BASE BUILDING (Weeks 1-6) =====
   {
-    week: 1, phase: "Base Building", title: "Foundation Setting", hours: 6.0,
+    week: 1, phase: "Base Building", title: "Foundation + Half Marathon", hours: 6.0,
     days: [
       { day: "Monday", sessions: [
         { d: S, dur: "1500m", z: "Z2", workout: "Warm-up: 300m easy (200m freestyle + 4x25m build). Main: 8x100m Z2 steady. Cool-down: 300m easy choice", sets: "8x100m", rest: "15s", purpose: "Aerobic capacity building. Long strokes, bilateral breathing every 3rd stroke" },
@@ -34,11 +34,10 @@ export const WEEKS = [
         { d: REST, dur: "-", z: "-", workout: "Complete physical and mental rest", sets: "-", rest: "-", purpose: "Recovery and adaptation. Light meal prep and hydration focus" },
       ]},
       { day: "Saturday", sessions: [
-        { d: B, dur: "60 min", z: "Z2", workout: "Warm-up: 10min easy + 3x1min builds. Main: 45min steady aerobic. Cool-down: 5min easy", sets: "1x45min", rest: "-", purpose: "Aerobic endurance building. Practice nutrition every 20min" },
-        { d: R, dur: "15 min", z: "Z1-Z2", workout: "Brick workout immediately off bike", sets: "1x15min", rest: "-", purpose: "Brick transition practice. Focus on quick, light steps" },
+        { d: R, dur: "20 min", z: "Z1-Z2", workout: "Pre-race shakeout: 10min easy jog + 4x15s strides. 5min walk. Dynamic stretches", sets: "4x15s strides", rest: "45s easy", purpose: "Pre-race activation. Loosen legs, stay fresh for tomorrow's half marathon" },
       ]},
       { day: "Sunday", sessions: [
-        { d: R, dur: "45 min", z: "Z2", workout: "Warm-up: 10min easy. Main: 30min steady Z2. Cool-down: 5min walk", sets: "1x30min", rest: "-", purpose: "Long slow distance base building. Conversation pace, nasal breathing preferred" },
+        { d: "RACE", dur: "Half Marathon (21km)", z: "Race", workout: "Half marathon race. Warm-up: 10min easy jog + dynamic stretches. Race: 21km. Cool-down: 10min walk + stretching", sets: "-", rest: "-", purpose: "Half marathon race. Conservative first 10km, build through second half. Practice pacing and nutrition strategy for Ironman" },
       ]},
     ],
   },
@@ -192,69 +191,9 @@ export const WEEKS = [
       ]},
     ],
   },
+  // ===== PHASE 2: BUILD PHASE (Weeks 7-14) =====
   {
-    week: 7, phase: "Base Building", title: "Pre-race Preparation", hours: 9.0,
-    days: [
-      { day: "Monday", sessions: [
-        { d: S, dur: "2400m", z: "Z2-Z3", workout: "Warm-up: 700m easy + 8x25m build. Main: 3x400m Z3 steady. Cool-down: 400m easy", sets: "3x400m", rest: "60s", purpose: "Distance at race pace. Practice sighting every 6 strokes" },
-        { d: C, dur: "25 min", z: "-", workout: "Core Strength Complex: 5x45s planks. Rotational Power: 3x12 each side. Stability Challenges: 3x30s holds. Integration Work: 3x10 complex moves", sets: "5 sets each", rest: "60s", purpose: "Peak core strength development" },
-      ]},
-      { day: "Tuesday", sessions: [
-        { d: B, dur: "2.25 hours", z: "Z2-Z3", workout: "Warm-up: 20min easy + 4x3min builds. Main: 105min with 4x8min Z3 efforts. Cool-down: 10min easy", sets: "4x8min", rest: "4min Z2", purpose: "Extended race pace practice. Practice exact race day nutrition" },
-        { d: ST, dur: "40 min", z: "-", workout: "Full Strength Session: 4x8-10 heavy. Power Development: 3x6 explosive. Stability Work: 3x12 each side. Postural Strength: 3x15 light", sets: "4 sets each", rest: "2-3min", purpose: "Peak strength phase. Heavy loads with full recovery" },
-      ]},
-      { day: "Wednesday", sessions: [
-        { d: R, dur: "75 min", z: "Z2-Z3", workout: "Warm-up: 20min easy + 8x15s strides. Main: 50min with 20min tempo Z3. Cool-down: 5min walk", sets: "1x20min", rest: "-", purpose: "Extended tempo run. 20min Z3 at race pace" },
-        { d: F, dur: "25 min", z: "-", workout: "Mobility Maintenance: 15min targeted. Deep Tissue Work: 10min foam rolling. Relaxation: 5min breathing", sets: "-", rest: "-", purpose: "Mobility maintenance for peak training" },
-      ]},
-      { day: "Thursday", sessions: [
-        { d: S, dur: "2300m", z: "Z2-Z3", workout: "Warm-up: 600m easy + 6x50m build. Main: 4x300m Z2-Z3 race pace. Cool-down: 400m easy", sets: "4x300m", rest: "45s", purpose: "Race pace consolidation. Practice open water skills" },
-      ]},
-      { day: "Friday", sessions: [
-        { d: AR, dur: "30 min", z: "Z1", workout: "Easy movement or complete rest", sets: "-", rest: "-", purpose: "Recovery before peak weekend" },
-      ]},
-      { day: "Saturday", sessions: [
-        { d: B, dur: "110 min", z: "Z2-Z3", workout: "Warm-up: 15min easy + 3x3min builds. Main: 85min race pace practice. Cool-down: 10min easy", sets: "1x85min", rest: "-", purpose: "Race pace practice ride. Exact race position, nutrition, pacing" },
-        { d: R, dur: "30 min", z: "Z2-Z3", workout: "Brick workout at race pace", sets: "1x30min", rest: "-", purpose: "Quality brick at race pace. Practice transition rhythm" },
-      ]},
-      { day: "Sunday", sessions: [
-        { d: R, dur: "80 min", z: "Z2", workout: "Warm-up: 20min easy + 6x15s strides. Main: 55min with race nutrition. Cool-down: 5min walk", sets: "1x55min", rest: "-", purpose: "Long run with race nutrition practice. Test all race day fueling" },
-      ]},
-    ],
-  },
-  {
-    week: 8, phase: "Base Building", title: "Sprint Triathlon Week", hours: 7.0,
-    days: [
-      { day: "Monday", sessions: [
-        { d: S, dur: "1500m", z: "Z2", workout: "Warm-up: 400m easy + 6x25m build. Main: 6x100m Z2 smooth. Cool-down: 300m easy", sets: "6x100m", rest: "20s", purpose: "Pre-race volume reduction. Smooth technique" },
-        { d: C, dur: "15 min", z: "-", workout: "Light Activation: 3x30s planks. Mobility: 5min gentle movement. Activation: 2x10 glute bridges", sets: "3 sets each", rest: "-", purpose: "Light activation only" },
-      ]},
-      { day: "Tuesday", sessions: [
-        { d: B, dur: "45 min", z: "Z2-Z3", workout: "Warm-up: 15min easy + 3x2min builds. Main: 3x3min Z3 openers. Cool-down: 10min easy", sets: "3x3min", rest: "3min", purpose: "Pre-race openers. Short efforts to maintain sharpness" },
-        { d: ST, dur: "20 min", z: "-", workout: "Light Activation: 2x8 bodyweight squats. Movement Prep: 5min dynamic warm-up. Gentle Stretching: 8min", sets: "2 sets each", rest: "-", purpose: "Activation only. Prepare body without fatigue" },
-      ]},
-      { day: "Wednesday", sessions: [
-        { d: R, dur: "35 min", z: "Z2", workout: "Warm-up: 15min easy + 4x15s strides. Main: 15min steady Z2. Cool-down: 5min walk", sets: "4x15s", rest: "45s easy", purpose: "Maintain leg speed and running rhythm" },
-        { d: F, dur: "15 min", z: "-", workout: "Light Stretching: 10min gentle. Relaxation: 5min breathing", sets: "-", rest: "-", purpose: "Light mobility. Focus on relaxation and mental preparation" },
-      ]},
-      { day: "Thursday", sessions: [
-        { d: S, dur: "1200m", z: "Z2", workout: "Warm-up: 300m easy + 4x25m build. Main: 4x150m Z2 race feel. Cool-down: 150m easy", sets: "4x150m", rest: "30s", purpose: "Final swim preparation. Smooth and confident" },
-      ]},
-      { day: "Friday", sessions: [
-        { d: REST, dur: "-", z: "-", workout: "Complete rest day", sets: "-", rest: "-", purpose: "Full recovery. Focus on hydration, nutrition, mental preparation" },
-      ]},
-      { day: "Saturday", sessions: [
-        { d: B, dur: "30 min", z: "Z1-Z2", workout: "Warm-up: 15min easy. Main: 3x30s leg speed. Cool-down: 10min easy", sets: "3x30s", rest: "2min easy", purpose: "Pre-race activation. Very easy with short leg speed efforts" },
-        { d: R, dur: "15 min", z: "Z1-Z2", workout: "Easy run off bike with strides", sets: "3x10s", rest: "1min easy", purpose: "Final movement preparation" },
-      ]},
-      { day: "Sunday", sessions: [
-        { d: "RACE", dur: "Sprint Triathlon", z: "Race", workout: "750m swim, 20km bike, 5km run", sets: "-", rest: "-", purpose: "Execute race plan. Practice for main event. Pace conservatively, finish strong" },
-      ]},
-    ],
-  },
-  // ===== PHASE 2: BUILD PHASE (Weeks 9-16) =====
-  {
-    week: 9, phase: "Build Phase", title: "Intensity Introduction", hours: 9.5,
+    week: 7, phase: "Build Phase", title: "Intensity Introduction", hours: 9.5,
     days: [
       { day: "Monday", sessions: [
         { d: S, dur: "2200m", z: "Z3", workout: "Warm-up: 600m easy + 8x25m build. Main: 5x300m Z3 steady. Cool-down: 350m easy", sets: "5x300m", rest: "45s", purpose: "Lactate threshold swimming. Z3 like 10K race pace" },
@@ -284,7 +223,7 @@ export const WEEKS = [
     ],
   },
   {
-    week: 10, phase: "Build Phase", title: "Lactate Threshold Focus", hours: 10.0,
+    week: 8, phase: "Build Phase", title: "Lactate Threshold Focus", hours: 10.0,
     days: [
       { day: "Monday", sessions: [
         { d: S, dur: "2400m", z: "Z3-Z4", workout: "Warm-up: 700m easy + 6x50m build/fast. Main: 6x250m Z3-Z4 steady. Cool-down: 350m easy", sets: "6x250m", rest: "30s", purpose: "VO2 max swimming. Z4 hard but sustainable for 250m" },
@@ -314,7 +253,7 @@ export const WEEKS = [
     ],
   },
   {
-    week: 11, phase: "Build Phase", title: "VO2 Max Development", hours: 10.5,
+    week: 9, phase: "Build Phase", title: "Sprint Triathlon Week", hours: 10.5,
     days: [
       { day: "Monday", sessions: [
         { d: S, dur: "2500m", z: "Z3-Z4", workout: "Warm-up: 700m easy + 8x25m fast. Main: 8x200m Z3-Z4 steady. Cool-down: 300m easy", sets: "8x200m", rest: "20s", purpose: "VO2 max swimming. Z4 at 1500m race pace" },
@@ -335,16 +274,15 @@ export const WEEKS = [
         { d: AR, dur: "30 min", z: "Z1", workout: "Easy movement or complete rest", sets: "-", rest: "-", purpose: "Recovery priority. Complete rest if needed" },
       ]},
       { day: "Saturday", sessions: [
-        { d: B, dur: "3 hours", z: "Z2-Z3", workout: "Warm-up: 20min easy + 4x3min builds. Main: 2.5hr with 4x10min Z3 blocks. Cool-down: 10min easy", sets: "4x10min", rest: "5min Z2", purpose: "Extended race pace practice. Practice all race day protocols" },
-        { d: R, dur: "35 min", z: "Z2-Z3", workout: "Brick workout progression", sets: "1x35min", rest: "-", purpose: "Quality brick. Smooth transition and building to race pace" },
+        { d: R, dur: "20 min", z: "Z1-Z2", workout: "Pre-race shakeout: 10min easy jog + 4x15s strides. 5min walk. Dynamic stretches", sets: "4x15s strides", rest: "45s easy", purpose: "Pre-race activation. Loosen legs, stay fresh for tomorrow's sprint triathlon" },
       ]},
       { day: "Sunday", sessions: [
-        { d: R, dur: "90 min", z: "Z2", workout: "Warm-up: 25min easy + 6x15s strides. Main: 60min long run build. Cool-down: 5min walk", sets: "1x60min", rest: "-", purpose: "Peak long run volume. Practice race nutrition every 15min" },
+        { d: "RACE", dur: "Sprint Triathlon", z: "Race", workout: "750m swim, 20km bike, 5km run. Race as a build-up event for Ironman 70.3", sets: "-", rest: "-", purpose: "Sprint triathlon race. Practice transitions, pacing, and race-day execution. Treat as Ironman dress rehearsal" },
       ]},
     ],
   },
   {
-    week: 12, phase: "Build Phase", title: "Recovery Week", hours: 9.0,
+    week: 10, phase: "Build Phase", title: "Recovery Week", hours: 9.0,
     days: [
       { day: "Monday", sessions: [
         { d: S, dur: "2000m", z: "Z2", workout: "Warm-up: 500m easy + 6x25m drill. Main: 6x200m Z2 smooth. Cool-down: 300m easy", sets: "6x200m", rest: "30s", purpose: "Recovery week. Focus on technique and feel for water" },
@@ -374,7 +312,7 @@ export const WEEKS = [
     ],
   },
   {
-    week: 13, phase: "Build Phase", title: "Lactate Threshold Focus", hours: 11.0,
+    week: 11, phase: "Build Phase", title: "Lactate Threshold Focus", hours: 11.0,
     days: [
       { day: "Monday", sessions: [
         { d: S, dur: "2600m", z: "Z3", workout: "Warm-up: 700m easy + 8x25m build. Main: 4x400m Z3 race pace. Cool-down: 300m easy", sets: "4x400m", rest: "60s", purpose: "Extended race pace swimming. Pacing discipline" },
@@ -404,7 +342,7 @@ export const WEEKS = [
     ],
   },
   {
-    week: 14, phase: "Build Phase", title: "Race-Specific Intensity", hours: 11.5,
+    week: 12, phase: "Build Phase", title: "Race-Specific Intensity", hours: 11.5,
     days: [
       { day: "Monday", sessions: [
         { d: S, dur: "2700m", z: "Z3-Z4", workout: "Warm-up: 700m easy + 8x25m fast. Main: 6x300m Z3-Z4 race pace. Cool-down: 200m easy", sets: "6x300m", rest: "45s", purpose: "Race-specific intensity. Z4 at race pace under pressure" },
@@ -434,7 +372,7 @@ export const WEEKS = [
     ],
   },
   {
-    week: 15, phase: "Build Phase", title: "Peak Build Volume", hours: 12.0,
+    week: 13, phase: "Build Phase", title: "Peak Build Volume", hours: 12.0,
     days: [
       { day: "Monday", sessions: [
         { d: S, dur: "2800m", z: "Z3-Z4", workout: "Warm-up: 800m easy + 8x25m race pace. Main: 5x350m Z3-Z4 steady. Cool-down: 250m easy", sets: "5x350m", rest: "45s", purpose: "Peak swimming volume. Z4 at race pace" },
@@ -464,7 +402,7 @@ export const WEEKS = [
     ],
   },
   {
-    week: 16, phase: "Build Phase", title: "Recovery Week", hours: 10.0,
+    week: 14, phase: "Build Phase", title: "Recovery Week", hours: 10.0,
     days: [
       { day: "Monday", sessions: [
         { d: S, dur: "2200m", z: "Z2", workout: "Warm-up: 600m easy + 6x25m drill. Main: 5x250m Z2 smooth. Cool-down: 350m easy", sets: "5x250m", rest: "40s", purpose: "Recovery week. Focus on technique and feel for water" },
@@ -493,9 +431,9 @@ export const WEEKS = [
       ]},
     ],
   },
-  // ===== PHASE 3: PEAK PHASE (Weeks 17-20) =====
+  // ===== PHASE 3: PEAK PHASE (Weeks 15-18) =====
   {
-    week: 17, phase: "Peak Phase", title: "Race Simulation", hours: 12.5,
+    week: 15, phase: "Peak Phase", title: "Race Simulation", hours: 12.5,
     days: [
       { day: "Monday", sessions: [
         { d: S, dur: "2800m", z: "Z2-Z3", workout: "Warm-up: 600m easy + 8x25m race pace. Main: 1800m continuous race pace. Cool-down: 400m easy", sets: "1x1800m", rest: "-", purpose: "Race distance simulation. Continuous at race pace. Practice sighting every 6-8 strokes" },
@@ -525,7 +463,7 @@ export const WEEKS = [
     ],
   },
   {
-    week: 18, phase: "Peak Phase", title: "Olympic Distance Triathlon Week", hours: 13.0,
+    week: 16, phase: "Peak Phase", title: "Olympic Distance Triathlon Week", hours: 13.0,
     days: [
       { day: "Monday", sessions: [
         { d: S, dur: "2500m", z: "Z2-Z3", workout: "Warm-up: 700m easy + 6x25m race pace. Main: 5x300m Z2-Z3 race pace. Cool-down: 300m easy", sets: "5x300m", rest: "45s", purpose: "Pre-race maintenance. Each 300m at race pace" },
@@ -555,7 +493,7 @@ export const WEEKS = [
     ],
   },
   {
-    week: 19, phase: "Peak Phase", title: "Post-Race Recovery", hours: 11.0,
+    week: 17, phase: "Peak Phase", title: "Post-Race Recovery", hours: 11.0,
     days: [
       { day: "Monday", sessions: [
         { d: REST, dur: "-", z: "-", workout: "Complete rest post-race", sets: "-", rest: "-", purpose: "Full recovery. Focus on hydration, nutrition, sleep" },
@@ -584,7 +522,7 @@ export const WEEKS = [
     ],
   },
   {
-    week: 20, phase: "Peak Phase", title: "Final Peak", hours: 13.5,
+    week: 18, phase: "Peak Phase", title: "Final Peak", hours: 13.5,
     days: [
       { day: "Monday", sessions: [
         { d: S, dur: "3000m", z: "Z2-Z3", workout: "Warm-up: 800m easy + 8x25m race pace. Main: 1900m race simulation. Cool-down: 300m easy", sets: "1x1900m", rest: "-", purpose: "Final race simulation. Continuous swim at race pace" },
@@ -613,39 +551,9 @@ export const WEEKS = [
       ]},
     ],
   },
-  // ===== PHASE 4: TAPER (Weeks 21-24) =====
+  // ===== PHASE 4: TAPER (Weeks 19-21) =====
   {
-    week: 21, phase: "Taper", title: "80% Volume Reduction", hours: 10.0,
-    days: [
-      { day: "Monday", sessions: [
-        { d: S, dur: "2000m", z: "Z2-Z3", workout: "Warm-up: 500m easy + 6x25m race pace. Main: 4x300m Z2-Z3 steady. Cool-down: 200m easy", sets: "4x300m", rest: "60s", purpose: "Maintain intensity, reduce volume. Race pace, smooth technique" },
-        { d: C, dur: "20 min", z: "-", workout: "Planks: 3x30s standard. Side Planks: 2x20s each side. Dead Bugs: 2x10 each side. Glute Bridges: 2x15", sets: "3 sets each", rest: "45s", purpose: "Maintenance work only. Keep core activated" },
-      ]},
-      { day: "Tuesday", sessions: [
-        { d: B, dur: "90 min", z: "Z2-Z3", workout: "Warm-up: 20min easy + 3x3min builds. Main: 60min with 25min race pace block. Cool-down: 10min easy", sets: "1x25min", rest: "-", purpose: "Race pace practice with reduced volume" },
-        { d: ST, dur: "30 min", z: "-", workout: "Bodyweight Squats: 3x10. Lunges: 2x8 each leg. Push-ups: 3x8. Band Rows: 3x12. Calf Raises: 2x15", sets: "3 sets each", rest: "60s", purpose: "Activation only. Maintain patterns without fatigue" },
-      ]},
-      { day: "Wednesday", sessions: [
-        { d: R, dur: "50 min", z: "Z2-Z3", workout: "Warm-up: 15min easy + 6x15s strides. Main: 25min race pace run. Cool-down: 10min easy", sets: "1x25min", rest: "-", purpose: "Race pace confidence builder. Controlled and sustainable" },
-        { d: F, dur: "20 min", z: "-", workout: "Dynamic Warm-up: 8min. Static Stretching: 12min focused. Relaxation: 5min breathing", sets: "-", rest: "-", purpose: "Mobility maintenance. Include stress management" },
-      ]},
-      { day: "Thursday", sessions: [
-        { d: S, dur: "1800m", z: "Z2-Z3", workout: "Warm-up: 400m easy + 6x50m build. Main: 5x200m Z2-Z3 smooth. Cool-down: 200m easy", sets: "5x200m", rest: "30s", purpose: "Technique refinement. Smooth, controlled. Practice race start" },
-      ]},
-      { day: "Friday", sessions: [
-        { d: AR, dur: "30 min", z: "Z1", workout: "Easy swim (1000m) or gentle walk", sets: "-", rest: "-", purpose: "Complete recovery. Very easy movement or rest" },
-      ]},
-      { day: "Saturday", sessions: [
-        { d: B, dur: "3 hours", z: "Z2", workout: "Warm-up: 20min easy + 3x5min builds. Main: 2.5hr steady with race nutrition. Cool-down: 10min easy", sets: "1x2.5hr", rest: "-", purpose: "Final long ride with race nutrition practice" },
-        { d: R, dur: "35 min", z: "Z2-Z3", workout: "Brick workout race simulation", sets: "1x35min", rest: "-", purpose: "Final brick. Smooth transition and race pace rhythm" },
-      ]},
-      { day: "Sunday", sessions: [
-        { d: R, dur: "80 min", z: "Z2", workout: "Warm-up: 20min easy + 6x15s strides. Main: 55min steady with nutrition. Cool-down: 5min walk", sets: "1x55min", rest: "-", purpose: "Final long run. Practice nutrition. Should feel strong" },
-      ]},
-    ],
-  },
-  {
-    week: 22, phase: "Taper", title: "60% Volume Reduction", hours: 8.5,
+    week: 19, phase: "Taper", title: "60% Volume Reduction", hours: 8.5,
     days: [
       { day: "Monday", sessions: [
         { d: S, dur: "1500m", z: "Z2-Z3", workout: "Warm-up: 400m easy + 4x25m race pace. Main: 5x150m Z2-Z3 smooth. Cool-down: 200m easy", sets: "5x150m", rest: "30s", purpose: "Pre-race sharpening. Each 150m at race pace" },
@@ -675,7 +583,7 @@ export const WEEKS = [
     ],
   },
   {
-    week: 23, phase: "Taper", title: "40% Volume Reduction", hours: 6.0,
+    week: 20, phase: "Taper", title: "40% Volume Reduction", hours: 6.0,
     days: [
       { day: "Monday", sessions: [
         { d: S, dur: "1200m", z: "Z2-Z3", workout: "Warm-up: 300m easy + 4x25m build. Main: 4x150m Z2-Z3 race pace. Cool-down: 150m easy", sets: "4x150m", rest: "30s", purpose: "Final race pace practice. Smooth and controlled" },
@@ -705,7 +613,7 @@ export const WEEKS = [
     ],
   },
   {
-    week: 24, phase: "Taper", title: "Race Week", hours: 4.5,
+    week: 21, phase: "Taper", title: "Race Week", hours: 4.5,
     days: [
       { day: "Monday", sessions: [
         { d: S, dur: "1200m", z: "Z2-Z3", workout: "Warm-up: 300m easy + 4x25m build. Main: 4x150m Z2-Z3 smooth. Cool-down: 150m easy", sets: "4x150m", rest: "20s", purpose: "Maintain feel for water. Smooth, controlled pace" },
@@ -745,7 +653,7 @@ export function getCurrentWeek(startDate) {
   const now = new Date()
   now.setHours(0, 0, 0, 0)
   const diff = Math.floor((now - start) / (7 * 24 * 60 * 60 * 1000))
-  return Math.max(1, Math.min(24, diff + 1))
+  return Math.max(1, Math.min(21, diff + 1))
 }
 
 export function getWeekWithDates(weekNum, startDate, checked = {}) {

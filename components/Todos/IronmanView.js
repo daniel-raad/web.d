@@ -1,11 +1,11 @@
 import { useState, useEffect, useMemo, useRef } from "react"
 import { WEEKS, PHASES, DISCIPLINE_INFO, getCurrentWeek } from "./ironmanData"
-import { getIronmanPlan, saveIronmanPlan } from "../../lib/firestore"
+import { getIronmanPlan, saveIronmanPlan, resetIronmanPlan } from "../../lib/firestore"
 import styles from "../../styles/Todos.module.css"
 
 const WEEKDAYS = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
 
-const DEFAULT_START = "2026-03-08"
+const DEFAULT_START = "2026-03-30"
 
 function getMonday(date) {
   const d = new Date(date)
@@ -247,6 +247,15 @@ export default function IronmanView() {
     setEditingStart(false)
   }
 
+  const handleResetProgress = async () => {
+    if (!window.confirm("Reset all progress? This will untick every session.")) return
+    const resetData = { checked: {}, startDate, dayOrders: {}, sessionMoves: {} }
+    await resetIronmanPlan(resetData)
+    setChecked({})
+    setDayOrders({})
+    setSessionMoves({})
+  }
+
   const stats = useMemo(() => {
     let total = 0
     let done = 0
@@ -282,7 +291,7 @@ export default function IronmanView() {
       <div className={styles.ironmanHeader}>
         <div className={styles.ironmanTitle}>
           <span>Ironman 70.3 Training Plan</span>
-          <span className={styles.ironmanSubtitle}>24 weeks</span>
+          <span className={styles.ironmanSubtitle}>21 weeks</span>
         </div>
         <div className={styles.ironmanStartDate}>
           {editingStart ? (
@@ -307,6 +316,9 @@ export default function IronmanView() {
           <div className={styles.ironmanProgressFill} style={{ width: `${stats.pct}%` }} />
         </div>
         <span className={styles.ironmanProgressText}>{stats.done}/{stats.total} sessions ({stats.pct}%)</span>
+        {stats.done > 0 && (
+          <button onClick={handleResetProgress} className={styles.ironmanResetBtn}>Reset</button>
+        )}
       </div>
 
       <div className={styles.ironmanPhases}>

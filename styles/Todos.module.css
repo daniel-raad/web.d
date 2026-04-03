@@ -701,6 +701,22 @@
   white-space: nowrap;
 }
 
+.ironmanResetBtn {
+  background: none;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  color: var(--text-faint);
+  font-size: 0.65rem;
+  padding: 1px 6px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.ironmanResetBtn:hover {
+  color: #ef4444;
+  border-color: #ef4444;
+}
+
 .ironmanPhases {
   display: flex;
   gap: 0.5rem;

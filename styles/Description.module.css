@@ -48,6 +48,26 @@
   border-color: var(--accent);
 }
 
+.ironmanLine {
+  font-weight: 500;
+  letter-spacing: 0.01em;
+}
+
+.ironmanRed {
+  color: #e02726;
+  font-weight: 800;
+}
+
+.ironmanWhite {
+  font-weight: 800;
+  color: var(--text);
+}
+
+.ironmanDays {
+  font-weight: 800;
+  color: var(--text);
+}
+
 .linkList {
   list-style: none;
   padding: 0;
