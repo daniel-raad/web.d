@@ -7,10 +7,11 @@ const WritingsDemo = dynamic(() => import('../components/WritingsDemo'), { ssr: 
 const experiments = [
   {
     title: 'Text Reflow with Pretext',
-    description: 'Drag the spaceman above and watch text reflow in real time. Uses chenglou\'s pretext library for DOM-free text measurement — pure arithmetic at 60fps.',
+    description: 'Drag the spaceman around and watch text reflow in real time. Uses chenglou\'s pretext library for DOM-free text measurement — pure arithmetic at 60fps.',
     tags: ['pretext', 'text layout', 'interactive'],
     link: 'https://github.com/chenglou/pretext',
     status: 'live',
+    liveDemo: true,
   },
   {
     title: 'Conversational Flow DSL',
@@ -32,9 +33,7 @@ export default function Experiments() {
 
       <Header compact />
 
-      <WritingsDemo />
-
-      <div className="max-w-4xl mx-auto px-6 pb-10">
+      <div className="max-w-4xl mx-auto px-6 pb-10" style={{ marginTop: '0.5rem' }}>
         <h2 style={{
           fontSize: '0.7em',
           fontWeight: 700,
@@ -42,8 +41,9 @@ export default function Experiments() {
           letterSpacing: '0.15em',
           textTransform: 'uppercase',
           marginBottom: '1rem',
+          marginTop: 0,
         }}>
-          All Experiments
+          Experiments
         </h2>
 
         <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
@@ -73,6 +73,10 @@ export default function Experiments() {
                   {exp.status}
                 </span>
               </div>
+              <p style={{ fontSize: '0.85em', lineHeight: 1.6, color: 'var(--text-secondary)', margin: '0 0 0.75rem' }}>
+                {exp.description}
+              </p>
+              {exp.liveDemo && <WritingsDemo />}
               {exp.image && (
                 // eslint-disable-next-line @next/next/no-img-element
                 <img src={exp.image} alt={exp.title} style={{
@@ -82,10 +86,7 @@ export default function Experiments() {
                   border: '1px solid var(--border)',
                 }} />
               )}
-              <p style={{ fontSize: '0.85em', lineHeight: 1.6, color: 'var(--text-secondary)', margin: '0 0 0.6rem' }}>
-                {exp.description}
-              </p>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', flexWrap: 'wrap' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', flexWrap: 'wrap', marginTop: '0.75rem' }}>
                 {exp.tags.map((tag, j) => (
                   <span key={j} style={{
                     fontSize: '0.7em',

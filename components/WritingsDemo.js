@@ -143,69 +143,50 @@ export default function WritingsDemo() {
   }, [pretextAPI, containerWidth, spacemanBounds])
 
   return (
-    <div className="max-w-4xl mx-auto px-6 pb-10">
-      <div style={{ marginBottom: '1.5rem', marginTop: '0.5rem' }}>
-        <h2 style={{
-          fontSize: '0.7em',
-          fontWeight: 700,
-          color: 'var(--text-faint)',
-          letterSpacing: '0.15em',
-          textTransform: 'uppercase',
-          marginBottom: '0.5rem',
-        }}>
-          Writing
-        </h2>
-        <p style={{ fontSize: '0.95em', color: 'var(--text-muted)', lineHeight: 1.6 }}>
-          Drag the spaceman around. Watch the text reflow.
-        </p>
-      </div>
+    <div
+      ref={containerRef}
+      style={{
+        position: 'relative',
+        minHeight: totalHeight + 64,
+        background: 'var(--bg-subtle)',
+        borderRadius: 12,
+        padding: '2rem',
+        overflow: 'hidden',
+      }}
+    >
+      {pretextAPI && (
+        <>
+          <DraggableSpaceman
+            onPositionChange={setSpacemanBounds}
+            containerRef={containerRef}
+          />
+          <div style={{ position: 'relative', width: '100%', minHeight: totalHeight }}>
+            {lines.map((line, i) => (
+              <div
+                key={i}
+                style={{
+                  position: 'absolute',
+                  left: line.x,
+                  top: line.y,
+                  height: LINE_HEIGHT,
+                  lineHeight: `${LINE_HEIGHT}px`,
+                  fontSize: '15px',
+                  fontFamily: 'Montserrat, sans-serif',
+                  color: 'var(--text-secondary)',
+                  whiteSpace: 'pre',
+                  pointerEvents: 'none',
+                }}
+              >
+                {line.text}
+              </div>
+            ))}
+          </div>
+        </>
+      )}
 
-      <div
-        ref={containerRef}
-        style={{
-          position: 'relative',
-          minHeight: totalHeight + 64,
-          background: 'var(--bg-elevated)',
-          borderRadius: 16,
-          padding: '2rem',
-          boxShadow: 'var(--shadow-sm)',
-          overflow: 'hidden',
-        }}
-      >
-        {pretextAPI && (
-          <>
-            <DraggableSpaceman
-              onPositionChange={setSpacemanBounds}
-              containerRef={containerRef}
-            />
-            <div style={{ position: 'relative', width: '100%', minHeight: totalHeight }}>
-              {lines.map((line, i) => (
-                <div
-                  key={i}
-                  style={{
-                    position: 'absolute',
-                    left: line.x,
-                    top: line.y,
-                    height: LINE_HEIGHT,
-                    lineHeight: `${LINE_HEIGHT}px`,
-                    fontSize: '15px',
-                    fontFamily: 'Montserrat, sans-serif',
-                    color: 'var(--text-secondary)',
-                    whiteSpace: 'pre',
-                    pointerEvents: 'none',
-                  }}
-                >
-                  {line.text}
-                </div>
-              ))}
-            </div>
-          </>
-        )}
-
-        {!pretextAPI && (
-          <p style={{ color: 'var(--text-faint)', fontStyle: 'italic' }}>Loading...</p>
-        )}
-      </div>
+      {!pretextAPI && (
+        <p style={{ color: 'var(--text-faint)', fontStyle: 'italic' }}>Loading...</p>
+      )}
     </div>
   )
 }

@@ -2,6 +2,7 @@ import React, { useState, useRef, useCallback, useEffect } from 'react'
 import { useTheme } from '../lib/ThemeContext'
 
 const SPACEMAN_SIZE = 140
+const PORTAL_INSET = 24  // portal extends this far beyond the image on each side
 
 export default function DraggableSpaceman({ onPositionChange, containerRef, initialPos }) {
   const { toggleTheme } = useTheme()
@@ -26,13 +27,13 @@ export default function DraggableSpaceman({ onPositionChange, containerRef, init
       const initialX = rect.width - SPACEMAN_SIZE - 60
       const initialY = 40
       setPosition({ x: initialX, y: initialY })
-      onPositionChange?.({ x: initialX, y: initialY, width: SPACEMAN_SIZE, height: SPACEMAN_SIZE })
+      onPositionChange?.({ x: initialX - PORTAL_INSET, y: initialY - PORTAL_INSET, width: SPACEMAN_SIZE + PORTAL_INSET * 2, height: SPACEMAN_SIZE + PORTAL_INSET * 2 })
     } else {
       // Free-floating mode: center horizontally, position near top (hero area)
       const x = (window.innerWidth - SPACEMAN_SIZE) / 2
       const y = 80
       setPosition({ x, y })
-      onPositionChange?.({ x, y, width: SPACEMAN_SIZE, height: SPACEMAN_SIZE })
+      onPositionChange?.({ x: x - PORTAL_INSET, y: y - PORTAL_INSET, width: SPACEMAN_SIZE + PORTAL_INSET * 2, height: SPACEMAN_SIZE + PORTAL_INSET * 2 })
     }
   }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
@@ -78,7 +79,7 @@ export default function DraggableSpaceman({ onPositionChange, containerRef, init
       const clampedX = Math.max(0, Math.min(newX, containerRect.width - SPACEMAN_SIZE))
       const clampedY = Math.max(0, Math.min(newY, containerRect.height - SPACEMAN_SIZE))
       setPosition({ x: clampedX, y: clampedY })
-      onPositionChange?.({ x: clampedX, y: clampedY, width: SPACEMAN_SIZE, height: SPACEMAN_SIZE })
+      onPositionChange?.({ x: clampedX - PORTAL_INSET, y: clampedY - PORTAL_INSET, width: SPACEMAN_SIZE + PORTAL_INSET * 2, height: SPACEMAN_SIZE + PORTAL_INSET * 2 })
     } else {
       // Free-floating (homepage) — fixed positioning, clamped to viewport
       const newX = e.clientX - dragOffset.current.x
@@ -86,7 +87,7 @@ export default function DraggableSpaceman({ onPositionChange, containerRef, init
       const clampedX = Math.max(0, Math.min(newX, window.innerWidth - SPACEMAN_SIZE))
       const clampedY = Math.max(0, Math.min(newY, window.innerHeight - SPACEMAN_SIZE))
       setPosition({ x: clampedX, y: clampedY })
-      onPositionChange?.({ x: clampedX, y: clampedY, width: SPACEMAN_SIZE, height: SPACEMAN_SIZE })
+      onPositionChange?.({ x: clampedX - PORTAL_INSET, y: clampedY - PORTAL_INSET, width: SPACEMAN_SIZE + PORTAL_INSET * 2, height: SPACEMAN_SIZE + PORTAL_INSET * 2 })
     }
   }, [isDragging, isConstrained, onPositionChange, containerRef])
 
