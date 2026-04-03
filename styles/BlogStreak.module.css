@@ -10,7 +10,7 @@
 
 .streak {
   font-size: 0.8em;
-  color: rgba(255, 255, 255, 0.45);
+  color: #9ca3af;
 }
 
 .scrollWrapper {
@@ -27,7 +27,7 @@
 
 .monthLabel {
   font-size: 0.6em;
-  color: rgba(255, 255, 255, 0.3);
+  color: #9ca3af;
   white-space: nowrap;
 }
 
@@ -41,9 +41,9 @@
   width: 14px;
   height: 14px;
   border-radius: 3px;
-  background: rgba(255, 255, 255, 0.06);
+  background: #f3f4f6;
 }
 
 .active {
-  background: rgba(100, 180, 255, 0.7);
+  background: #2563eb;
 }

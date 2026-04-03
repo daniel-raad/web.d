@@ -1,6 +1,6 @@
 import Head from "next/head"
-import Header from "../components/Header"
-import DashboardPage from "../components/Dashboard/DashboardPage"
+import Header from "../../components/Header"
+import TodayHub from "../../components/Dashboard/TodayHub"
 
 export default function Dashboard() {
   return (
@@ -17,7 +17,7 @@ export default function Dashboard() {
         .fixed.bottom-0 { display: none; }
       `}</style>
 
-      <DashboardPage />
+      <TodayHub />
     </div>
   )
 }

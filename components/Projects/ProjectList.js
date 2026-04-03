@@ -1,7 +1,6 @@
 import { projects } from "../../constants/constants";
 import styles from "../../styles/ProjectList.module.css";
 import Image from "next/image";
-import Link from "next/link";
 
 export default function ProjectList() {
   return (
@@ -9,7 +8,7 @@ export default function ProjectList() {
       <h2 className={styles.sectionHeader}>Projects</h2>
       <div className={styles.grid}>
         {projects.map((project, i) => (
-          <div key={i} className={styles.card}>
+          <div key={i} className={`${styles.card} ${project.featured ? styles.featured : ''}`}>
             <div className={styles.cardTop}>
               <div className={styles.imageWrap}>
                 <Image
@@ -27,6 +26,15 @@ export default function ProjectList() {
               </div>
             </div>
             <p className={styles.excerpt}>{project.excerpt}</p>
+            {project.badges && project.badges.length > 0 && (
+              <div className={styles.badges}>
+                {project.badges.map((badge, j) => (
+                  <span key={j} className={styles.badge} style={{ backgroundColor: badge.color }}>
+                    {badge.label}
+                  </span>
+                ))}
+              </div>
+            )}
             <div className={styles.tags}>
               {project.tags.map((tag, j) => (
                 <span key={j} className={styles.tag}>{tag}</span>

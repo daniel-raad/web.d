@@ -5,17 +5,96 @@
 @import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;700&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&display=swap");
 
+:root {
+  --bg: #fafbfc;
+  --bg-elevated: #ffffff;
+  --bg-subtle: #f3f4f6;
+  --bg-muted: #f9fafb;
+  --border: #e5e7eb;
+  --border-accent: rgba(37, 99, 235, 0.3);
+  --text: #111827;
+  --text-secondary: #374151;
+  --text-muted: #6b7280;
+  --text-faint: #9ca3af;
+  --accent: #2563eb;
+  --accent-bg: rgba(37, 99, 235, 0.08);
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.06), 0 4px 16px rgba(0, 0, 0, 0.04);
+  --shadow-md: 0 2px 8px rgba(0, 0, 0, 0.08), 0 8px 32px rgba(0, 0, 0, 0.06);
+  --shadow-hover: 0 4px 16px rgba(17, 24, 39, 0.2);
+  --btn-primary-bg: #111827;
+  --btn-primary-color: #ffffff;
+  --btn-primary-hover: #1f2937;
+  --btn-outline-bg: #ffffff;
+  --btn-outline-border: #e5e7eb;
+  --btn-outline-color: #111827;
+  --link-underline: rgba(37, 99, 235, 0.3);
+  --tag-bg: #f3f4f6;
+  --tag-color: #6b7280;
+}
+
+[data-theme="dark"] {
+  --bg: #0b0d17;
+  --bg-elevated: rgba(255, 255, 255, 0.04);
+  --bg-subtle: rgba(255, 255, 255, 0.06);
+  --bg-muted: rgba(255, 255, 255, 0.04);
+  --border: rgba(255, 255, 255, 0.08);
+  --border-accent: rgba(100, 180, 255, 0.3);
+  --text: #ffffff;
+  --text-secondary: rgba(255, 255, 255, 0.7);
+  --text-muted: rgba(255, 255, 255, 0.5);
+  --text-faint: rgba(255, 255, 255, 0.35);
+  --accent: rgba(100, 180, 255, 0.8);
+  --accent-bg: rgba(100, 180, 255, 0.1);
+  --shadow-sm: none;
+  --shadow-md: none;
+  --shadow-hover: none;
+  --btn-primary-bg: rgba(100, 180, 255, 0.15);
+  --btn-primary-color: rgba(100, 180, 255, 0.9);
+  --btn-primary-hover: rgba(100, 180, 255, 0.25);
+  --btn-outline-bg: transparent;
+  --btn-outline-border: rgba(255, 255, 255, 0.1);
+  --btn-outline-color: rgba(255, 255, 255, 0.7);
+  --link-underline: rgba(100, 180, 255, 0.4);
+  --tag-bg: rgba(100, 180, 255, 0.1);
+  --tag-color: rgba(100, 180, 255, 0.7);
+}
+
 html,
 body {
   padding: 0;
   margin: 0;
   font-family: "Montserrat", sans-serif;
-  background: #0b0d17;
-  color: #e0e0e0;
+  background: var(--bg);
+  color: var(--text-secondary);
+}
+
+/* Circular reveal animation for theme toggle (View Transition API) */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
+}
+
+::view-transition-old(root) {
+  z-index: 1;
+}
+
+::view-transition-new(root) {
+  z-index: 9999;
+  animation: theme-reveal 0.9s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@keyframes theme-reveal {
+  from {
+    clip-path: circle(0% at var(--theme-toggle-x, 50%) var(--theme-toggle-y, 50%));
+  }
+  to {
+    clip-path: circle(150vmax at var(--theme-toggle-x, 50%) var(--theme-toggle-y, 50%));
+  }
 }
 
 .text-shadow {
-  text-shadow: 0px 2px 0px rgb(0 0 0 / 30%);
+  text-shadow: none;
 }
 
 .adjacent-post {

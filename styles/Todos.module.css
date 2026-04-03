@@ -7,7 +7,7 @@
 /* --- View Toggle --- */
 .viewToggle {
   display: flex;
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid var(--border);
   border-radius: 2px;
   overflow: hidden;
   margin-bottom: 1.5rem;
@@ -16,8 +16,8 @@
 .viewToggleBtn {
   background: none;
   border: none;
-  border-right: 1px solid rgba(255, 255, 255, 0.1);
-  color: rgba(255, 255, 255, 0.4);
+  border-right: 1px solid var(--border);
+  color: var(--text-faint);
   padding: 0.4rem 1rem;
   cursor: pointer;
   font-size: 0.78rem;
@@ -32,12 +32,12 @@
 }
 
 .viewToggleBtn:hover {
-  color: rgba(255, 255, 255, 0.7);
+  color: var(--text-secondary);
 }
 
 .viewToggleActive {
-  background: rgba(100, 180, 255, 0.12);
-  color: rgb(100, 180, 255);
+  background: var(--accent-bg);
+  color: var(--accent);
 }
 
 /* --- Category Section --- */
@@ -55,7 +55,7 @@
 .categoryName {
   font-size: 0.85rem;
   font-weight: 700;
-  color: rgba(255, 255, 255, 0.7);
+  color: var(--text-secondary);
   text-transform: uppercase;
   letter-spacing: 0.06em;
 }
@@ -68,14 +68,14 @@
 
 .categoryCount {
   font-size: 0.75rem;
-  color: rgba(255, 255, 255, 0.35);
+  color: var(--text-faint);
   font-weight: 500;
 }
 
 .categoryActionBtn {
   background: none;
   border: none;
-  color: rgba(255, 255, 255, 0.15);
+  color: var(--border);
   cursor: pointer;
   padding: 0.15rem 0.3rem;
   font-size: 0.8rem;
@@ -88,7 +88,7 @@
 }
 
 .categoryActionBtn:hover {
-  color: #3b82f6;
+  color: var(--accent);
 }
 
 .categoryDeleteBtn:hover {
@@ -96,11 +96,11 @@
 }
 
 .categoryRenameInput {
-  background: rgba(255, 255, 255, 0.08);
-  border: 1px solid rgba(59, 130, 246, 0.5);
+  background: var(--bg-subtle);
+  border: 1px solid var(--accent);
   border-radius: 4px;
   padding: 0.2rem 0.5rem;
-  color: #fff;
+  color: var(--text);
   font-size: 0.85rem;
   font-weight: 700;
   font-family: inherit;
@@ -123,7 +123,7 @@
 .completedToggle {
   background: none;
   border: none;
-  color: rgba(255, 255, 255, 0.35);
+  color: var(--text-faint);
   cursor: pointer;
   font-size: 0.78rem;
   padding: 0.25rem 0.4rem;
@@ -131,7 +131,7 @@
 }
 
 .completedToggle:hover {
-  color: rgba(255, 255, 255, 0.6);
+  color: var(--text-secondary);
 }
 
 /* --- Todo Item --- */
@@ -145,14 +145,14 @@
 }
 
 .todoItem:hover {
-  background: rgba(255, 255, 255, 0.04);
+  background: var(--bg-muted);
 }
 
 .checkbox {
   width: 22px;
   height: 22px;
   border-radius: 5px;
-  border: 2px solid rgba(255, 255, 255, 0.2);
+  border: 2px solid var(--border);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -164,14 +164,14 @@
 }
 
 .checkbox:hover {
-  border-color: #3b82f6;
+  border-color: var(--accent);
 }
 
 .checkboxDone {
-  background: #3b82f6;
-  border-color: #3b82f6;
-  color: #fff;
-  box-shadow: 0 0 6px rgba(59, 130, 246, 0.3);
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--text);
+  box-shadow: 0 0 0 2px var(--accent-bg);
 }
 
 .todoContent {
@@ -184,17 +184,17 @@
 
 .todoText {
   font-size: 0.9rem;
-  color: rgba(255, 255, 255, 0.85);
+  color: var(--text-secondary);
 }
 
 .todoTextDone {
   text-decoration: line-through;
-  color: rgba(255, 255, 255, 0.35);
+  color: var(--text-faint);
 }
 
 .todoNote {
   font-size: 0.75rem;
-  color: rgba(255, 255, 255, 0.35);
+  color: var(--text-faint);
   font-style: italic;
 }
 
@@ -206,28 +206,28 @@
 
 .noteInput {
   flex: 1;
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.15);
+  background: var(--bg-subtle);
+  border: 1px solid var(--border);
   border-radius: 5px;
   padding: 0.35rem 0.5rem;
-  color: #e0e0e0;
+  color: var(--text);
   font-size: 0.8rem;
   font-family: inherit;
 }
 
 .noteInput:focus {
   outline: none;
-  border-color: rgba(59, 130, 246, 0.5);
+  border-color: var(--accent);
 }
 
 .noteInput::placeholder {
-  color: rgba(255, 255, 255, 0.25);
+  color: var(--text-faint);
 }
 
 .noteBtn {
-  background: rgba(59, 130, 246, 0.15);
-  border: 1px solid rgba(59, 130, 246, 0.3);
-  color: #3b82f6;
+  background: var(--accent-bg);
+  border: 1px solid var(--accent);
+  color: var(--accent);
   border-radius: 5px;
   padding: 0.3rem 0.6rem;
   cursor: pointer;
@@ -238,13 +238,13 @@
 }
 
 .noteBtn:hover {
-  background: rgba(59, 130, 246, 0.25);
+  background: var(--accent-bg);
 }
 
 .noteSkipBtn {
   background: none;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  color: rgba(255, 255, 255, 0.4);
+  border: 1px solid var(--border);
+  color: var(--text-faint);
   border-radius: 5px;
   padding: 0.3rem 0.6rem;
   cursor: pointer;
@@ -254,12 +254,12 @@
 }
 
 .noteSkipBtn:hover {
-  color: rgba(255, 255, 255, 0.6);
+  color: var(--text-secondary);
 }
 
 .todoDueDate {
   font-size: 0.75rem;
-  color: rgba(255, 255, 255, 0.4);
+  color: var(--text-faint);
   white-space: nowrap;
 }
 
@@ -268,13 +268,13 @@
 }
 
 .todoDueDateToday {
-  color: #3b82f6;
+  color: var(--accent);
   font-weight: 600;
 }
 
 .todoDueDateAdd {
   font-size: 0.75rem;
-  color: rgba(255, 255, 255, 0.2);
+  color: var(--border);
   cursor: pointer;
   white-space: nowrap;
   transition: color 0.2s;
@@ -286,7 +286,7 @@
 }
 
 .todoDueDateAdd:hover {
-  color: #3b82f6;
+  color: var(--accent);
 }
 
 .todoDueDate,
@@ -296,11 +296,11 @@
 }
 
 .todoDateInline {
-  background: rgba(255, 255, 255, 0.08);
-  border: 1px solid rgba(59, 130, 246, 0.4);
+  background: var(--bg-subtle);
+  border: 1px solid var(--accent);
   border-radius: 4px;
   padding: 0.2rem 0.4rem;
-  color: #e0e0e0;
+  color: var(--text);
   font-size: 0.75rem;
   font-family: inherit;
   width: 130px;
@@ -308,13 +308,13 @@
 
 .todoDateInline:focus {
   outline: none;
-  border-color: rgba(59, 130, 246, 0.6);
+  border-color: var(--accent);
 }
 
 .deleteBtn {
   background: none;
   border: none;
-  color: rgba(255, 255, 255, 0.15);
+  color: var(--border);
   cursor: pointer;
   padding: 0.2rem 0.3rem;
   font-size: 0.8rem;
@@ -340,30 +340,30 @@
 
 .addInput {
   flex: 1;
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: var(--bg-subtle);
+  border: 1px solid var(--border);
   border-radius: 5px;
   padding: 0.4rem 0.6rem;
-  color: #e0e0e0;
+  color: var(--text);
   font-size: 0.85rem;
   font-family: inherit;
 }
 
 .addInput:focus {
   outline: none;
-  border-color: rgba(59, 130, 246, 0.5);
+  border-color: var(--accent);
 }
 
 .addInput::placeholder {
-  color: rgba(255, 255, 255, 0.25);
+  color: var(--text-faint);
 }
 
 .addDateInput {
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: var(--bg-subtle);
+  border: 1px solid var(--border);
   border-radius: 5px;
   padding: 0.4rem 0.5rem;
-  color: #e0e0e0;
+  color: var(--text);
   font-size: 0.8rem;
   font-family: inherit;
   width: 140px;
@@ -371,13 +371,13 @@
 
 .addDateInput:focus {
   outline: none;
-  border-color: rgba(59, 130, 246, 0.5);
+  border-color: var(--accent);
 }
 
 .addBtn {
-  background: rgba(59, 130, 246, 0.15);
-  border: 1px solid rgba(59, 130, 246, 0.3);
-  color: #3b82f6;
+  background: var(--accent-bg);
+  border: 1px solid var(--accent);
+  color: var(--accent);
   border-radius: 5px;
   padding: 0.4rem 0.7rem;
   cursor: pointer;
@@ -387,7 +387,7 @@
 }
 
 .addBtn:hover {
-  background: rgba(59, 130, 246, 0.25);
+  background: var(--accent-bg);
 }
 
 /* --- Add Category --- */
@@ -398,11 +398,11 @@
 }
 
 .addCategoryInput {
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px dashed rgba(255, 255, 255, 0.15);
+  background: var(--bg-subtle);
+  border: 1px dashed var(--border);
   border-radius: 5px;
   padding: 0.4rem 0.6rem;
-  color: #e0e0e0;
+  color: var(--text);
   font-size: 0.85rem;
   font-family: inherit;
   width: 200px;
@@ -410,12 +410,12 @@
 
 .addCategoryInput:focus {
   outline: none;
-  border-color: rgba(59, 130, 246, 0.5);
+  border-color: var(--accent);
   border-style: solid;
 }
 
 .addCategoryInput::placeholder {
-  color: rgba(255, 255, 255, 0.25);
+  color: var(--text-faint);
 }
 
 /* --- Week View --- */
@@ -428,8 +428,8 @@
 
 .weekNav button {
   background: none;
-  border: 1px solid rgba(255, 255, 255, 0.18);
-  color: rgba(255, 255, 255, 0.7);
+  border: 1px solid var(--border);
+  color: var(--text-secondary);
   border-radius: 4px;
   padding: 0.3rem 0.7rem;
   cursor: pointer;
@@ -438,14 +438,14 @@
 }
 
 .weekNav button:hover {
-  background: rgba(255, 255, 255, 0.1);
-  color: #fff;
+  background: var(--bg-subtle);
+  color: var(--text);
 }
 
 .weekLabel {
   font-size: 1rem;
   font-weight: 600;
-  color: #fff;
+  color: var(--text);
   min-width: 200px;
   text-align: center;
 }
@@ -459,14 +459,14 @@
   display: grid;
   grid-template-columns: repeat(7, 1fr);
   gap: 1px;
-  background: rgba(255, 255, 255, 0.06);
+  background: var(--border);
   border-radius: 8px;
   overflow: hidden;
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid var(--border);
 }
 
 .weekDay {
-  background: rgba(13, 15, 26, 0.9);
+  background: var(--bg-elevated);
   min-height: 160px;
   display: flex;
   flex-direction: column;
@@ -475,17 +475,17 @@
 .weekDayHeader {
   font-size: 0.7rem;
   font-weight: 600;
-  color: rgba(255, 255, 255, 0.5);
+  color: var(--text-muted);
   text-transform: uppercase;
   letter-spacing: 0.06em;
   text-align: center;
   padding: 0.5rem 0.4rem 0.3rem;
-  background: rgba(255, 255, 255, 0.03);
+  background: var(--bg-muted);
 }
 
 .weekDayToday {
-  color: #3b82f6;
-  background: rgba(59, 130, 246, 0.08);
+  color: var(--accent);
+  background: var(--accent-bg);
 }
 
 .weekDayDate {
@@ -515,14 +515,14 @@
 }
 
 .weekTodoItem:hover {
-  background: rgba(255, 255, 255, 0.06);
+  background: var(--bg-subtle);
 }
 
 .weekTodoCheckbox {
   width: 14px;
   height: 14px;
   border-radius: 3px;
-  border: 1.5px solid rgba(255, 255, 255, 0.2);
+  border: 1.5px solid var(--border);
   flex-shrink: 0;
   display: flex;
   align-items: center;
@@ -532,13 +532,13 @@
 }
 
 .weekTodoCheckboxDone {
-  background: #3b82f6;
-  border-color: #3b82f6;
-  color: #fff;
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--text);
 }
 
 .weekTodoText {
-  color: rgba(255, 255, 255, 0.75);
+  color: var(--text-secondary);
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -546,12 +546,12 @@
 
 .weekTodoTextDone {
   text-decoration: line-through;
-  color: rgba(255, 255, 255, 0.3);
+  color: var(--text-faint);
 }
 
 .weekCategory {
   font-size: 0.6rem;
-  color: rgba(255, 255, 255, 0.3);
+  color: var(--text-faint);
   padding: 0.1rem 0.3rem;
   font-weight: 600;
   text-transform: uppercase;
@@ -560,8 +560,8 @@
 
 .unscheduledSection {
   margin-top: 1.5rem;
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: var(--bg-muted);
+  border: 1px solid var(--border);
   border-radius: 8px;
   padding: 1rem;
 }
@@ -569,7 +569,7 @@
 .unscheduledTitle {
   font-size: 0.8rem;
   font-weight: 600;
-  color: rgba(255, 255, 255, 0.5);
+  color: var(--text-muted);
   text-transform: uppercase;
   letter-spacing: 0.06em;
   margin-bottom: 0.5rem;
@@ -583,18 +583,18 @@
 .completedDate {
   font-size: 0.8rem;
   font-weight: 600;
-  color: rgba(255, 255, 255, 0.5);
+  color: var(--text-muted);
   text-transform: uppercase;
   letter-spacing: 0.04em;
   margin-bottom: 0.4rem;
   padding-bottom: 0.3rem;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  border-bottom: 1px solid var(--border);
 }
 
 .completedCategory {
   font-size: 0.7rem;
   font-weight: 500;
-  color: rgba(255, 255, 255, 0.35);
+  color: var(--text-faint);
   text-transform: uppercase;
   letter-spacing: 0.05em;
   margin-top: 0.5rem;
@@ -606,7 +606,7 @@
 .emptyState {
   text-align: center;
   padding: 3rem 1rem;
-  color: rgba(255, 255, 255, 0.35);
+  color: var(--text-faint);
   font-size: 0.9rem;
 }
 
@@ -614,7 +614,7 @@
 .loading {
   text-align: center;
   padding: 4rem 0;
-  color: rgba(255, 255, 255, 0.5);
+  color: var(--text-muted);
   font-size: 0.9rem;
 }
 
@@ -638,21 +638,21 @@
   gap: 0.5rem;
   font-size: 1.1rem;
   font-weight: 700;
-  color: #fff;
+  color: var(--text);
 }
 
 .ironmanSubtitle {
   font-size: 0.75rem;
   font-weight: 500;
-  color: rgba(255, 255, 255, 0.4);
+  color: var(--text-faint);
 }
 
 .ironmanStartBtn {
-  background: rgba(255, 255, 255, 0.06);
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: var(--bg-subtle);
+  border: 1px solid var(--border);
   border-radius: 5px;
   padding: 0.3rem 0.6rem;
-  color: rgba(255, 255, 255, 0.6);
+  color: var(--text-secondary);
   font-size: 0.75rem;
   cursor: pointer;
   font-family: inherit;
@@ -660,16 +660,16 @@
 }
 
 .ironmanStartBtn:hover {
-  color: #fff;
-  border-color: rgba(59, 130, 246, 0.4);
+  color: var(--text);
+  border-color: var(--accent);
 }
 
 .ironmanDateInput {
-  background: rgba(255, 255, 255, 0.08);
-  border: 1px solid rgba(59, 130, 246, 0.5);
+  background: var(--bg-subtle);
+  border: 1px solid var(--accent);
   border-radius: 5px;
   padding: 0.3rem 0.5rem;
-  color: #e0e0e0;
+  color: var(--text);
   font-size: 0.75rem;
   font-family: inherit;
 }
@@ -683,21 +683,21 @@
 .ironmanProgressBar {
   flex: 1;
   height: 6px;
-  background: rgba(255, 255, 255, 0.08);
+  background: var(--border);
   border-radius: 3px;
   overflow: hidden;
 }
 
 .ironmanProgressFill {
   height: 100%;
-  background: linear-gradient(90deg, #3b82f6, #8b5cf6);
+  background: linear-gradient(90deg, var(--accent), #8b5cf6);
   border-radius: 3px;
   transition: width 0.3s;
 }
 
 .ironmanProgressText {
   font-size: 0.72rem;
-  color: rgba(255, 255, 255, 0.45);
+  color: var(--text-muted);
   white-space: nowrap;
 }
 
@@ -715,7 +715,7 @@
   flex: 1;
   padding: 0.35rem 0.3rem;
   border-radius: 5px;
-  background: rgba(255, 255, 255, 0.03);
+  background: var(--bg-muted);
   border-top: 2px solid;
   font-size: 0.7rem;
   font-weight: 600;
@@ -723,21 +723,21 @@
 
 .ironmanPhaseWeeks {
   font-size: 0.6rem;
-  color: rgba(255, 255, 255, 0.35);
+  color: var(--text-faint);
   font-weight: 400;
 }
 
 /* Week */
 .ironmanWeek {
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  border: 1px solid var(--border);
   border-radius: 8px;
   overflow: hidden;
   transition: border-color 0.2s;
 }
 
 .ironmanWeekCurrent {
-  border-color: rgba(59, 130, 246, 0.35);
-  box-shadow: 0 0 12px rgba(59, 130, 246, 0.08);
+  border-color: var(--accent);
+  box-shadow: 0 0 12px var(--accent-bg);
 }
 
 .ironmanWeekDone {
@@ -750,7 +750,7 @@
   justify-content: space-between;
   width: 100%;
   padding: 0.6rem 0.75rem;
-  background: rgba(255, 255, 255, 0.03);
+  background: var(--bg-muted);
   border: none;
   cursor: pointer;
   font-family: inherit;
@@ -758,7 +758,7 @@
 }
 
 .ironmanWeekHeader:hover {
-  background: rgba(255, 255, 255, 0.06);
+  background: var(--bg-subtle);
 }
 
 .ironmanWeekLeft {
@@ -768,7 +768,7 @@
 }
 
 .ironmanWeekChevron {
-  color: rgba(255, 255, 255, 0.35);
+  color: var(--text-faint);
   font-size: 0.8rem;
   width: 1rem;
 }
@@ -776,7 +776,7 @@
 .ironmanWeekNum {
   font-size: 0.7rem;
   font-weight: 700;
-  color: rgba(255, 255, 255, 0.7);
+  color: var(--text-secondary);
   border-left: 3px solid;
   padding-left: 0.4rem;
 }
@@ -784,14 +784,14 @@
 .ironmanWeekTitle {
   font-size: 0.82rem;
   font-weight: 600;
-  color: rgba(255, 255, 255, 0.8);
+  color: var(--text-secondary);
 }
 
 .ironmanCurrentBadge {
   font-size: 0.6rem;
   font-weight: 600;
-  color: #3b82f6;
-  background: rgba(59, 130, 246, 0.15);
+  color: var(--accent);
+  background: var(--accent-bg);
   padding: 0.1rem 0.4rem;
   border-radius: 3px;
   text-transform: uppercase;
@@ -806,18 +806,18 @@
 
 .ironmanWeekDates {
   font-size: 0.7rem;
-  color: rgba(255, 255, 255, 0.35);
+  color: var(--text-faint);
 }
 
 .ironmanWeekHours {
   font-size: 0.7rem;
-  color: rgba(255, 255, 255, 0.45);
+  color: var(--text-muted);
   font-weight: 600;
 }
 
 .ironmanWeekProgress {
   font-size: 0.7rem;
-  color: rgba(255, 255, 255, 0.4);
+  color: var(--text-faint);
   font-weight: 500;
   min-width: 2.5rem;
   text-align: right;
@@ -830,26 +830,26 @@
 }
 
 .ironmanDay {
-  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  border-top: 1px solid var(--bg-subtle);
   padding: 0.5rem 0.75rem;
 }
 
 .ironmanDayToday {
-  background: rgba(59, 130, 246, 0.04);
-  border-top-color: rgba(59, 130, 246, 0.15);
+  background: var(--accent-bg);
+  border-top-color: var(--accent);
 }
 
 .ironmanResetRow {
   display: flex;
   justify-content: flex-end;
   padding: 0.3rem 0.75rem;
-  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  border-top: 1px solid var(--bg-subtle);
 }
 
 .ironmanResetBtn {
   background: none;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  color: rgba(255, 255, 255, 0.35);
+  border: 1px solid var(--border);
+  color: var(--text-faint);
   font-size: 0.65rem;
   padding: 0.15rem 0.5rem;
   border-radius: 3px;
@@ -877,9 +877,9 @@
 }
 
 .ironmanDayDropTarget {
-  background: rgba(59, 130, 246, 0.08);
-  border-top-color: rgba(59, 130, 246, 0.3);
-  border-bottom: 2px solid rgba(59, 130, 246, 0.4);
+  background: var(--accent-bg);
+  border-top-color: var(--accent);
+  border-bottom: 2px solid var(--accent);
 }
 
 .ironmanDaySessionDropTarget {
@@ -888,7 +888,7 @@
 }
 
 .ironmanDragHandle {
-  color: rgba(255, 255, 255, 0.15);
+  color: var(--border);
   cursor: grab;
   font-size: 0.85rem;
   line-height: 1;
@@ -898,7 +898,7 @@
 }
 
 .ironmanDragHandle:hover {
-  color: rgba(255, 255, 255, 0.45);
+  color: var(--text-muted);
 }
 
 .ironmanDragHandle:active {
@@ -906,7 +906,7 @@
 }
 
 .ironmanSessionGrip {
-  color: rgba(255, 255, 255, 0.1);
+  color: var(--border);
   cursor: grab;
   font-size: 0.65rem;
   line-height: 1;
@@ -922,7 +922,7 @@
 }
 
 .ironmanSessionGrip:hover {
-  color: rgba(255, 255, 255, 0.4);
+  color: var(--text-faint);
 }
 
 .ironmanSessionGrip:active {
@@ -932,7 +932,7 @@
 .ironmanDayName {
   font-size: 0.72rem;
   font-weight: 700;
-  color: rgba(255, 255, 255, 0.55);
+  color: var(--text-secondary);
   text-transform: uppercase;
   letter-spacing: 0.04em;
   width: 5rem;
@@ -940,7 +940,7 @@
 
 .ironmanDayDate {
   font-size: 0.68rem;
-  color: rgba(255, 255, 255, 0.3);
+  color: var(--text-faint);
 }
 
 /* Sessions */
@@ -964,14 +964,14 @@
 }
 
 .ironmanSessionRow:hover {
-  background: rgba(255, 255, 255, 0.03);
+  background: var(--bg-muted);
 }
 
 .ironmanCheck {
   width: 20px;
   height: 20px;
   border-radius: 4px;
-  border: 2px solid rgba(255, 255, 255, 0.18);
+  border: 2px solid var(--border);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -983,14 +983,14 @@
 }
 
 .ironmanCheck:hover {
-  border-color: #3b82f6;
+  border-color: var(--accent);
 }
 
 .ironmanCheckDone {
-  background: #3b82f6;
-  border-color: #3b82f6;
-  color: #fff;
-  box-shadow: 0 0 6px rgba(59, 130, 246, 0.3);
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--text);
+  box-shadow: 0 0 0 2px var(--accent-bg);
 }
 
 .ironmanIcon {
@@ -1010,20 +1010,20 @@
 
 .ironmanDur {
   font-size: 0.8rem;
-  color: rgba(255, 255, 255, 0.75);
+  color: var(--text-secondary);
   flex: 1;
 }
 
 .ironmanTextDone {
   text-decoration: line-through;
-  color: rgba(255, 255, 255, 0.3);
+  color: var(--text-faint);
 }
 
 .ironmanZone {
   font-size: 0.65rem;
   font-weight: 600;
-  color: rgba(255, 255, 255, 0.5);
-  background: rgba(255, 255, 255, 0.06);
+  color: var(--text-muted);
+  background: var(--bg-subtle);
   padding: 0.1rem 0.35rem;
   border-radius: 3px;
   letter-spacing: 0.02em;
@@ -1031,8 +1031,8 @@
 
 .ironmanExpandBtn {
   background: none;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  color: rgba(255, 255, 255, 0.35);
+  border: 1px solid var(--border);
+  color: var(--text-faint);
   width: 20px;
   height: 20px;
   border-radius: 3px;
@@ -1048,8 +1048,8 @@
 }
 
 .ironmanExpandBtn:hover {
-  color: #3b82f6;
-  border-color: rgba(59, 130, 246, 0.3);
+  color: var(--accent);
+  border-color: var(--accent);
 }
 
 .ironmanSessionMoved {
@@ -1069,13 +1069,13 @@
   display: flex;
   gap: 0.5rem;
   font-size: 0.75rem;
-  color: rgba(255, 255, 255, 0.6);
+  color: var(--text-secondary);
   line-height: 1.4;
 }
 
 .ironmanDetailLabel {
   font-weight: 600;
-  color: rgba(255, 255, 255, 0.4);
+  color: var(--text-faint);
   min-width: 4rem;
   flex-shrink: 0;
   text-transform: uppercase;

@@ -1,8 +1,12 @@
 export const projects = [
   {
     title: 'Conversify',
-    excerpt: "A restaurant loyalty and WhatsApp messaging platform. Customers earn points, redeem offers, and interact via AI-powered WhatsApp conversations. Features campaign management, a digital wallet, and multi-restaurant support. Built with a microservices architecture across Express.js, Next.js, and Go.",
-    tags: ['Next.js', 'Express.js', 'Go', 'Supabase', 'WhatsApp API', 'Gemini AI'],
+    excerpt: "AI-powered WhatsApp marketing platform for restaurants. Customers earn loyalty points, redeem offers, and interact via intelligent AI conversations powered by Gemini. Features campaign scheduling, a digital web wallet, QR code onboarding, and multi-restaurant support. Built end-to-end as co-founder — from architecture to deployment.",
+    badges: [
+      { label: 'Meta Tech Provider', color: '#0081FB' },
+      { label: 'Google for Startups', color: '#34A853' },
+    ],
+    tags: ['Next.js', 'Express.js', 'TypeScript', 'Go', 'Supabase', 'WhatsApp API', 'Gemini AI'],
     featuredImage: {
       url: "/conversify.png"
     },
@@ -16,77 +20,42 @@ export const projects = [
     source: 'https://github.com/daniel-raad/conversify',
     visit: 'https://conversify.uk/',
     id: 5,
+    featured: true,
   },
   {
     title: 'OVA gym',
-    excerpt: "A react-native application with a Python backend. Coming soon in December 2024 on both ios and Android.",
-    tags: ['React-Native', 'Python', 'Azure', 'PostgresQL'],
-    featuredImage: { 
+    excerpt: "Cross-platform mobile fitness app with a Python backend. Built with React Native for iOS and Android, backed by a Python API and PostgreSQL database.",
+    tags: ['React-Native', 'Python', 'Azure', 'PostgreSQL'],
+    featuredImage: {
       url: "/gym.png"
     },
-    author: { 
+    author: {
       name: 'Daniel Raad, Stuart Said',
-      photo: { 
+      photo: {
           url: '/astro.png'
       },
     },
     createdAt: "March, 2024",
   },
   {
-    title: 'blank space',
-    excerpt: "This prokect was built for the ICP blockchain, the first realtime peer-to-peer document on the ICP.",
-    tags: ['React', 'JavaScript', 'Azure', 'motoko'],
-    featuredImage: { 
-      url: "/blankspace.png"
+    title: 'This website',
+    excerpt: "Personal portfolio and blog built with Next.js, Firebase, and Tailwind CSS. Features a markdown blog system, habit tracking dashboard, and AI chat integration.",
+    tags: ['Next.js', 'React', 'Firebase', 'Tailwind CSS', 'Vercel'],
+    featuredImage: {
+      url: "/website.png"
     },
-    author: { 
-      name: 'Daniel Raad, Hassan Memon',
-      photo: { 
+    author: {
+      name: 'Daniel Raad',
+      photo: {
           url: '/astro.png'
       },
     },
-    createdAt: "June 20, 2022",
-    source:'https://github.com/mhmemon444/blankspace',
-    visit: 'https://www.youtube.com/channel/UCbXJT2uuBrd8ApJnAeMCqrA',
-    id: 2,
-  }, 
-    {
-      title: 'TikTok Automation',
-      excerpt: "Using Python, I automated a compression and download of TikTok videos to quickly create compilations. You can download videos straight from the terminal using a hashtag and pick up the X most liked or X most viewed. Am aiming to add a small front end to it in the near future...",
-      featuredImage: { 
-          url: '/astro.png'
-      },
-      author: { 
-          name: 'Daniel Raad',
-          photo: { 
-              url: '/astro.png'
-          },
-      },
-      tags: ['Python', 'Flask'],
-      source: 'https://github.com/daniel-raad/YTAuto',
-      visit: 'https://www.youtube.com/channel/UCy6UwC18Mg6-K54H73E9rrQ',
-      createdAt: "Dec 01, 2021",
-      id: 0,
-    },
-    {
-      title: 'This website',
-      excerpt: "I built this website to practice and learn different ways to work using js, react and next",
-      tags: ['React', 'JavaScript', 'firebase', 'next', 'vercel'],
-      featuredImage: { 
-        url: "/website.png"
-      },
-      author: { 
-        name: 'Daniel Raad',
-        photo: { 
-            url: '/astro.png'
-        },
-      },
-      createdAt: "Jan 01, 2022",
-      source:'https://github.com/daniel-raad/web3d',
-      visit: 'https://www.danielraad.co.uk',
-      id: 1,
-    },
-  ];
+    createdAt: "Jan, 2022",
+    source:'https://github.com/daniel-raad/web3d',
+    visit: 'https://www.danielraad.co.uk',
+    id: 1,
+  },
+];
   
 
   export const blogs = [ 

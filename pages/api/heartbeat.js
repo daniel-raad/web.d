@@ -28,28 +28,27 @@ function getWeekRange() {
 const PROMPTS = {
   morning: `Good morning Daniel! This is his daily standup. Do the following:
 
-1. Call get_recent_checkins (limit 3) to see what was discussed in last night's evening check-in. If Daniel replied with plans or priorities, hold him to them.
-2. Call get_ironman_plan with the current week number to get TODAY's specific training sessions. Tell him exactly what workout is scheduled (e.g. "45min easy run + 20min strength"), not just "training".
-3. Call get_todos to get his task list. Give him a work standup: what are the key open tasks across Palantir, Conversify, and personal? Focus on what's due soon or overdue.
-4. Call get_habits to see today's habit list.
+1. Call get_memory to recall context.
+2. Call get_today to get the full snapshot — training, habits, todos, sleep, weight, everything.
+3. Call get_recent_checkins (limit 3) to see what was discussed in last night's evening check-in. If Daniel replied with plans or priorities, hold him to them.
+4. Call get_todos to see the full task list (get_today only shows due/overdue — you need the full picture for the standup).
 
 Format it as a clear morning brief:
 - Accountability (if he said he'd do something last night, lead with that)
-- Today's training (specific sessions)
-- Work standup (top 3-5 actionable tasks for today)
+- Today's training (specific sessions from get_today — e.g. "45min easy run + 20min strength", not just "training")
+- Work standup (top 3-5 actionable tasks across Palantir, Conversify, personal — focus on due/overdue)
 - Habits to tick off
 
 Keep it punchy and actionable. This should feel like a standup, not a novel.`,
 
-  midday: `It's midday. Check Daniel's habits for today and his todos. Give him a quick progress check — what's done, what's still open, and a nudge on anything he might be forgetting. Keep it short.`,
+  midday: `It's midday. Call get_today to get the full day snapshot — habits, training, todos, everything. Give Daniel a quick progress check — what's done, what's still open, and a nudge on anything he might be forgetting. Keep it short.`,
 
   evening: `Evening check-in. Do the following:
 
-1. Call get_recent_checkins (limit 3) to see what was said in this morning's standup — what did Daniel commit to today?
-2. Call get_habits to see what got done today and what didn't.
+1. Call get_today to see the full day snapshot — habits done, training completed, todos status, sleep/weight logged.
+2. Call get_recent_checkins (limit 3) to see what was said in this morning's standup — what did Daniel commit to today?
 3. Call get_completed_todos with today's date as both startDate and endDate to see what was actually finished today.
-4. Call get_todos to see what's still open.
-5. Compare what Daniel said he'd do (from morning check-in) vs what actually got done. Be honest about the gap if there is one.
+4. Compare what Daniel said he'd do (from morning check-in) vs what actually got done. Be honest about the gap if there is one.
 
 Summarize the day: what got done (including any completion notes on todos), what didn't, honest but encouraging.
 

@@ -1,8 +1,18 @@
 import Link from 'next/link'
 import styles from "../styles/Header.module.css"
 import Image from 'next/image'
+import { useTheme } from '../lib/ThemeContext'
 
 export default function Header({ compact }){
+    const { toggleTheme } = useTheme()
+
+    const handleSpacemanClick = (e) => {
+        const rect = e.currentTarget.getBoundingClientRect()
+        const centerX = rect.left + rect.width / 2
+        const centerY = rect.top + rect.height / 2
+        toggleTheme(centerX, centerY)
+    }
+
     if (compact) {
         return (
             <div className={styles.compactHeader}>
@@ -17,10 +27,11 @@ export default function Header({ compact }){
 
     return(
         <section className={styles.hero}>
-            <div className={styles.stars} />
-            <Image src="/astro.png" width="140" height="140" className={styles.spaceman} alt="Spaceman" />
+            <div className={styles.spacePortal} onClick={handleSpacemanClick} role="button" tabIndex={0}>
+                <Image src="/astro.png" width="140" height="140" className={styles.spaceman} alt="Toggle theme" />
+            </div>
             <h1 className={styles.name}>Daniel Raad</h1>
-            <p className={styles.tagline}>Forward Deployed Operations Engineer</p>
+            <p className={styles.tagline}>Building things...</p>
         </section>
     );
 };

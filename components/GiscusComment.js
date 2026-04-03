@@ -21,7 +21,7 @@ export default class GiscusComments extends Component {
         scriptEl.setAttribute("data-category", "Announcements");
         scriptEl.setAttribute("data-category-id", "DIC_kwDOGzIzN84CBCT1");
         scriptEl.setAttribute("data-reactions-enabled", "1");
-        scriptEl.setAttribute("data-theme", "dark");
+        scriptEl.setAttribute("data-theme", "light");
         this.commentBox.current.appendChild(scriptEl); 
     }
 

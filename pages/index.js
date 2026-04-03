@@ -1,14 +1,13 @@
 import Head from 'next/head'
 import Header from "../components/Header"
 import Description from "../components/Description"
-import GiscusComments from '../components/GiscusComment';
 
-export default function About() {
+export default function Home() {
   return (
     <div>
       <Head>
         <title>Daniel Raad</title>
-        <meta name="description" content="Daniel Raad - Personal Website" />
+        <meta name="description" content="Daniel Raad - Full-Stack Engineer" />
         <link rel="icon" href="/astro.png" />
       </Head>
 
@@ -16,9 +15,6 @@ export default function About() {
 
       <div className="max-w-2xl mx-auto px-6 pb-10">
         <Description />
-        <div style={{ marginTop: '2rem' }}>
-          <GiscusComments/>
-        </div>
       </div>
     </div>
   )

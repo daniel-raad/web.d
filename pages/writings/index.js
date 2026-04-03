@@ -24,7 +24,7 @@ export default function Writings({ dailyPosts, longformPosts, allPosts, hiddenPo
   return (
     <div>
       <Head>
-        <title>Writings — Daniel Raad</title>
+        <title>Writing — Daniel Raad</title>
         <meta name="description" content="Daniel Raad's writings" />
         <link rel="icon" href="/astro.png" />
       </Head>
@@ -43,9 +43,9 @@ export default function Writings({ dailyPosts, longformPosts, allPosts, hiddenPo
                     fontSize: '0.85em',
                     padding: '0.4rem 1rem',
                     borderRadius: '8px',
-                    background: activeTab === tab ? 'rgba(100, 180, 255, 0.2)' : 'transparent',
-                    border: activeTab === tab ? '1px solid rgba(100, 180, 255, 0.4)' : '1px solid rgba(255,255,255,0.1)',
-                    color: activeTab === tab ? 'rgba(100, 180, 255, 0.9)' : 'rgba(255,255,255,0.4)',
+                    background: activeTab === tab ? 'var(--accent-bg)' : 'transparent',
+                    border: activeTab === tab ? '1px solid var(--border-accent)' : '1px solid var(--border)',
+                    color: activeTab === tab ? 'var(--accent)' : 'var(--text-muted)',
                     cursor: 'pointer',
                     transition: 'all 0.2s ease',
                   }}
@@ -57,9 +57,9 @@ export default function Writings({ dailyPosts, longformPosts, allPosts, hiddenPo
                 fontSize: '0.85em',
                 padding: '0.4rem 1rem',
                 borderRadius: '8px',
-                background: 'rgba(100, 180, 255, 0.1)',
-                border: '1px solid rgba(100, 180, 255, 0.3)',
-                color: 'rgba(100, 180, 255, 0.9)',
+                background: 'var(--accent-bg)',
+                border: '1px solid var(--border-accent)',
+                color: 'var(--accent)',
                 textDecoration: 'none',
                 transition: 'all 0.2s ease',
               }}>+ New Post</a>
@@ -77,7 +77,7 @@ export default function Writings({ dailyPosts, longformPosts, allPosts, hiddenPo
           <>
             <BlogList posts={hiddenPosts} title="Hidden" />
             {hiddenPosts.length === 0 && (
-              <p style={{ color: 'rgba(255,255,255,0.4)', fontSize: '0.9rem' }}>No hidden posts yet.</p>
+              <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem' }}>No hidden posts yet.</p>
             )}
           </>
         )}

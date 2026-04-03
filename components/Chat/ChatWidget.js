@@ -9,10 +9,15 @@ export default function ChatWidget() {
   const [input, setInput] = useState("")
   const [loading, setLoading] = useState(false)
   const bottomRef = useRef(null)
+  const inputRef = useRef(null)
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" })
   }, [messages, loading])
+
+  useEffect(() => {
+    if (!loading) inputRef.current?.focus()
+  }, [loading])
 
   const sendMessage = async () => {
     const text = input.trim()
@@ -84,6 +89,7 @@ export default function ChatWidget() {
           </div>
           <div className={styles.inputArea}>
             <input
+              ref={inputRef}
               value={input}
               onChange={(e) => setInput(e.target.value)}
               onKeyDown={handleKeyDown}

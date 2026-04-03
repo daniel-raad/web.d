@@ -1,12 +1,12 @@
 ---
-title: "Coffe Shop"
+title: "Coffee Shop"
 date: "2026-02-15"
 excerpt: "Coffee shop energy"
 tags: ["general"]
 hidden: false
 ---
 
-# Coffee Shops
+# Coffee Shops
 
 Sitting in a coffee shop, sipping my coffee, I realised something that’s been hiding in plain sight.
 
