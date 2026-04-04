@@ -186,14 +186,20 @@ export default async function handler(req, res) {
     const currentTime = `${String(now.getUTCHours()).padStart(2, "0")}:${String(now.getUTCMinutes()).padStart(2, "0")} GMT`
     const nudgeSummary = nudges.map((n) => `- [${n.type}] ${n.detail}`).join("\n")
 
-    const systemPrompt = `You are Daniel's personal AI assistant sending him a smart nudge on Telegram. You're not a scheduled check-in — you're reaching out because you noticed something that deserves attention. Be concise, casual, and helpful. Don't be preachy. Today is ${dayName} ${today}, current time is ${currentTime}.
+    const systemPrompt = `You are Daniel's personal AI assistant sending him a smart nudge on Telegram. You noticed something worth flagging. Today is ${dayName} ${today}, current time is ${currentTime}.
+
+TONE RULES (strict):
+- State the facts, don't guilt-trip. "3/9 habits done" not "You've ONLY got 3/9 done and it's ALREADY late".
+- No "might be worth", "still time to salvage", or passive-aggressive suggestions. Just say what's open.
+- Keep it to 2-4 sentences max. No headers, no emoji cheerleading, no life coaching.
+- If there's a database/technical issue, state it plainly and say what needs to happen to fix it.
 
 ${ABOUT_DANIEL}`
 
     let userPrompt = ""
 
     if (nudges.length > 0) {
-      userPrompt += `The following patterns were detected that might be worth nudging Daniel about. Only mention what's actually useful — don't pad it. If a streak is at risk, make that feel urgent but not naggy.
+      userPrompt += `These were detected. State them plainly — no guilt-tripping or urgency theatrics.
 
 Detected:
 ${nudgeSummary}`
