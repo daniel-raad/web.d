@@ -1,5 +1,5 @@
 import { adminDb } from "../../lib/firebaseAdmin"
-import { ABOUT_DANIEL, READ_TOOLS, WRITE_TOOLS, runChatLoop } from "../../lib/chatEngine"
+import { ABOUT_DANIEL, READ_TOOLS, WRITE_TOOLS, runChatLoop, getPersonalitySection } from "../../lib/chatEngine"
 import { sendMessage } from "../../lib/telegram"
 
 export const config = { maxDuration: 120 }
@@ -186,7 +186,8 @@ export default async function handler(req, res) {
     const currentTime = `${String(now.getUTCHours()).padStart(2, "0")}:${String(now.getUTCMinutes()).padStart(2, "0")} GMT`
     const nudgeSummary = nudges.map((n) => `- [${n.type}] ${n.detail}`).join("\n")
 
-    const systemPrompt = `You are Daniel's personal AI assistant sending him a smart nudge on Telegram. You noticed something worth flagging. Today is ${dayName} ${today}, current time is ${currentTime}.
+    const personality = await getPersonalitySection()
+    const systemPrompt = `${personality}You are Daniel's personal AI assistant sending him a smart nudge on Telegram. You noticed something worth flagging. Today is ${dayName} ${today}, current time is ${currentTime}.
 
 TONE RULES (strict):
 - State the facts, don't guilt-trip. "3/9 habits done" not "You've ONLY got 3/9 done and it's ALREADY late".

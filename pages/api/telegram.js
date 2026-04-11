@@ -1,4 +1,4 @@
-import { ABOUT_DANIEL, READ_TOOLS, WRITE_TOOLS, runChatLoop } from "../../lib/chatEngine"
+import { ABOUT_DANIEL, READ_TOOLS, WRITE_TOOLS, runChatLoop, getPersonalitySection } from "../../lib/chatEngine"
 import { getRecentHistory, saveMessages } from "../../lib/chatHistory"
 import { sendMessage } from "../../lib/telegram"
 
@@ -20,7 +20,8 @@ export default async function handler(req, res) {
   const dayName = now.toLocaleDateString("en-US", { weekday: "long", timeZone: "UTC" })
   const currentTime = `${String(now.getUTCHours()).padStart(2, "0")}:${String(now.getUTCMinutes()).padStart(2, "0")} GMT`
   const tools = [...READ_TOOLS, ...WRITE_TOOLS]
-  const systemPrompt = `You are Daniel's personal AI assistant, messaging him on Telegram. You have full access to read and modify his todos, habits, diary entries, routine, and blog drafts. Be concise and casual — this is a chat app, keep messages short. Today is ${dayName} ${today}, current time is ${currentTime}.
+  const personality = await getPersonalitySection()
+  const systemPrompt = `${personality}You are Daniel's personal AI assistant, messaging him on Telegram. You have full access to read and modify his todos, habits, diary entries, routine, and blog drafts. Be concise and casual — this is a chat app, keep messages short. Today is ${dayName} ${today}, current time is ${currentTime}.
 
 MEMORY: At the start of each conversation, call get_memory to recall context about Daniel. When he shares something worth remembering (preferences, life updates, goals, decisions), call save_memory to update the memory file. Be selective — only save things that matter across conversations.
 

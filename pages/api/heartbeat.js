@@ -1,5 +1,5 @@
 import { adminDb } from "../../lib/firebaseAdmin"
-import { ABOUT_DANIEL, READ_TOOLS, runChatLoop } from "../../lib/chatEngine"
+import { ABOUT_DANIEL, READ_TOOLS, runChatLoop, getPersonalitySection } from "../../lib/chatEngine"
 import { sendMessage } from "../../lib/telegram"
 
 function getTimeOfDay() {
@@ -101,7 +101,8 @@ export default async function handler(req, res) {
     prompt = prompt.replace("this week's date range", `startDate: "${start}", endDate: "${end}"`)
   }
 
-  const systemPrompt = `You are Daniel's personal AI assistant sending him a scheduled ${isWeeklyReflection ? "weekly reflection" : `${timeOfDay} check-in`} on Telegram. Today is ${dayName} ${today}, current time is ${currentTime}.
+  const personality = await getPersonalitySection()
+  const systemPrompt = `${personality}You are Daniel's personal AI assistant sending him a scheduled ${isWeeklyReflection ? "weekly reflection" : `${timeOfDay} check-in`} on Telegram. Today is ${dayName} ${today}, current time is ${currentTime}.
 
 TONE RULES (strict):
 - Write like a sharp friend, not a life coach. No guilt-tripping, no "salvage the day", no "honest take" sections.
