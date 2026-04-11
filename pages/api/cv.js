@@ -4,7 +4,7 @@ export default async function handler(req, res) {
   if (req.method !== "GET") return res.status(405).end()
 
   const apiKey = process.env.GOOGLE_API_KEY
-  const fileId = "1Fqr19c6MVdTS9W97izyD8cykJ2rVVFvm3hyWM5ichIo"
+  const fileId = "1sIiM0gdn1o7TfZ4jET_K_G9czm4yqlqmLtSFztDzSXk"
   const url = `https://www.googleapis.com/drive/v3/files/${fileId}/export?key=${apiKey}`
 
   const response = await axios.get(url, {
