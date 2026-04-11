@@ -19,7 +19,7 @@
 
 const http = require("http")
 const { URL } = require("url")
-const { google } = require("googleapis")
+const { auth } = require("@googleapis/calendar")
 
 const SCOPES = ["https://www.googleapis.com/auth/calendar"]
 
@@ -37,7 +37,7 @@ async function main() {
   const { port } = server.address()
   const redirectUri = `http://127.0.0.1:${port}/oauth/callback`
 
-  const oauth2Client = new google.auth.OAuth2(clientId, clientSecret, redirectUri)
+  const oauth2Client = new auth.OAuth2(clientId, clientSecret, redirectUri)
   const authUrl = oauth2Client.generateAuthUrl({
     access_type: "offline",
     prompt: "consent", // force a refresh_token even if previously granted
