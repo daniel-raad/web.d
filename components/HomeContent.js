@@ -5,7 +5,7 @@ import { faLinkedin, faGithub } from '@fortawesome/free-brands-svg-icons'
 import DraggableSpaceman from './DraggableSpaceman'
 import styles from '../styles/Description.module.css'
 
-const ABOUT_TEXT = "Building products end-to-end. Forward Deployed Operations Engineer at Palantir and Co-founder of Conversify, an AI-driven WhatsApp marketing platform. I spend my days deploying AI, and my evenings building a startup from scratch."
+const ABOUT_TEXT = "Building products end-to-end. Forward Deployed Operations Engineer at Palantir and Co-founder of Conversify, an AI-driven WhatsApp marketing platform."
 
 const LINE_HEIGHT = 28
 const FONT = '16px Montserrat'

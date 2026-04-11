@@ -27,7 +27,7 @@ export default function Description(){
             <div className={styles.card}>
                 <h2 className={styles.sectionHeader}>About</h2>
                 <div className={styles.bioText}>
-                    <p>Building products end-to-end. Forward Deployed Operations Engineer at <a href="https://www.palantir.com" target="_blank" rel="noopener noreferrer">Palantir</a> and Co-founder of <a href="https://conversify.uk" target="_blank" rel="noopener noreferrer">Conversify</a>, an AI-driven WhatsApp marketing platform. I spend my days deploying AI, and my evenings building a startup from scratch.</p>
+                    <p>Building products end-to-end. Forward Deployed Operations Engineer at <a href="https://www.palantir.com" target="_blank" rel="noopener noreferrer">Palantir</a> and Co-founder of <a href="https://conversify.uk" target="_blank" rel="noopener noreferrer">Conversify</a>, an AI-driven WhatsApp marketing platform.</p>
                     <p className={styles.ironmanLine}>
                         Training for <span className={styles.ironmanRed}>IRON</span><span className={styles.ironmanWhite}>MAN</span> <span className={styles.ironmanRed}>70.3</span> Estonia — <span className={styles.ironmanDays}>{days}</span> days to go
                     </p>

@@ -15,7 +15,7 @@ const experiments = [
   },
   {
     title: 'Conversational Flow DSL',
-    description: 'A graph-based journey DSL for defining WhatsApp conversation flows. Three layers: a fluent TypeScript builder that compiles to nodes + edges, a plugin system (28 plugins covering messages, AI classification, scheduling, and business logic), and a runtime engine that executes the graph — pausing at user input or scheduled delays. Code is the source of truth, synced to Supabase via CLI. Edges carry conditions instead of nodes, so routing is decoupled from logic.',
+    description: 'A graph-based journey DSL for defining WhatsApp conversation flows. Three layers: a fluent TypeScript builder that compiles to nodes + edges, a plugin system (28 plugins covering messages, AI classification, scheduling, and business logic), and a runtime engine that executes the graph — pausing at user input or scheduled delays. The trees are stored with Supabase, and the current node is recorded. Edges carry conditions instead of nodes, so routing is decoupled from logic.',
     tags: ['TypeScript', 'DSL', 'graph engine', 'WhatsApp'],
     image: '/DSL.png',
     status: 'in progress',
