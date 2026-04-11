@@ -18,10 +18,49 @@
 // and prints the token to add to your .env / Vercel.
 
 const http = require("http")
+const https = require("https")
 const { URL } = require("url")
-const { auth } = require("@googleapis/calendar")
 
 const SCOPES = ["https://www.googleapis.com/auth/calendar"]
+const AUTH_URL = "https://accounts.google.com/o/oauth2/v2/auth"
+const TOKEN_URL = "https://oauth2.googleapis.com/token"
+
+function postForm(urlString, params) {
+  return new Promise((resolve, reject) => {
+    const body = new URLSearchParams(params).toString()
+    const u = new URL(urlString)
+    const req = https.request(
+      {
+        method: "POST",
+        hostname: u.hostname,
+        path: u.pathname + u.search,
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+          "Content-Length": Buffer.byteLength(body),
+        },
+      },
+      (res) => {
+        let chunks = ""
+        res.on("data", (c) => (chunks += c))
+        res.on("end", () => {
+          try {
+            const parsed = JSON.parse(chunks)
+            if (res.statusCode >= 400) {
+              reject(new Error(`Token endpoint ${res.statusCode}: ${chunks}`))
+            } else {
+              resolve(parsed)
+            }
+          } catch (e) {
+            reject(e)
+          }
+        })
+      }
+    )
+    req.on("error", reject)
+    req.write(body)
+    req.end()
+  })
+}
 
 async function main() {
   const clientId = process.env.GOOGLE_OAUTH_CLIENT_ID
@@ -37,12 +76,15 @@ async function main() {
   const { port } = server.address()
   const redirectUri = `http://127.0.0.1:${port}/oauth/callback`
 
-  const oauth2Client = new auth.OAuth2(clientId, clientSecret, redirectUri)
-  const authUrl = oauth2Client.generateAuthUrl({
+  const authParams = new URLSearchParams({
+    response_type: "code",
+    client_id: clientId,
+    redirect_uri: redirectUri,
+    scope: SCOPES.join(" "),
     access_type: "offline",
-    prompt: "consent", // force a refresh_token even if previously granted
-    scope: SCOPES,
+    prompt: "consent",
   })
+  const authUrl = `${AUTH_URL}?${authParams.toString()}`
 
   console.log("\nOpen this URL in your browser to authorize the agent:\n")
   console.log(authUrl)
@@ -81,7 +123,13 @@ async function main() {
 
   server.close()
 
-  const { tokens } = await oauth2Client.getToken(code)
+  const tokens = await postForm(TOKEN_URL, {
+    code,
+    client_id: clientId,
+    client_secret: clientSecret,
+    redirect_uri: redirectUri,
+    grant_type: "authorization_code",
+  })
   if (!tokens.refresh_token) {
     console.error("\nNo refresh_token returned. Try again — and revoke prior consent at https://myaccount.google.com/permissions if needed.")
     process.exit(1)
