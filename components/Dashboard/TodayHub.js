@@ -157,9 +157,9 @@ export default function TodayHub() {
   )
 
   const handleTodoToggle = async (id) => {
-    const today = new Date().toISOString().split("T")[0]
-    setTodos((prev) => prev.map((t) => (t.id === id ? { ...t, completed: true, completedAt: today } : t)))
-    await updateTodo(id, { completed: true, completedAt: today })
+    const completedAt = Date.now()
+    setTodos((prev) => prev.map((t) => (t.id === id ? { ...t, completed: true, completedAt } : t)))
+    await updateTodo(id, { completed: true, completedAt })
   }
 
   const handleSessionToggle = (key) => {

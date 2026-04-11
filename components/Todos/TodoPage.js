@@ -26,8 +26,7 @@ export default function TodoPage() {
   }, [loadData])
 
   const handleToggle = async (id, completed, note) => {
-    const today = new Date().toISOString().split("T")[0]
-    const updates = { completed, completedAt: completed ? today : null, note: note || null }
+    const updates = { completed, completedAt: completed ? Date.now() : null, note: note || null }
     setTodos((prev) =>
       prev.map((t) => (t.id === id ? { ...t, ...updates } : t))
     )

@@ -8,7 +8,11 @@ export default async function handler(req, res) {
   const { id } = req.query
 
   if (req.method === "PUT") {
-    await adminDb.collection("todos").doc(id).update(req.body)
+    const updates = { ...req.body }
+    if (updates.completed === true) updates.completedAt = Date.now()
+    if (updates.completed === false) updates.completedAt = null
+
+    await adminDb.collection("todos").doc(id).update(updates)
     return res.json({ ok: true })
   }
 
