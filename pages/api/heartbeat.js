@@ -1,27 +1,18 @@
 import { adminDb } from "../../lib/firebaseAdmin"
 import { ABOUT_DANIEL, READ_TOOLS, runChatLoop, getPersonalitySection } from "../../lib/chatEngine"
+import { addDaysToDateKey, getDateContext } from "../../lib/dates.js"
 import { sendMessage } from "../../lib/telegram"
 
-function getTimeOfDay() {
-  // GMT
-  const hour = new Date().getUTCHours()
+function getTimeOfDay(hour) {
   if (hour < 11) return "morning"
   if (hour < 17) return "midday"
   return "evening"
 }
 
-function isSunday() {
-  return new Date().getUTCDay() === 0
-}
-
-function getWeekRange() {
-  const now = new Date()
-  const end = new Date(now)
-  const start = new Date(now)
-  start.setDate(start.getDate() - 6)
+function getWeekRange(today) {
   return {
-    start: start.toISOString().split("T")[0],
-    end: end.toISOString().split("T")[0],
+    start: addDaysToDateKey(today, -6),
+    end: today,
   }
 }
 
@@ -83,22 +74,21 @@ export default async function handler(req, res) {
   const chatId = process.env.TELEGRAM_CHAT_ID
   if (!chatId) return res.status(500).json({ error: "TELEGRAM_CHAT_ID not set" })
 
-  const timeOfDay = getTimeOfDay()
   const now = new Date()
-  const today = now.toISOString().split("T")[0]
-  const dayName = now.toLocaleDateString("en-US", { weekday: "long", timeZone: "UTC" })
-  const currentTime = `${String(now.getUTCHours()).padStart(2, "0")}:${String(now.getUTCMinutes()).padStart(2, "0")} GMT`
+  const { today, dayName, dayOfWeek, hour, currentTime } = getDateContext(now)
+  const timeOfDay = getTimeOfDay(hour)
 
   // Sunday evening = weekly reflection instead of normal evening
-  const isWeeklyReflection = timeOfDay === "evening" && isSunday()
+  const isWeeklyReflection = timeOfDay === "evening" && dayOfWeek === 0
   const promptKey = isWeeklyReflection ? "weekly_reflection" : timeOfDay
 
   let prompt = PROMPTS[promptKey]
 
   // Inject week range for weekly reflection
   if (isWeeklyReflection) {
-    const { start, end } = getWeekRange()
+    const { start, end } = getWeekRange(today)
     prompt = prompt.replace("this week's date range", `startDate: "${start}", endDate: "${end}"`)
+    prompt += `\n\nCalendar review range: ${start} to ${end}. Keep this separate from the Ironman training week's dateRange returned by get_ironman_plan.`
   }
 
   const personality = await getPersonalitySection()

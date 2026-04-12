@@ -1,9 +1,10 @@
 import { adminDb } from "../../lib/firebaseAdmin"
 import { requireAuth } from "../../lib/authMiddleware"
+import { DEFAULT_IRONMAN_START_DATE } from "../../components/Todos/ironmanData"
 
 const DEFAULTS = {
   checked: {},
-  startDate: "2026-03-30",
+  startDate: DEFAULT_IRONMAN_START_DATE,
   dayOrders: {},
   sessionMoves: {},
 }

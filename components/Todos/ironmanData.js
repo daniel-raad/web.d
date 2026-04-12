@@ -1,7 +1,16 @@
+import {
+  addDaysToDateKey,
+  compareDateKeys,
+  getDateKey,
+  getDayNameForDateKey,
+} from "../../lib/dates.js"
+
 // 21-Week Ironman 70.3 Training Plan
 // Phases: Base Building (1-6), Build Phase (7-14), Peak Phase (15-18), Taper (19-21)
 
 const S = "Swim", B = "Bike", R = "Run", C = "Core", ST = "Strength", F = "Flexibility", AR = "Active Recovery", REST = "Rest"
+
+export const DEFAULT_IRONMAN_START_DATE = "2026-03-30"
 
 export const PHASES = [
   { name: "Base Building", weeks: [1, 6], color: "#22c55e" },
@@ -645,39 +654,8 @@ export const WEEKS = [
   },
 ]
 
-// Discipline display info
-const WEEKDAYS = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
-const MS_PER_DAY = 24 * 60 * 60 * 1000
-
-function startOfDay(value) {
-  const date = value instanceof Date ? new Date(value) : new Date(value)
-  date.setHours(0, 0, 0, 0)
-  return date
-}
-
-function addDays(date, days) {
-  const next = new Date(date)
-  next.setDate(next.getDate() + days)
-  return next
-}
-
-function toDateKey(date) {
-  const y = date.getFullYear()
-  const m = String(date.getMonth() + 1).padStart(2, "0")
-  const d = String(date.getDate()).padStart(2, "0")
-  return `${y}-${m}-${d}`
-}
-
-function compareDateOnly(a, b) {
-  return Math.round((startOfDay(a) - startOfDay(b)) / MS_PER_DAY)
-}
-
-export function getCurrentWeek(startDate) {
-  const start = new Date(startDate)
-  start.setHours(0, 0, 0, 0)
-  const now = new Date()
-  now.setHours(0, 0, 0, 0)
-  const diff = Math.floor((now - start) / (7 * 24 * 60 * 60 * 1000))
+export function getCurrentWeek(startDate, today = getDateKey()) {
+  const diff = Math.floor(compareDateKeys(today, startDate) / 7)
   return Math.max(1, Math.min(21, diff + 1))
 }
 
@@ -685,18 +663,14 @@ export function getWeekWithDates(weekNum, startDate, checked = {}) {
   const weekData = WEEKS.find(w => w.week === weekNum)
   if (!weekData) return null
 
-  const start = new Date(startDate)
-  start.setHours(0, 0, 0, 0)
-  const weekStart = new Date(start)
-  weekStart.setDate(weekStart.getDate() + (weekNum - 1) * 7)
+  const weekStart = addDaysToDateKey(startDate, (weekNum - 1) * 7)
 
   const days = weekData.days.map((day, di) => {
-    const dayDate = new Date(weekStart)
-    dayDate.setDate(dayDate.getDate() + di)
+    const date = addDaysToDateKey(weekStart, di)
     return {
       ...day,
-      day: WEEKDAYS[dayDate.getDay()],
-      date: toDateKey(dayDate),
+      day: getDayNameForDateKey(date),
+      date,
       sessions: day.sessions.map((session, si) => ({
         ...session,
         checked: !!checked[`w${weekNum}-d${di}-s${si}`],
@@ -721,13 +695,12 @@ export function getTrainingWeekProgress(weekNum, startDate, checked = {}, option
   const weekData = WEEKS.find(w => w.week === weekNum)
   if (!weekData) return null
 
-  const today = startOfDay(options.today || new Date())
+  const today = options.today || getDateKey()
   const dayOrders = options.dayOrders || {}
   const sessionMoves = options.sessionMoves || {}
 
-  const start = startOfDay(startDate)
-  const weekStart = addDays(start, (weekNum - 1) * 7)
-  const weekEnd = addDays(weekStart, weekData.days.length - 1)
+  const weekStart = addDaysToDateKey(startDate, (weekNum - 1) * 7)
+  const weekEnd = addDaysToDateKey(weekStart, weekData.days.length - 1)
   const order = dayOrders[weekNum] || Array.from({ length: weekData.days.length }, (_, i) => i)
   const displayPosByOrigDay = {}
   order.forEach((origDayIdx, displayPos) => {
@@ -735,12 +708,12 @@ export function getTrainingWeekProgress(weekNum, startDate, checked = {}, option
   })
 
   const displayedDays = order.map((origDayIdx, displayPos) => {
-    const dayDate = addDays(weekStart, displayPos)
+    const date = addDaysToDateKey(weekStart, displayPos)
     return {
       originalDayIndex: origDayIdx,
       displayDayIndex: displayPos,
-      day: WEEKDAYS[dayDate.getDay()],
-      date: toDateKey(dayDate),
+      day: getDayNameForDateKey(date),
+      date,
       sessions: [],
     }
   })
@@ -753,9 +726,9 @@ export function getTrainingWeekProgress(weekNum, startDate, checked = {}, option
       const key = `w${weekNum}-d${di}-s${si}`
       const effectiveOrigDayIdx = sessionMoves[key] !== undefined ? sessionMoves[key] : di
       const displayPos = displayPosByOrigDay[effectiveOrigDayIdx] ?? effectiveOrigDayIdx
-      const sessionDate = addDays(weekStart, displayPos)
+      const sessionDate = addDaysToDateKey(weekStart, displayPos)
       const checkedSession = !!checked[key]
-      const dateCompare = compareDateOnly(sessionDate, today)
+      const dateCompare = compareDateKeys(sessionDate, today)
       const status = checkedSession
         ? dateCompare > 0 ? "completed_ahead" : "completed"
         : dateCompare < 0 ? "missed" : dateCompare === 0 ? "due_today" : "upcoming"
@@ -764,7 +737,7 @@ export function getTrainingWeekProgress(weekNum, startDate, checked = {}, option
         ...session,
         key,
         checked: checkedSession,
-        date: toDateKey(sessionDate),
+        date: sessionDate,
         status,
         originalDayIndex: di,
         scheduledDayIndex: effectiveOrigDayIdx,
@@ -775,12 +748,12 @@ export function getTrainingWeekProgress(weekNum, startDate, checked = {}, option
 
       let displayDay = displayedDays[displayPos]
       if (!displayDay) {
-        const fallbackDate = toDateKey(sessionDate)
+        const fallbackDate = sessionDate
         if (!fallbackDays[fallbackDate]) {
           fallbackDays[fallbackDate] = {
             originalDayIndex: effectiveOrigDayIdx,
             displayDayIndex: displayPos,
-            day: WEEKDAYS[sessionDate.getDay()],
+            day: getDayNameForDateKey(sessionDate),
             date: fallbackDate,
             sessions: [],
           }
@@ -794,15 +767,15 @@ export function getTrainingWeekProgress(weekNum, startDate, checked = {}, option
   const allDays = [...displayedDays, ...Object.values(fallbackDays)].sort((a, b) => a.displayDayIndex - b.displayDayIndex)
   const totalSessions = sessions.length
   const completedSessions = sessions.filter((s) => s.checked).length
-  const dueSessions = sessions.filter((s) => compareDateOnly(s.date, today) <= 0).length
-  const completedDueSessions = sessions.filter((s) => s.checked && compareDateOnly(s.date, today) <= 0).length
+  const dueSessions = sessions.filter((s) => compareDateKeys(s.date, today) <= 0).length
+  const completedDueSessions = sessions.filter((s) => s.checked && compareDateKeys(s.date, today) <= 0).length
   const missedSessions = sessions.filter((s) => s.status === "missed").length
   const dueTodaySessions = sessions.filter((s) => s.status === "due_today").length
   const upcomingSessions = sessions.filter((s) => s.status === "upcoming").length
   const futureCompletedSessions = sessions.filter((s) => s.status === "completed_ahead").length
-  const status = compareDateOnly(weekStart, today) > 0
+  const status = compareDateKeys(weekStart, today) > 0
     ? "future"
-    : compareDateOnly(weekEnd, today) < 0
+    : compareDateKeys(weekEnd, today) < 0
       ? "past"
       : "current"
 
@@ -813,8 +786,8 @@ export function getTrainingWeekProgress(weekNum, startDate, checked = {}, option
     hours: weekData.hours,
     status,
     dateRange: {
-      start: toDateKey(weekStart),
-      end: toDateKey(weekEnd),
+      start: weekStart,
+      end: weekEnd,
     },
     progress: `${completedSessions}/${totalSessions}`,
     dueProgress: `${completedDueSessions}/${dueSessions}`,
@@ -830,6 +803,14 @@ export function getTrainingWeekProgress(weekNum, startDate, checked = {}, option
     },
     days: allDays,
   }
+}
+
+export function getTodayTrainingSessions(weekNum, startDate, checked = {}, options = {}) {
+  const today = options.today || getDateKey()
+  const week = getTrainingWeekProgress(weekNum, startDate, checked, { ...options, today })
+  if (!week) return []
+  const day = week.days.find((d) => d.date === today)
+  return day ? day.sessions : []
 }
 
 export const DISCIPLINE_INFO = {

@@ -1,5 +1,6 @@
 import { adminDb } from "../../../lib/firebaseAdmin"
 import { requireAuth } from "../../../lib/authMiddleware"
+import { getDateKey } from "../../../lib/dates.js"
 
 export default async function handler(req, res) {
   if (req.method === "POST") {
@@ -30,7 +31,7 @@ export default async function handler(req, res) {
       tags: tags || [],
       type: type || "daily",
       hidden: hidden || false,
-      date: new Date().toISOString().split("T")[0],
+      date: getDateKey(),
       source: "firestore",
       createdAt: Date.now(),
       updatedAt: Date.now(),

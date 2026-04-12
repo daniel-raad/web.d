@@ -6,7 +6,8 @@ import {
   getTodos, updateTodo,
   getIronmanPlan, saveIronmanPlan,
 } from "../../lib/firestore"
-import { WEEKS, DISCIPLINE_INFO, getCurrentWeek } from "../Todos/ironmanData"
+import { DEFAULT_IRONMAN_START_DATE, DISCIPLINE_INFO, getCurrentWeek, getTodayTrainingSessions } from "../Todos/ironmanData"
+import { compareDateKeys, dateKeyToLocalDate, getDateKey } from "../../lib/dates.js"
 import styles from "../../styles/Dashboard.module.css"
 
 const DAY_NAMES = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
@@ -15,49 +16,10 @@ const MONTH_NAMES = [
   "July", "August", "September", "October", "November", "December",
 ]
 
-function fmtDate(d) {
-  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`
-}
-
-function getTodaySessions(weekNum, startDate, dayOrders, sessionMoves, checked) {
-  const weekData = WEEKS.find((w) => w.week === weekNum)
-  if (!weekData) return []
-
-  const start = new Date(startDate)
-  start.setHours(0, 0, 0, 0)
-  const weekStart = new Date(start)
-  weekStart.setDate(weekStart.getDate() + (weekNum - 1) * 7)
-
-  const today = new Date()
-  today.setHours(0, 0, 0, 0)
-
-  const diffDays = Math.round((today - weekStart) / (1000 * 60 * 60 * 24))
-  if (diffDays < 0 || diffDays >= weekData.days.length) return []
-
-  const order = dayOrders[weekNum] || Array.from({ length: weekData.days.length }, (_, i) => i)
-  if (diffDays >= order.length) return []
-  const origDayIdx = order[diffDays]
-  if (origDayIdx === undefined || origDayIdx >= weekData.days.length) return []
-
-  const results = []
-  weekData.days.forEach((day, di) => {
-    day.sessions.forEach((session, si) => {
-      const key = `w${weekNum}-d${di}-s${si}`
-      const movedTo = sessionMoves[key]
-      const belongsHere = movedTo !== undefined ? movedTo === origDayIdx : di === origDayIdx
-      if (belongsHere) {
-        results.push({ session, key, checked: !!checked[key] })
-      }
-    })
-  })
-  return results
-}
-
 export default function TodayHub() {
   const now = new Date()
-  const dateStr = fmtDate(now)
-  const year = now.getFullYear()
-  const month = now.getMonth() + 1
+  const dateStr = getDateKey(now)
+  const [year, month] = dateStr.split("-").map(Number)
 
   const [config, setConfig] = useState(null)
   const [habits, setHabits] = useState([])
@@ -189,17 +151,25 @@ export default function TodayHub() {
   const unscheduledCount = todos.filter((t) => !t.completed && !t.dueDate).length
   const activeCount = todos.filter((t) => !t.completed).length
 
-  const startDate = ironman?.startDate || "2026-03-08"
-  const currentWeek = getCurrentWeek(startDate)
-  const todaySessions = getTodaySessions(
+  const startDate = ironman?.startDate || DEFAULT_IRONMAN_START_DATE
+  const currentWeek = getCurrentWeek(startDate, dateStr)
+  const todaySessions = getTodayTrainingSessions(
     currentWeek,
     startDate,
-    ironman?.dayOrders || {},
-    ironman?.sessionMoves || {},
-    ironman?.checked || {}
-  )
+    ironman?.checked || {},
+    {
+      today: dateStr,
+      dayOrders: ironman?.dayOrders || {},
+      sessionMoves: ironman?.sessionMoves || {},
+    }
+  ).map((session) => ({
+    session,
+    key: session.key,
+    checked: session.checked,
+  }))
 
-  const dateLabel = `${DAY_NAMES[now.getDay()]}, ${MONTH_NAMES[now.getMonth()]} ${now.getDate()}`
+  const todayDate = dateKeyToLocalDate(dateStr)
+  const dateLabel = `${DAY_NAMES[todayDate.getDay()]}, ${MONTH_NAMES[todayDate.getMonth()]} ${todayDate.getDate()}`
 
   return (
     <div className={`${styles.dashboard} terminal`}>
@@ -330,9 +300,7 @@ export default function TodayHub() {
         ) : (
           <div className={styles.hubTodoList}>
             {todayTodos.map((t) => {
-              const overdueDays = Math.floor(
-                (new Date(dateStr + "T00:00:00") - new Date(t.dueDate + "T00:00:00")) / (1000 * 60 * 60 * 24)
-              )
+              const overdueDays = compareDateKeys(dateStr, t.dueDate)
               return (
                 <div key={t.id} className={styles.hubTodoItem}>
                   <div className={styles.hubCheck} onClick={() => handleTodoToggle(t.id)} />

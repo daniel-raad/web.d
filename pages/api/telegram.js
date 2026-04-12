@@ -1,5 +1,6 @@
 import { ABOUT_DANIEL, READ_TOOLS, WRITE_TOOLS, runChatLoop, getPersonalitySection } from "../../lib/chatEngine"
 import { getRecentHistory, saveMessages } from "../../lib/chatHistory"
+import { getDateContext } from "../../lib/dates.js"
 import { sendMessage } from "../../lib/telegram"
 
 export const config = { maxDuration: 60 }
@@ -16,9 +17,7 @@ export default async function handler(req, res) {
   }
 
   const now = new Date()
-  const today = now.toISOString().split("T")[0]
-  const dayName = now.toLocaleDateString("en-US", { weekday: "long", timeZone: "UTC" })
-  const currentTime = `${String(now.getUTCHours()).padStart(2, "0")}:${String(now.getUTCMinutes()).padStart(2, "0")} GMT`
+  const { today, dayName, currentTime } = getDateContext(now)
   const tools = [...READ_TOOLS, ...WRITE_TOOLS]
   const personality = await getPersonalitySection()
   const systemPrompt = `${personality}You are Daniel's personal AI assistant, messaging him on Telegram. You have full access to read and modify his todos, habits, diary entries, routine, and blog drafts. Be concise and casual — this is a chat app, keep messages short. Today is ${dayName} ${today}, current time is ${currentTime}.

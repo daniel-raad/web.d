@@ -1,4 +1,5 @@
 import TodoItem from "./TodoItem"
+import { getDateKey as getZonedDateKey } from "../../lib/dates.js"
 import styles from "../../styles/Todos.module.css"
 
 function formatDate(timestamp) {
@@ -12,7 +13,7 @@ function getDateKey(timestamp) {
   if (!timestamp) return "Unknown"
   const date = typeof timestamp === "number" ? new Date(timestamp) : new Date(timestamp)
   if (isNaN(date.getTime())) return "Unknown"
-  return date.toISOString().split("T")[0]
+  return getZonedDateKey(date)
 }
 
 export default function CompletedView({ todos, onToggle, onDelete, onUpdateDate }) {

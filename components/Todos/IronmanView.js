@@ -1,11 +1,12 @@
 import { useState, useEffect, useMemo, useRef } from "react"
-import { WEEKS, PHASES, DISCIPLINE_INFO, getCurrentWeek } from "./ironmanData"
+import { WEEKS, PHASES, DISCIPLINE_INFO, DEFAULT_IRONMAN_START_DATE, getCurrentWeek } from "./ironmanData"
 import { getIronmanPlan, saveIronmanPlan, resetIronmanPlan } from "../../lib/firestore"
+import { dateKeyToLocalDate } from "../../lib/dates.js"
 import styles from "../../styles/Todos.module.css"
 
 const WEEKDAYS = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
 
-const DEFAULT_START = "2026-03-30"
+const DEFAULT_START = DEFAULT_IRONMAN_START_DATE
 
 function getMonday(date) {
   const d = new Date(date)
@@ -283,7 +284,7 @@ export default function IronmanView() {
 
   if (loading) return <div className={styles.loading}>Loading...</div>
 
-  const startDay = new Date(startDate)
+  const startDay = dateKeyToLocalDate(startDate)
   startDay.setHours(0, 0, 0, 0)
 
   return (
@@ -305,7 +306,7 @@ export default function IronmanView() {
             />
           ) : (
             <button onClick={() => setEditingStart(true)} className={styles.ironmanStartBtn}>
-              Start: {formatDateFull(new Date(startDate))}
+              Start: {formatDateFull(dateKeyToLocalDate(startDate))}
             </button>
           )}
         </div>

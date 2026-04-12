@@ -1,5 +1,6 @@
 import { adminDb } from "../../lib/firebaseAdmin"
 import { ABOUT_DANIEL, READ_TOOLS, WRITE_TOOLS, runChatLoop, getPersonalitySection } from "../../lib/chatEngine"
+import { addDaysToDateKey, getDateContext } from "../../lib/dates.js"
 import { sendMessage } from "../../lib/telegram"
 
 export const config = { maxDuration: 120 }
@@ -15,24 +16,19 @@ async function getHabitsForDate(date) {
   return { total: habits.length, completed, sleep: entry.sleep || null }
 }
 
-function formatDate(d) {
-  return d.toISOString().split("T")[0]
-}
-
 async function detectNudges() {
   const now = new Date()
-  const hour = now.getUTCHours()
-  const today = formatDate(now)
+  const { hour, today, currentTime } = getDateContext(now)
   const nudges = []
 
   // Get today's habits
   const todayHabits = await getHabitsForDate(today)
 
-  // Afternoon check: it's past 2PM GMT and less than half habits done
+  // Afternoon check: it's past 2PM London time and less than half habits done
   if (hour >= 14 && todayHabits.total > 0 && todayHabits.completed < todayHabits.total / 2) {
     nudges.push({
       type: "low_habits",
-      detail: `Only ${todayHabits.completed}/${todayHabits.total} habits done and it's ${hour}:00 GMT`,
+      detail: `Only ${todayHabits.completed}/${todayHabits.total} habits done and it's ${currentTime}`,
     })
   }
 
@@ -51,9 +47,7 @@ async function detectNudges() {
   // Check sleep pattern — last 3 days
   const recentDates = []
   for (let i = 1; i <= 3; i++) {
-    const d = new Date(now)
-    d.setDate(d.getDate() - i)
-    recentDates.push(formatDate(d))
+    recentDates.push(addDaysToDateKey(today, -i))
   }
   const sleepData = []
   for (const date of recentDates) {
@@ -86,9 +80,7 @@ async function detectNudges() {
       // Check if done 3 days in a row before today
       let streak = 0
       for (let i = 1; i <= 3; i++) {
-        const d = new Date(now)
-        d.setDate(d.getDate() - i)
-        const entry = await adminDb.collection("habitEntries").doc(formatDate(d)).get()
+        const entry = await adminDb.collection("habitEntries").doc(addDaysToDateKey(today, -i)).get()
         if (entry.exists && entry.data().habits?.[habit.id]) streak++
         else break
       }
@@ -181,9 +173,7 @@ export default async function handler(req, res) {
     }
 
     const now = new Date()
-    const today = now.toISOString().split("T")[0]
-    const dayName = now.toLocaleDateString("en-US", { weekday: "long", timeZone: "UTC" })
-    const currentTime = `${String(now.getUTCHours()).padStart(2, "0")}:${String(now.getUTCMinutes()).padStart(2, "0")} GMT`
+    const { today, dayName, currentTime } = getDateContext(now)
     const nudgeSummary = nudges.map((n) => `- [${n.type}] ${n.detail}`).join("\n")
 
     const personality = await getPersonalitySection()

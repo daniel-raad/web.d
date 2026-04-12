@@ -1,5 +1,6 @@
 import { getAuth } from "firebase-admin/auth"
 import { ABOUT_DANIEL, READ_TOOLS, WRITE_TOOLS, runChatLoop, getPersonalitySection } from "../../lib/chatEngine"
+import { getDateContext } from "../../lib/dates.js"
 import { checkRateLimit } from "../../lib/rateLimit"
 
 const AUTHORIZED_EMAIL = "danielraadsw@gmail.com"
@@ -39,8 +40,7 @@ export default async function handler(req, res) {
   const tools = isAuthed ? [...READ_TOOLS, ...WRITE_TOOLS] : READ_TOOLS
 
   const now = new Date()
-  const today = now.toISOString().split("T")[0]
-  const dayName = now.toLocaleDateString("en-US", { weekday: "long", timeZone: "UTC" })
+  const { today, dayName } = getDateContext(now)
   const personality = isAuthed ? await getPersonalitySection() : ""
   const systemPrompt = isAuthed
     ? `${personality}You are Daniel's personal AI assistant on his website. The person chatting with you IS Daniel — he is signed in and authenticated. You have full access to read and modify his todos, habits, diary entries, routine, and blog drafts. Be concise, casual, and helpful. Address him as Daniel. Today is ${dayName} ${today}.\n\nMEMORY: Call get_memory first to recall context about Daniel before responding. When he shares something worth remembering, call save_memory to update the memory file.\n\n${ABOUT_DANIEL}`
