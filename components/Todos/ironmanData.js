@@ -647,6 +647,30 @@ export const WEEKS = [
 
 // Discipline display info
 const WEEKDAYS = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
+const MS_PER_DAY = 24 * 60 * 60 * 1000
+
+function startOfDay(value) {
+  const date = value instanceof Date ? new Date(value) : new Date(value)
+  date.setHours(0, 0, 0, 0)
+  return date
+}
+
+function addDays(date, days) {
+  const next = new Date(date)
+  next.setDate(next.getDate() + days)
+  return next
+}
+
+function toDateKey(date) {
+  const y = date.getFullYear()
+  const m = String(date.getMonth() + 1).padStart(2, "0")
+  const d = String(date.getDate()).padStart(2, "0")
+  return `${y}-${m}-${d}`
+}
+
+function compareDateOnly(a, b) {
+  return Math.round((startOfDay(a) - startOfDay(b)) / MS_PER_DAY)
+}
 
 export function getCurrentWeek(startDate) {
   const start = new Date(startDate)
@@ -672,7 +696,7 @@ export function getWeekWithDates(weekNum, startDate, checked = {}) {
     return {
       ...day,
       day: WEEKDAYS[dayDate.getDay()],
-      date: dayDate.toISOString().split("T")[0],
+      date: toDateKey(dayDate),
       sessions: day.sessions.map((session, si) => ({
         ...session,
         checked: !!checked[`w${weekNum}-d${di}-s${si}`],
@@ -690,6 +714,121 @@ export function getWeekWithDates(weekNum, startDate, checked = {}) {
     hours: weekData.hours,
     progress: `${completedSessions}/${totalSessions}`,
     days,
+  }
+}
+
+export function getTrainingWeekProgress(weekNum, startDate, checked = {}, options = {}) {
+  const weekData = WEEKS.find(w => w.week === weekNum)
+  if (!weekData) return null
+
+  const today = startOfDay(options.today || new Date())
+  const dayOrders = options.dayOrders || {}
+  const sessionMoves = options.sessionMoves || {}
+
+  const start = startOfDay(startDate)
+  const weekStart = addDays(start, (weekNum - 1) * 7)
+  const weekEnd = addDays(weekStart, weekData.days.length - 1)
+  const order = dayOrders[weekNum] || Array.from({ length: weekData.days.length }, (_, i) => i)
+  const displayPosByOrigDay = {}
+  order.forEach((origDayIdx, displayPos) => {
+    displayPosByOrigDay[origDayIdx] = displayPos
+  })
+
+  const displayedDays = order.map((origDayIdx, displayPos) => {
+    const dayDate = addDays(weekStart, displayPos)
+    return {
+      originalDayIndex: origDayIdx,
+      displayDayIndex: displayPos,
+      day: WEEKDAYS[dayDate.getDay()],
+      date: toDateKey(dayDate),
+      sessions: [],
+    }
+  })
+
+  const fallbackDays = {}
+  const sessions = []
+
+  weekData.days.forEach((day, di) => {
+    day.sessions.forEach((session, si) => {
+      const key = `w${weekNum}-d${di}-s${si}`
+      const effectiveOrigDayIdx = sessionMoves[key] !== undefined ? sessionMoves[key] : di
+      const displayPos = displayPosByOrigDay[effectiveOrigDayIdx] ?? effectiveOrigDayIdx
+      const sessionDate = addDays(weekStart, displayPos)
+      const checkedSession = !!checked[key]
+      const dateCompare = compareDateOnly(sessionDate, today)
+      const status = checkedSession
+        ? dateCompare > 0 ? "completed_ahead" : "completed"
+        : dateCompare < 0 ? "missed" : dateCompare === 0 ? "due_today" : "upcoming"
+
+      const enrichedSession = {
+        ...session,
+        key,
+        checked: checkedSession,
+        date: toDateKey(sessionDate),
+        status,
+        originalDayIndex: di,
+        scheduledDayIndex: effectiveOrigDayIdx,
+        moved: effectiveOrigDayIdx !== di,
+      }
+
+      sessions.push(enrichedSession)
+
+      let displayDay = displayedDays[displayPos]
+      if (!displayDay) {
+        const fallbackDate = toDateKey(sessionDate)
+        if (!fallbackDays[fallbackDate]) {
+          fallbackDays[fallbackDate] = {
+            originalDayIndex: effectiveOrigDayIdx,
+            displayDayIndex: displayPos,
+            day: WEEKDAYS[sessionDate.getDay()],
+            date: fallbackDate,
+            sessions: [],
+          }
+        }
+        displayDay = fallbackDays[fallbackDate]
+      }
+      displayDay.sessions.push(enrichedSession)
+    })
+  })
+
+  const allDays = [...displayedDays, ...Object.values(fallbackDays)].sort((a, b) => a.displayDayIndex - b.displayDayIndex)
+  const totalSessions = sessions.length
+  const completedSessions = sessions.filter((s) => s.checked).length
+  const dueSessions = sessions.filter((s) => compareDateOnly(s.date, today) <= 0).length
+  const completedDueSessions = sessions.filter((s) => s.checked && compareDateOnly(s.date, today) <= 0).length
+  const missedSessions = sessions.filter((s) => s.status === "missed").length
+  const dueTodaySessions = sessions.filter((s) => s.status === "due_today").length
+  const upcomingSessions = sessions.filter((s) => s.status === "upcoming").length
+  const futureCompletedSessions = sessions.filter((s) => s.status === "completed_ahead").length
+  const status = compareDateOnly(weekStart, today) > 0
+    ? "future"
+    : compareDateOnly(weekEnd, today) < 0
+      ? "past"
+      : "current"
+
+  return {
+    week: weekData.week,
+    phase: weekData.phase,
+    title: weekData.title,
+    hours: weekData.hours,
+    status,
+    dateRange: {
+      start: toDateKey(weekStart),
+      end: toDateKey(weekEnd),
+    },
+    progress: `${completedSessions}/${totalSessions}`,
+    dueProgress: `${completedDueSessions}/${dueSessions}`,
+    totals: {
+      completed: completedSessions,
+      total: totalSessions,
+      completedDue: completedDueSessions,
+      due: dueSessions,
+      missed: missedSessions,
+      dueToday: dueTodaySessions,
+      upcoming: upcomingSessions,
+      completedAhead: futureCompletedSessions,
+    },
+    days: allDays,
   }
 }
 

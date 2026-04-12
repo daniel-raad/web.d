@@ -65,7 +65,7 @@ Give Daniel an honest weekly review:
 - Habit completion rate (% and trend vs. what you'd expect)
 - Best and worst days this week
 - Sleep average and pattern
-- Training progress — sessions completed vs. planned
+- Training progress — use get_ironman_plan's dueProgress/overallDueProgress, not raw progress, when a training week is still in progress. Future/upcoming sessions are not missed; only call out sessions with status/totals.missed. Use the tool's currentWeek and dateRange before saying a new training week starts.
 - Todo throughput — what got done, what's been sitting
 - One specific, actionable thing to improve next week
 
