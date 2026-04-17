@@ -13,7 +13,7 @@ export default function Projects() {
 
       <Header compact />
 
-      <div className="max-w-2xl mx-auto px-6 pb-10">
+      <div className="max-w-4xl mx-auto px-6 pb-10">
         <ProjectList />
       </div>
     </div>

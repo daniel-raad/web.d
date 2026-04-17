@@ -21,6 +21,15 @@ export const projects = [
     visit: 'https://conversify.uk/',
     id: 5,
     featured: true,
+    experiments: [
+      {
+        title: 'Conversational Flow DSL',
+        description: 'A graph-based journey DSL for defining WhatsApp conversation flows. Three layers: a fluent TypeScript builder that compiles to nodes + edges, a plugin system (28 plugins covering messages, AI classification, scheduling, and business logic), and a runtime engine that executes the graph — pausing at user input or scheduled delays. The trees are stored with Supabase, and the current node is recorded. Edges carry conditions instead of nodes, so routing is decoupled from logic.',
+        tags: ['TypeScript', 'DSL', 'graph engine', 'WhatsApp'],
+        image: '/DSL.png',
+        status: 'in progress',
+      },
+    ],
   },
   {
     title: 'OVA gym',
@@ -54,6 +63,16 @@ export const projects = [
     source:'https://github.com/daniel-raad/web3d',
     visit: 'https://www.danielraad.co.uk',
     id: 1,
+    experiments: [
+      {
+        title: 'Text Reflow with Pretext',
+        description: 'Drag the spaceman around and watch text reflow in real time. Uses chenglou\'s pretext library for DOM-free text measurement — pure arithmetic at 60fps.',
+        tags: ['pretext', 'text layout', 'interactive'],
+        link: 'https://github.com/chenglou/pretext',
+        status: 'live',
+        liveDemo: true,
+      },
+    ],
   },
 ];
   

@@ -54,6 +54,36 @@ export default function ProjectList() {
                 )}
               </div>
             )}
+            {project.experiments && project.experiments.length > 0 && (
+              <div className={styles.experiments}>
+                <h4 className={styles.experimentsHeader}>Experiments</h4>
+                {project.experiments.map((exp, j) => (
+                  <div key={j} className={styles.experiment}>
+                    <div className={styles.expTop}>
+                      <span className={styles.expTitle}>{exp.title}</span>
+                      <span className={`${styles.expStatus} ${exp.status === 'live' ? styles.expStatusLive : ''}`}>
+                        {exp.status}
+                      </span>
+                    </div>
+                    <p className={styles.expDesc}>{exp.description}</p>
+                    {exp.image && (
+                      // eslint-disable-next-line @next/next/no-img-element
+                      <img src={exp.image} alt={exp.title} className={styles.expImage} />
+                    )}
+                    <div className={styles.expTags}>
+                      {exp.tags.map((tag, k) => (
+                        <span key={k} className={styles.tag}>{tag}</span>
+                      ))}
+                      {exp.link && (
+                        <a href={exp.link} target="_blank" rel="noopener noreferrer" className={styles.expLink}>
+                          Visit
+                        </a>
+                      )}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
         ))}
       </div>

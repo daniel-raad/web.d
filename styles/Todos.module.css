@@ -701,6 +701,70 @@
   white-space: nowrap;
 }
 
+.ironmanReality {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 0.75rem;
+  background: var(--bg-muted);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+}
+
+.ironmanRealityHeader {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.75rem;
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--text-secondary);
+}
+
+.ironmanRealityRange {
+  font-size: 0.65rem;
+  font-weight: 500;
+  color: var(--text-faint);
+}
+
+.ironmanRealityGrid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0.5rem;
+}
+
+.ironmanRealityCard {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  min-width: 0;
+  padding: 0.5rem;
+  background: var(--bg);
+  border: 1px solid var(--bg-subtle);
+  border-radius: 6px;
+}
+
+.ironmanRealityLabel {
+  font-size: 0.62rem;
+  font-weight: 700;
+  color: var(--text-faint);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.ironmanRealityValue {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.ironmanRealityMeta {
+  font-size: 0.66rem;
+  color: var(--text-muted);
+  line-height: 1.35;
+  overflow-wrap: anywhere;
+}
+
 .ironmanResetBtn {
   background: none;
   border: 1px solid var(--border);
@@ -1045,6 +1109,18 @@
   letter-spacing: 0.02em;
 }
 
+.ironmanActualBadge {
+  font-size: 0.62rem;
+  font-weight: 700;
+  color: #10b981;
+  background: rgba(16, 185, 129, 0.1);
+  border: 1px solid rgba(16, 185, 129, 0.2);
+  padding: 0.1rem 0.35rem;
+  border-radius: 3px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
 .ironmanExpandBtn {
   background: none;
   border: 1px solid var(--border);
@@ -1098,6 +1174,72 @@
   font-size: 0.65rem;
   letter-spacing: 0.04em;
   padding-top: 0.05rem;
+}
+
+.ironmanActualEditor,
+.ironmanActualSummary {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  flex: 1;
+  min-width: 0;
+}
+
+.ironmanActualFields {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.4rem;
+}
+
+.ironmanActualInput,
+.ironmanActualNotes {
+  width: 100%;
+  min-width: 0;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 5px;
+  color: var(--text);
+  font: inherit;
+  font-size: 0.72rem;
+  padding: 0.35rem 0.45rem;
+}
+
+.ironmanActualNotes {
+  resize: vertical;
+}
+
+.ironmanActualActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+}
+
+.ironmanActualBtn,
+.ironmanActualBtnSecondary {
+  border-radius: 5px;
+  font-family: inherit;
+  font-size: 0.68rem;
+  font-weight: 700;
+  padding: 0.25rem 0.5rem;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.ironmanActualBtn {
+  background: var(--accent);
+  border: 1px solid var(--accent);
+  color: var(--text);
+}
+
+.ironmanActualBtnSecondary {
+  background: var(--bg-subtle);
+  border: 1px solid var(--border);
+  color: var(--text-muted);
+}
+
+.ironmanActualBtnSecondary:hover {
+  color: var(--text);
+  border-color: var(--accent);
 }
 
 /* --- Responsive --- */
@@ -1211,12 +1353,22 @@
   }
 
   .ironmanPhases {
-    flex-wrap: wrap;
+    flex-direction: column;
     gap: 0.3rem;
   }
 
+  .ironmanRealityHeader {
+    flex-direction: column;
+    gap: 0.2rem;
+  }
+
+  .ironmanRealityGrid {
+    grid-template-columns: 1fr;
+  }
+
   .ironmanPhase {
-    flex: 1 1 40%;
+    flex: 1 1 auto;
+    width: 100%;
     min-width: 0;
   }
 
@@ -1262,6 +1414,19 @@
 
   .ironmanDetails {
     padding-left: 2rem;
+  }
+
+  .ironmanDetailRow {
+    flex-direction: column;
+    gap: 0.2rem;
+  }
+
+  .ironmanDetailLabel {
+    min-width: 0;
+  }
+
+  .ironmanActualFields {
+    grid-template-columns: 1fr;
   }
 
   .ironmanExpandBtn {

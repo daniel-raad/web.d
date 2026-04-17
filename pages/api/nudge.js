@@ -1,6 +1,7 @@
 import { adminDb } from "../../lib/firebaseAdmin"
 import { ABOUT_DANIEL, READ_TOOLS, WRITE_TOOLS, runChatLoop, getPersonalitySection } from "../../lib/chatEngine"
 import { addDaysToDateKey, getDateContext } from "../../lib/dates.js"
+import { getTrainingRealitySnapshot } from "../../lib/ironmanReview"
 import { sendMessage } from "../../lib/telegram"
 
 export const config = { maxDuration: 120 }
@@ -65,6 +66,35 @@ async function detectNudges() {
         detail: `Average sleep over last ${sleepData.length} days: ${avg.toFixed(1)}hrs`,
       })
     }
+  }
+
+  // Check Ironman plan reality — compare due planned sessions with checked-off work
+  const trainingReality = await getTrainingRealitySnapshot({ today, rangeDays: 14 })
+  const todayTraining = trainingReality.plannedVsActual.today
+  const currentWeekTraining = trainingReality.plannedVsActual.currentWeek
+  const recentTraining = trainingReality.plannedVsActual.recent
+
+  if (hour >= 14 && todayTraining.planned > 0 && todayTraining.open > 0) {
+    nudges.push({
+      type: "ironman_today_open",
+      detail: `${todayTraining.done}/${todayTraining.planned} planned training sessions checked off today; ${todayTraining.open} still open. Day load is ${trainingReality.dayLoad.label}.`,
+    })
+  }
+
+  if (recentTraining.missed > 0) {
+    nudges.push({
+      type: "ironman_plan_gap",
+      detail: `${recentTraining.completedDue}/${recentTraining.plannedDue} due sessions completed in the last ${trainingReality.range.days} days; ${recentTraining.missed} missed. Current shape estimate: ${recentTraining.adherencePct}% recent adherence.`,
+    })
+  } else if (
+    currentWeekTraining &&
+    currentWeekTraining.totals.due >= 4 &&
+    currentWeekTraining.adherencePct < 75
+  ) {
+    nudges.push({
+      type: "ironman_week_slipping",
+      detail: `Current Ironman week due progress is ${currentWeekTraining.dueProgress} (${currentWeekTraining.adherencePct}%). Day load is ${trainingReality.dayLoad.label}.`,
+    })
   }
 
   // Check habit streaks at risk — look for habits done 3+ days in a row that weren't done today
@@ -150,6 +180,44 @@ async function runTodoMaintenance() {
   }
 }
 
+async function runIronmanCoach(nudges) {
+  const shouldRun = nudges.some((n) => n.type.startsWith("ironman_"))
+  if (!shouldRun) return null
+
+  try {
+    const personality = await getPersonalitySection()
+    const systemPrompt = `${personality}You are Daniel's dedicated Ironman 70.3 training coach. You only review the training plan, what was actually checked off, today's day load, current shape, and how far the goal is.
+
+${ABOUT_DANIEL}
+
+RULES:
+- Call get_training_reality first.
+- Also call get_calendar_events for today through the next 3 days if calendar access works, so suggestions account for how busy the day and near future look.
+- Use dueProgress and session status. Future sessions are upcoming, not missed.
+- Treat checked Ironman sessions as confirmed completion. Treat Strava as optional corroboration only; do not invent pace, HR, power, RPE, or activities if Strava has no data.
+- Make concrete suggestions: what to do today, what to move, what to protect, or when to back off.
+- Keep the report short enough to fit inside a Telegram nudge: 3 bullets max, no hype.`
+
+    const triggerSummary = nudges
+      .filter((n) => n.type.startsWith("ironman_"))
+      .map((n) => `- [${n.type}] ${n.detail}`)
+      .join("\n")
+
+    return await runChatLoop({
+      messages: [{
+        role: "user",
+        content: `Review the Ironman plan vs actuals and produce a coaching note for today's nudge.\n\nTraining triggers:\n${triggerSummary}`,
+      }],
+      tools: READ_TOOLS,
+      systemPrompt,
+      maxTokens: 900,
+    })
+  } catch (err) {
+    console.error("Ironman coach error:", err)
+    return null
+  }
+}
+
 export default async function handler(req, res) {
   if (req.method !== "POST") return res.status(405).end()
 
@@ -164,11 +232,13 @@ export default async function handler(req, res) {
   try {
     // Always run todo maintenance, regardless of nudge triggers
     const [nudges, maintenanceReport] = await Promise.all([detectNudges(), runTodoMaintenance()])
+    const ironmanCoachReport = await runIronmanCoach(nudges)
 
     const hasMaintenanceActions =
       maintenanceReport && !maintenanceReport.toLowerCase().includes("queue is clean")
+    const hasIronmanCoachReport = !!ironmanCoachReport
 
-    if (nudges.length === 0 && !hasMaintenanceActions) {
+    if (nudges.length === 0 && !hasMaintenanceActions && !hasIronmanCoachReport) {
       return res.status(200).json({ ok: true, nudged: false, reason: "Nothing worth nudging about" })
     }
 
@@ -203,6 +273,13 @@ Maintenance report:
 ${maintenanceReport}`
     }
 
+    if (hasIronmanCoachReport) {
+      userPrompt += `${userPrompt ? "\n\n" : ""}A dedicated Ironman coach agent reviewed the training plan, actual checked-off sessions, current shape, goal timing, and day load. Include this as the training note, but keep the final Telegram nudge concise and non-dramatic.
+
+Ironman coach report:
+${ironmanCoachReport}`
+    }
+
     const reply = await runChatLoop({
       messages: [{ role: "user", content: userPrompt }],
       tools: READ_TOOLS,
@@ -215,6 +292,7 @@ ${maintenanceReport}`
       nudged: true,
       nudges: nudges.map((n) => n.type),
       maintenance: hasMaintenanceActions,
+      ironmanCoach: hasIronmanCoachReport,
     })
   } catch (err) {
     console.error("Nudge error:", err)

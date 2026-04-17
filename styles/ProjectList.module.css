@@ -127,21 +127,111 @@
 }
 
 .link {
-  font-size: 0.8em;
+  font-size: 0.78em;
   padding: 0.4rem 1rem;
   border-radius: 8px;
-  background: var(--btn-primary-bg);
-  border: none;
-  color: var(--btn-primary-color);
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--text-secondary);
   font-weight: 500;
   transition: all 0.2s ease;
   text-decoration: none;
 }
 
 .link:hover {
-  background: var(--btn-primary-hover);
+  border-color: var(--accent);
+  color: var(--accent);
   transform: translateY(-1px);
-  box-shadow: var(--shadow-hover);
+}
+
+.experiments {
+  margin-top: 1rem;
+  padding-top: 0.8rem;
+  border-top: 1px solid var(--border);
+}
+
+.experimentsHeader {
+  font-size: 0.65em;
+  font-weight: 700;
+  color: var(--text-faint);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  margin: 0 0 0.6rem;
+}
+
+.experiment {
+  background: var(--bg-subtle);
+  border-radius: 10px;
+  padding: 1rem 1.1rem;
+  margin-bottom: 0.5rem;
+}
+
+.experiment:last-child {
+  margin-bottom: 0;
+}
+
+.expTop {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.5rem;
+  margin-bottom: 0.3rem;
+}
+
+.expTitle {
+  font-size: 0.9em;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.expStatus {
+  font-size: 0.65em;
+  padding: 0.15rem 0.45rem;
+  border-radius: 4px;
+  background: var(--bg-elevated);
+  color: var(--text-faint);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  flex-shrink: 0;
+}
+
+.expStatusLive {
+  background: rgba(34, 197, 94, 0.1);
+  color: #16a34a;
+}
+
+.expDesc {
+  font-size: 0.8em;
+  line-height: 1.6;
+  color: var(--text-secondary);
+  margin: 0 0 0.6rem;
+}
+
+.expImage {
+  width: 100%;
+  border-radius: 6px;
+  margin-bottom: 0.6rem;
+  border: 1px solid var(--border);
+}
+
+.expTags {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.expLink {
+  font-size: 0.75em;
+  font-weight: 500;
+  color: var(--accent);
+  text-decoration: none;
+  margin-left: auto;
+}
+
+.expLink:hover {
+  text-decoration: underline;
 }
 
 @media (max-width: 600px) {

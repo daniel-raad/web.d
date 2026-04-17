@@ -4,6 +4,7 @@ import { DEFAULT_IRONMAN_START_DATE } from "../../components/Todos/ironmanData"
 
 const DEFAULTS = {
   checked: {},
+  actuals: {},
   startDate: DEFAULT_IRONMAN_START_DATE,
   dayOrders: {},
   sessionMoves: {},

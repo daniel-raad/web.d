@@ -45,9 +45,6 @@ export default function Description(){
                 <Link href="/projects">
                     <a className={styles.navButton}>Projects</a>
                 </Link>
-                <Link href="/experiments">
-                    <a className={styles.navButton}>Experiments</a>
-                </Link>
                 <Link href="/dashboard">
                     <a className={styles.navButton}>Dashboard</a>
                 </Link>

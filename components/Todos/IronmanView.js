@@ -1,6 +1,6 @@
-import { useState, useEffect, useMemo, useRef } from "react"
+import { useState, useEffect, useMemo, useRef, useCallback } from "react"
 import { WEEKS, PHASES, DISCIPLINE_INFO, DEFAULT_IRONMAN_START_DATE, getCurrentWeek } from "./ironmanData"
-import { getIronmanPlan, saveIronmanPlan, resetIronmanPlan } from "../../lib/firestore"
+import { getIronmanPlan, getIronmanReview, saveIronmanPlan, resetIronmanPlan } from "../../lib/firestore"
 import { dateKeyToLocalDate } from "../../lib/dates.js"
 import styles from "../../styles/Todos.module.css"
 
@@ -33,12 +33,16 @@ function formatDateFull(date) {
 
 export default function IronmanView() {
   const [checked, setChecked] = useState({})
+  const [actuals, setActuals] = useState({})
   const [startDate, setStartDate] = useState(DEFAULT_START)
   const [expandedWeeks, setExpandedWeeks] = useState({})
   const [expandedSessions, setExpandedSessions] = useState({})
+  const [editingActualKey, setEditingActualKey] = useState(null)
+  const [actualDraft, setActualDraft] = useState({ duration: "", distance: "", rpe: "", notes: "" })
   const [editingStart, setEditingStart] = useState(false)
   const [dayOrders, setDayOrders] = useState({})
   const [sessionMoves, setSessionMoves] = useState({})
+  const [reality, setReality] = useState(null)
   const [loading, setLoading] = useState(true)
 
   // Drag state
@@ -46,10 +50,20 @@ export default function IronmanView() {
   const [dragOverSession, setDragOverSession] = useState(null)
   const dragTypeRef = useRef(null)
 
+  const refreshReality = useCallback(() => {
+    getIronmanReview().then((review) => {
+      if (!review.error) setReality(review)
+    }).catch(() => {})
+  }, [])
+
+  const savePlanAndRefresh = useCallback((data) => {
+    saveIronmanPlan(data).then(refreshReality).catch(() => {})
+  }, [refreshReality])
+
   useEffect(() => {
     async function load() {
       try {
-        const data = await getIronmanPlan()
+        const [data, review] = await Promise.all([getIronmanPlan(), getIronmanReview()])
 
         // One-time localStorage migration
         if (typeof window !== "undefined") {
@@ -62,15 +76,17 @@ export default function IronmanView() {
           if (hasLocal && isFirestoreEmpty) {
             const migrated = {
               checked: lsChecked ? JSON.parse(lsChecked) : {},
+              actuals: {},
               startDate: localStorage.getItem("ironman-plan-start") || DEFAULT_START,
               dayOrders: lsDayOrders ? JSON.parse(lsDayOrders) : {},
               sessionMoves: lsSessionMoves ? JSON.parse(lsSessionMoves) : {},
             }
             setChecked(migrated.checked)
+            setActuals(migrated.actuals)
             setStartDate(migrated.startDate)
             setDayOrders(migrated.dayOrders)
             setSessionMoves(migrated.sessionMoves)
-            saveIronmanPlan(migrated)
+            savePlanAndRefresh(migrated)
             localStorage.removeItem("ironman-plan-checked")
             localStorage.removeItem("ironman-plan-start")
             localStorage.removeItem("ironman-day-orders")
@@ -81,16 +97,18 @@ export default function IronmanView() {
         }
 
         setChecked(data.checked || {})
+        setActuals(data.actuals || {})
         setStartDate(data.startDate || DEFAULT_START)
         setDayOrders(data.dayOrders || {})
         setSessionMoves(data.sessionMoves || {})
+        if (!review.error) setReality(review)
       } catch {
         // Fallback to defaults
       }
       setLoading(false)
     }
     load()
-  }, [])
+  }, [savePlanAndRefresh])
 
   const currentWeekNum = useMemo(() => {
     if (!startDate) return 1
@@ -104,7 +122,7 @@ export default function IronmanView() {
   const toggle = (key) => {
     setChecked((prev) => {
       const next = { ...prev, [key]: !prev[key] }
-      saveIronmanPlan({ checked: next })
+      savePlanAndRefresh({ checked: next })
       return next
     })
   }
@@ -115,6 +133,49 @@ export default function IronmanView() {
 
   const toggleSession = (key) => {
     setExpandedSessions((prev) => ({ ...prev, [key]: !prev[key] }))
+  }
+
+  const startActualEdit = (key) => {
+    const actual = actuals[key] || {}
+    setEditingActualKey(key)
+    setActualDraft({
+      duration: actual.duration || "",
+      distance: actual.distance || "",
+      rpe: actual.rpe || "",
+      notes: actual.notes || "",
+    })
+  }
+
+  const updateActualDraft = (field, value) => {
+    setActualDraft((prev) => ({ ...prev, [field]: value }))
+  }
+
+  const saveActual = (key) => {
+    const actual = {
+      duration: actualDraft.duration.trim(),
+      distance: actualDraft.distance.trim(),
+      rpe: actualDraft.rpe.trim(),
+      notes: actualDraft.notes.trim(),
+      updatedAt: Date.now(),
+    }
+
+    const hasContent = actual.duration || actual.distance || actual.rpe || actual.notes
+    if (!hasContent) return
+
+    const nextActuals = { ...actuals, [key]: actual }
+    const nextChecked = { ...checked, [key]: true }
+    setActuals(nextActuals)
+    setChecked(nextChecked)
+    setEditingActualKey(null)
+    savePlanAndRefresh({ actuals: nextActuals, checked: nextChecked })
+  }
+
+  const clearActual = (key) => {
+    const nextActuals = { ...actuals }
+    delete nextActuals[key]
+    setActuals(nextActuals)
+    setEditingActualKey(null)
+    savePlanAndRefresh({ actuals: nextActuals })
   }
 
   const getDayOrder = (weekNum, dayCount) => {
@@ -128,7 +189,7 @@ export default function IronmanView() {
     order.splice(toPos, 0, moved)
     setDayOrders((prev) => {
       const next = { ...prev, [weekNum]: order }
-      saveIronmanPlan({ dayOrders: next })
+      savePlanAndRefresh({ dayOrders: next })
       return next
     })
   }
@@ -137,7 +198,7 @@ export default function IronmanView() {
     setDayOrders((prev) => {
       const next = { ...prev }
       delete next[weekNum]
-      saveIronmanPlan({ dayOrders: next })
+      savePlanAndRefresh({ dayOrders: next })
       return next
     })
     setSessionMoves((prev) => {
@@ -145,7 +206,7 @@ export default function IronmanView() {
       for (const [k, v] of Object.entries(prev)) {
         if (!k.startsWith(`w${weekNum}-`)) next[k] = v
       }
-      saveIronmanPlan({ sessionMoves: next })
+      savePlanAndRefresh({ sessionMoves: next })
       return next
     })
   }
@@ -155,7 +216,7 @@ export default function IronmanView() {
       const next = { ...prev, [sessionKey]: targetOrigDayIdx }
       const origDayIdx = parseInt(sessionKey.split("-")[1].slice(1))
       if (targetOrigDayIdx === origDayIdx) delete next[sessionKey]
-      saveIronmanPlan({ sessionMoves: next })
+      savePlanAndRefresh({ sessionMoves: next })
       return next
     })
   }
@@ -243,18 +304,20 @@ export default function IronmanView() {
     const val = e.target.value
     if (val) {
       setStartDate(val)
-      saveIronmanPlan({ startDate: val })
+      savePlanAndRefresh({ startDate: val })
     }
     setEditingStart(false)
   }
 
   const handleResetProgress = async () => {
     if (!window.confirm("Reset all progress? This will untick every session.")) return
-    const resetData = { checked: {}, startDate, dayOrders: {}, sessionMoves: {} }
+    const resetData = { checked: {}, actuals: {}, startDate, dayOrders: {}, sessionMoves: {} }
     await resetIronmanPlan(resetData)
     setChecked({})
+    setActuals({})
     setDayOrders({})
     setSessionMoves({})
+    refreshReality()
   }
 
   const stats = useMemo(() => {
@@ -264,19 +327,59 @@ export default function IronmanView() {
       w.days.forEach((day, di) => {
         day.sessions.forEach((_, si) => {
           total++
-          if (checked[`w${w.week}-d${di}-s${si}`]) done++
+          const key = `w${w.week}-d${di}-s${si}`
+          if (checked[key] || actuals[key]) done++
         })
       })
     })
     return { total, done, pct: total ? Math.round((done / total) * 100) : 0 }
-  }, [checked])
+  }, [checked, actuals])
+
+  const realityCards = useMemo(() => {
+    if (!reality) return []
+
+    const today = reality.plannedVsActual?.today
+    const week = reality.plannedVsActual?.currentWeek
+    const recent = reality.plannedVsActual?.recent
+    const shape = reality.currentShape
+    const dayLoad = reality.dayLoad
+    const goal = reality.goal
+    const habitsOpen = Math.max(0, (dayLoad?.habits?.total || 0) - (dayLoad?.habits?.completed || 0))
+    const stravaText = shape?.strava?.connected
+      ? `${shape.strava.count} Strava activities`
+      : "Strava not connected"
+
+    return [
+      {
+        label: "Today",
+        value: today?.planned ? `${today.done}/${today.planned} done` : "Rest day",
+        meta: dayLoad ? `${dayLoad.label} day · ${dayLoad.todos.dueTodayOrOverdue} due · ${habitsOpen} habits open` : "",
+      },
+      {
+        label: "Week",
+        value: week ? `${week.dueProgress} due` : "No active week",
+        meta: week ? `${week.adherencePct}% adherence · ${week.totals.missed} missed` : "",
+      },
+      {
+        label: `Last ${reality.range.days}d`,
+        value: recent ? `${recent.completedDue}/${recent.plannedDue} due` : "No sessions",
+        meta: recent ? `${recent.missed} missed · ${shape?.completedPlannedMinutes || 0}/${shape?.plannedMinutesDue || 0} planned mins` : "",
+      },
+      {
+        label: "Goal",
+        value: goal?.daysToGoal != null ? `${goal.daysToGoal} days` : "No date",
+        meta: `Week ${goal?.currentWeek || "?"}/${goal?.totalWeeks || "?"} · ${goal?.phase || "Training"} · ${stravaText}`,
+      },
+    ]
+  }, [reality])
 
   const weekStats = (w) => {
     let total = 0, done = 0
     w.days.forEach((day, di) => {
       day.sessions.forEach((_, si) => {
         total++
-        if (checked[`w${w.week}-d${di}-s${si}`]) done++
+        const key = `w${w.week}-d${di}-s${si}`
+        if (checked[key] || actuals[key]) done++
       })
     })
     return { total, done }
@@ -321,6 +424,26 @@ export default function IronmanView() {
           <button onClick={handleResetProgress} className={styles.ironmanResetBtn}>Reset</button>
         )}
       </div>
+
+      {realityCards.length > 0 && (
+        <div className={styles.ironmanReality}>
+          <div className={styles.ironmanRealityHeader}>
+            <span>Planned vs actual</span>
+            <span className={styles.ironmanRealityRange}>
+              {reality.range.start} to {reality.range.end}
+            </span>
+          </div>
+          <div className={styles.ironmanRealityGrid}>
+            {realityCards.map((card) => (
+              <div key={card.label} className={styles.ironmanRealityCard}>
+                <span className={styles.ironmanRealityLabel}>{card.label}</span>
+                <span className={styles.ironmanRealityValue}>{card.value}</span>
+                {card.meta && <span className={styles.ironmanRealityMeta}>{card.meta}</span>}
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
 
       <div className={styles.ironmanPhases}>
         {PHASES.map((p) => (
@@ -410,7 +533,8 @@ export default function IronmanView() {
                         </div>
                         <div className={styles.ironmanSessions}>
                           {sessions.map(({ session, origDayIdx, key }) => {
-                            const done = checked[key]
+                            const actual = actuals[key]
+                            const done = !!(checked[key] || actual)
                             const info = DISCIPLINE_INFO[session.d] || { label: session.d, icon: "\uD83D\uDCCB", color: "#6b7280" }
                             const sessionExpanded = expandedSessions[key]
                             const isMoved = sessionMoves[key] !== undefined
@@ -440,6 +564,9 @@ export default function IronmanView() {
                                   {session.z !== "-" && (
                                     <span className={styles.ironmanZone}>{session.z}</span>
                                   )}
+                                  {actual && (
+                                    <span className={styles.ironmanActualBadge}>Actual</span>
+                                  )}
                                   <button
                                     className={styles.ironmanExpandBtn}
                                     onClick={() => toggleSession(key)}
@@ -468,6 +595,67 @@ export default function IronmanView() {
                                     <div className={styles.ironmanDetailRow}>
                                       <span className={styles.ironmanDetailLabel}>Purpose</span>
                                       <span>{session.purpose}</span>
+                                    </div>
+                                    <div className={styles.ironmanDetailRow}>
+                                      <span className={styles.ironmanDetailLabel}>Actual</span>
+                                      {editingActualKey === key ? (
+                                        <div className={styles.ironmanActualEditor}>
+                                          <div className={styles.ironmanActualFields}>
+                                            <input
+                                              className={styles.ironmanActualInput}
+                                              value={actualDraft.duration}
+                                              onChange={(e) => updateActualDraft("duration", e.target.value)}
+                                              placeholder="Duration, e.g. 48 min"
+                                            />
+                                            <input
+                                              className={styles.ironmanActualInput}
+                                              value={actualDraft.distance}
+                                              onChange={(e) => updateActualDraft("distance", e.target.value)}
+                                              placeholder="Distance, e.g. 8.2 km"
+                                            />
+                                            <input
+                                              className={styles.ironmanActualInput}
+                                              value={actualDraft.rpe}
+                                              onChange={(e) => updateActualDraft("rpe", e.target.value)}
+                                              placeholder="RPE, e.g. 6/10"
+                                            />
+                                          </div>
+                                          <textarea
+                                            className={styles.ironmanActualNotes}
+                                            value={actualDraft.notes}
+                                            onChange={(e) => updateActualDraft("notes", e.target.value)}
+                                            placeholder="What actually happened?"
+                                            rows={2}
+                                          />
+                                          <div className={styles.ironmanActualActions}>
+                                            <button className={styles.ironmanActualBtn} onClick={() => saveActual(key)}>
+                                              Save actual
+                                            </button>
+                                            <button className={styles.ironmanActualBtnSecondary} onClick={() => setEditingActualKey(null)}>
+                                              Cancel
+                                            </button>
+                                          </div>
+                                        </div>
+                                      ) : actual ? (
+                                        <div className={styles.ironmanActualSummary}>
+                                          <span>
+                                            {[actual.duration, actual.distance, actual.rpe && `RPE ${actual.rpe}`].filter(Boolean).join(" · ")}
+                                          </span>
+                                          {actual.notes && <span>{actual.notes}</span>}
+                                          <div className={styles.ironmanActualActions}>
+                                            <button className={styles.ironmanActualBtnSecondary} onClick={() => startActualEdit(key)}>
+                                              Edit actual
+                                            </button>
+                                            <button className={styles.ironmanActualBtnSecondary} onClick={() => clearActual(key)}>
+                                              Clear
+                                            </button>
+                                          </div>
+                                        </div>
+                                      ) : (
+                                        <button className={styles.ironmanActualBtnSecondary} onClick={() => startActualEdit(key)}>
+                                          Log actual
+                                        </button>
+                                      )}
                                     </div>
                                   </div>
                                 )}
