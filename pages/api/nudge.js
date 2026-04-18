@@ -194,7 +194,7 @@ RULES:
 - Call get_training_reality first.
 - Also call get_calendar_events for today through the next 3 days if calendar access works, so suggestions account for how busy the day and near future look.
 - Use dueProgress and session status. Future sessions are upcoming, not missed.
-- Treat checked Ironman sessions as confirmed completion. Treat Strava as optional corroboration only; do not invent pace, HR, power, RPE, or activities if Strava has no data.
+- Treat checked Ironman sessions and actual workout logs as confirmed completion. Do not invent pace, HR, power, RPE, or workout details that are not logged.
 - Make concrete suggestions: what to do today, what to move, what to protect, or when to back off.
 - Keep the report short enough to fit inside a Telegram nudge: 3 bullets max, no hype.`
 

@@ -345,10 +345,6 @@ export default function IronmanView() {
     const dayLoad = reality.dayLoad
     const goal = reality.goal
     const habitsOpen = Math.max(0, (dayLoad?.habits?.total || 0) - (dayLoad?.habits?.completed || 0))
-    const stravaText = shape?.strava?.connected
-      ? `${shape.strava.count} Strava activities`
-      : "Strava not connected"
-
     return [
       {
         label: "Today",
@@ -357,8 +353,8 @@ export default function IronmanView() {
       },
       {
         label: "Week",
-        value: week ? `${week.dueProgress} due` : "No active week",
-        meta: week ? `${week.adherencePct}% adherence · ${week.totals.missed} missed` : "",
+        value: week ? `${week.totals.completed}/${week.totals.total} total` : "No active week",
+        meta: week ? `${week.dueProgress} due so far · ${week.adherencePct}% due adherence · ${week.totals.missed} missed` : "",
       },
       {
         label: `Last ${reality.range.days}d`,
@@ -368,7 +364,7 @@ export default function IronmanView() {
       {
         label: "Goal",
         value: goal?.daysToGoal != null ? `${goal.daysToGoal} days` : "No date",
-        meta: `Week ${goal?.currentWeek || "?"}/${goal?.totalWeeks || "?"} · ${goal?.phase || "Training"} · ${stravaText}`,
+        meta: `Week ${goal?.currentWeek || "?"}/${goal?.totalWeeks || "?"} · ${goal?.phase || "Training"}`,
       },
     ]
   }, [reality])
