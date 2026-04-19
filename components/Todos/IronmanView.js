@@ -204,33 +204,51 @@ export default function IronmanView() {
     setSessionMoves((prev) => {
       const next = {}
       for (const [k, v] of Object.entries(prev)) {
-        if (!k.startsWith(`w${weekNum}-`)) next[k] = v
+        if (k.startsWith(`w${weekNum}-`)) continue
+        if (v && typeof v === 'object' && v.week === weekNum) continue
+        next[k] = v
       }
       savePlanAndRefresh({ sessionMoves: next })
       return next
     })
   }
 
-  const moveSession = (sessionKey, targetOrigDayIdx) => {
+  const moveSession = (sessionKey, targetWeekNum, targetOrigDayIdx) => {
     setSessionMoves((prev) => {
-      const next = { ...prev, [sessionKey]: targetOrigDayIdx }
+      const next = { ...prev }
+      const origWeek = parseInt(sessionKey.split("-")[0].slice(1))
       const origDayIdx = parseInt(sessionKey.split("-")[1].slice(1))
-      if (targetOrigDayIdx === origDayIdx) delete next[sessionKey]
+      if (targetWeekNum === origWeek && targetOrigDayIdx === origDayIdx) {
+        delete next[sessionKey]
+      } else {
+        next[sessionKey] = { week: targetWeekNum, day: targetOrigDayIdx }
+      }
       savePlanAndRefresh({ sessionMoves: next })
       return next
     })
   }
 
-  const getSessionsForDay = (weekNum, origDayIdx, allDays) => {
+  const getSessionsForDay = (weekNum, origDayIdx) => {
     const results = []
-    allDays.forEach((day, di) => {
-      day.sessions.forEach((session, si) => {
-        const key = `w${weekNum}-d${di}-s${si}`
-        const movedTo = sessionMoves[key]
-        const belongsHere = movedTo !== undefined ? movedTo === origDayIdx : di === origDayIdx
-        if (belongsHere) {
-          results.push({ session, origDayIdx: di, key })
-        }
+    WEEKS.forEach((w) => {
+      w.days.forEach((day, di) => {
+        day.sessions.forEach((session, si) => {
+          const key = `w${w.week}-d${di}-s${si}`
+          const moved = sessionMoves[key]
+          let belongsHere
+          if (moved !== undefined) {
+            if (typeof moved === 'number') {
+              belongsHere = w.week === weekNum && moved === origDayIdx
+            } else {
+              belongsHere = moved.week === weekNum && moved.day === origDayIdx
+            }
+          } else {
+            belongsHere = w.week === weekNum && di === origDayIdx
+          }
+          if (belongsHere) {
+            results.push({ session, origDayIdx: di, key, fromWeek: w.week })
+          }
+        })
       })
     })
     return results
@@ -294,8 +312,8 @@ export default function IronmanView() {
     setDragOverSession(null)
     try {
       const data = JSON.parse(e.dataTransfer.getData("text/plain"))
-      if (data.type === "session" && data.weekNum === weekNum) {
-        moveSession(data.sessionKey, targetOrigDayIdx)
+      if (data.type === "session") {
+        moveSession(data.sessionKey, weekNum, targetOrigDayIdx)
       }
     } catch {}
   }
@@ -371,11 +389,22 @@ export default function IronmanView() {
 
   const weekStats = (w) => {
     let total = 0, done = 0
-    w.days.forEach((day, di) => {
-      day.sessions.forEach((_, si) => {
-        total++
-        const key = `w${w.week}-d${di}-s${si}`
-        if (checked[key] || actuals[key]) done++
+    WEEKS.forEach((srcWeek) => {
+      srcWeek.days.forEach((day, di) => {
+        day.sessions.forEach((_, si) => {
+          const key = `w${srcWeek.week}-d${di}-s${si}`
+          const moved = sessionMoves[key]
+          let targetWeek
+          if (moved !== undefined) {
+            targetWeek = typeof moved === 'number' ? srcWeek.week : moved.week
+          } else {
+            targetWeek = srcWeek.week
+          }
+          if (targetWeek === w.week) {
+            total++
+            if (checked[key] || actuals[key]) done++
+          }
+        })
       })
     })
     return { total, done }
@@ -480,7 +509,9 @@ export default function IronmanView() {
 
             {expanded && (() => {
               const order = getDayOrder(w.week, w.days.length)
-              const isCustomOrder = !!dayOrders[w.week] || Object.keys(sessionMoves).some((k) => k.startsWith(`w${w.week}-`))
+              const isCustomOrder = !!dayOrders[w.week] || Object.entries(sessionMoves).some(([k, v]) =>
+                k.startsWith(`w${w.week}-`) || (v && typeof v === 'object' && v.week === w.week)
+              )
 
               return (
                 <div className={styles.ironmanDays}>
@@ -496,7 +527,7 @@ export default function IronmanView() {
                     if (!day) return null
                     const dayDate = addDays(weekStart, displayPos)
                     const isToday = dayDate.toDateString() === new Date().toDateString()
-                    const sessions = getSessionsForDay(w.week, origDayIdx, w.days)
+                    const sessions = getSessionsForDay(w.week, origDayIdx)
                     const dayName = WEEKDAYS[dayDate.getDay()]
                     const isDayDropTarget = dragOverDay === `${w.week}-${displayPos}`
                     const isSessionDropTarget = dragOverSession === `${w.week}-${origDayIdx}`
@@ -528,12 +559,13 @@ export default function IronmanView() {
                           </div>
                         </div>
                         <div className={styles.ironmanSessions}>
-                          {sessions.map(({ session, origDayIdx, key }) => {
+                          {sessions.map(({ session, origDayIdx, key, fromWeek }) => {
                             const actual = actuals[key]
                             const done = !!(checked[key] || actual)
                             const info = DISCIPLINE_INFO[session.d] || { label: session.d, icon: "\uD83D\uDCCB", color: "#6b7280" }
                             const sessionExpanded = expandedSessions[key]
                             const isMoved = sessionMoves[key] !== undefined
+                            const isFromOtherWeek = fromWeek !== w.week
 
                             return (
                               <div key={key} className={`${styles.ironmanSession} ${isMoved ? styles.ironmanSessionMoved : ""}`}>
@@ -559,6 +591,9 @@ export default function IronmanView() {
                                   </span>
                                   {session.z !== "-" && (
                                     <span className={styles.ironmanZone}>{session.z}</span>
+                                  )}
+                                  {isFromOtherWeek && (
+                                    <span className={styles.ironmanMovedFromBadge}>from W{fromWeek}</span>
                                   )}
                                   {actual && (
                                     <span className={styles.ironmanActualBadge}>Actual</span>

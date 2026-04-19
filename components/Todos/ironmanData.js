@@ -691,6 +691,17 @@ export function getWeekWithDates(weekNum, startDate, checked = {}) {
   }
 }
 
+// Resolve a sessionMoves entry to { week, day }. Handles both legacy (number) and new ({ week, day }) formats.
+function resolveSessionMove(key, sessionMoves) {
+  const moved = sessionMoves[key]
+  if (moved === undefined) return null
+  if (typeof moved === 'number') {
+    const origWeek = parseInt(key.split('-')[0].slice(1))
+    return { week: origWeek, day: moved }
+  }
+  return moved
+}
+
 export function getTrainingWeekProgress(weekNum, startDate, checked = {}, options = {}) {
   const weekData = WEEKS.find(w => w.week === weekNum)
   if (!weekData) return null
@@ -721,10 +732,52 @@ export function getTrainingWeekProgress(weekNum, startDate, checked = {}, option
   const fallbackDays = {}
   const sessions = []
 
+  const addSession = (session, key, effectiveOrigDayIdx, di) => {
+    const displayPos = displayPosByOrigDay[effectiveOrigDayIdx] ?? effectiveOrigDayIdx
+    const sessionDate = addDaysToDateKey(weekStart, displayPos)
+    const checkedSession = !!checked[key]
+    const dateCompare = compareDateKeys(sessionDate, today)
+    const status = checkedSession
+      ? dateCompare > 0 ? "completed_ahead" : "completed"
+      : dateCompare < 0 ? "missed" : dateCompare === 0 ? "due_today" : "upcoming"
+
+    const enrichedSession = {
+      ...session,
+      key,
+      checked: checkedSession,
+      date: sessionDate,
+      status,
+      originalDayIndex: di,
+      scheduledDayIndex: effectiveOrigDayIdx,
+      moved: true,
+    }
+
+    sessions.push(enrichedSession)
+
+    let displayDay = displayedDays[displayPos]
+    if (!displayDay) {
+      const fallbackDate = sessionDate
+      if (!fallbackDays[fallbackDate]) {
+        fallbackDays[fallbackDate] = {
+          originalDayIndex: effectiveOrigDayIdx,
+          displayDayIndex: displayPos,
+          day: getDayNameForDateKey(sessionDate),
+          date: fallbackDate,
+          sessions: [],
+        }
+      }
+      displayDay = fallbackDays[fallbackDate]
+    }
+    displayDay.sessions.push(enrichedSession)
+  }
+
+  // This week's own sessions (excluding those moved to other weeks)
   weekData.days.forEach((day, di) => {
     day.sessions.forEach((session, si) => {
       const key = `w${weekNum}-d${di}-s${si}`
-      const effectiveOrigDayIdx = sessionMoves[key] !== undefined ? sessionMoves[key] : di
+      const move = resolveSessionMove(key, sessionMoves)
+      if (move && move.week !== weekNum) return // moved to another week, skip
+      const effectiveOrigDayIdx = move ? move.day : di
       const displayPos = displayPosByOrigDay[effectiveOrigDayIdx] ?? effectiveOrigDayIdx
       const sessionDate = addDaysToDateKey(weekStart, displayPos)
       const checkedSession = !!checked[key]
@@ -761,6 +814,19 @@ export function getTrainingWeekProgress(weekNum, startDate, checked = {}, option
         displayDay = fallbackDays[fallbackDate]
       }
       displayDay.sessions.push(enrichedSession)
+    })
+  })
+
+  // Sessions from other weeks moved into this week
+  WEEKS.forEach((srcWeek) => {
+    if (srcWeek.week === weekNum) return
+    srcWeek.days.forEach((day, di) => {
+      day.sessions.forEach((session, si) => {
+        const key = `w${srcWeek.week}-d${di}-s${si}`
+        const move = resolveSessionMove(key, sessionMoves)
+        if (!move || move.week !== weekNum) return
+        addSession(session, key, move.day, di)
+      })
     })
   })
 
