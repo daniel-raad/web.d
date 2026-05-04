@@ -2,8 +2,10 @@ name: Smart Nudges
 
 on:
   schedule:
-    # Every 2 hours from 10AM to 10PM GMT
-    - cron: "0 10,12,14,16,18,20,22 * * *"
+    # 3 PM GMT — single mid-afternoon opportunistic check.
+    # Only fires if something genuinely needs attention (low habits,
+    # overdue todos, low sleep, streak at risk). Often silent.
+    - cron: "0 15 * * *"
   workflow_dispatch:
 
 jobs:

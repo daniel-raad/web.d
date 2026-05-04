@@ -2,13 +2,10 @@ name: Heartbeat Reminders
 
 on:
   schedule:
-    # 6AM, 10AM, 1PM, 6PM, 9PM, 11PM GMT
-    - cron: "0 6 * * *"
-    - cron: "0 10 * * *"
-    - cron: "0 13 * * *"
-    - cron: "0 18 * * *"
-    - cron: "0 21 * * *"
-    - cron: "0 23 * * *"
+    # 6:30 AM GMT — morning anchor (post-training, pre-work)
+    - cron: "30 6 * * *"
+    # 9:30 PM GMT — evening review + plan tomorrow
+    - cron: "30 21 * * *"
   workflow_dispatch:
 
 jobs:
