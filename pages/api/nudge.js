@@ -142,6 +142,7 @@ async function runTodoMaintenance() {
       messages: [{ role: "user", content: "Run your todo queue maintenance check now." }],
       tools: MAINTENANCE_TOOLS,
       systemPrompt: MAINTENANCE_SYSTEM_PROMPT,
+      model: "claude-haiku-4-5",
     })
     return report || null
   } catch (err) {
