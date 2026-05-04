@@ -66,7 +66,7 @@ export default function HabitSettings({ habits, year, month, onClose, onRefresh 
         <div className={styles.settingsTitle}>Habit Settings</div>
 
         <div className={styles.settingsGroup}>
-          <label className={styles.settingsLabel}>Target Date (Ironman 70.3)</label>
+          <label className={styles.settingsLabel}>Target Date</label>
           <input
             type="date"
             className={styles.settingsInput}

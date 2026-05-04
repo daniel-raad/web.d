@@ -4,92 +4,6 @@
   padding: 1rem 1.5rem 3rem;
 }
 
-/* --- Countdown Hero --- */
-.countdownHero {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 2rem 1rem 1.5rem;
-  margin-bottom: 1.5rem;
-  background: linear-gradient(135deg, var(--accent-bg), rgba(139, 92, 246, 0.04));
-  border: 1px solid var(--accent);
-  border-radius: 12px;
-  position: relative;
-}
-
-.countdownLabel {
-  font-size: 1.1rem;
-  font-weight: 800;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  margin-bottom: 0.25rem;
-}
-
-.ironmanRed {
-  color: #e02726;
-}
-
-.ironmanWhite {
-  color: var(--text);
-}
-
-.countdownNumber {
-  font-size: 5rem;
-  font-weight: 800;
-  color: var(--accent);
-  line-height: 1;
-  letter-spacing: -0.02em;
-}
-
-.countdownSubtext {
-  font-size: 1.1rem;
-  font-weight: 500;
-  color: var(--text-muted);
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  margin-top: 0.25rem;
-}
-
-.countdownTimer {
-  display: flex;
-  align-items: center;
-  gap: 0.4rem;
-  margin-top: 1rem;
-  font-family: "SF Mono", "Fira Code", "Courier New", monospace;
-}
-
-.timerSegment {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-.timerValue {
-  font-size: 1.6rem;
-  font-weight: 700;
-  color: var(--text-secondary);
-  letter-spacing: 0.05em;
-  min-width: 2.4ch;
-  text-align: center;
-}
-
-.timerSep {
-  font-size: 1.6rem;
-  font-weight: 700;
-  color: var(--accent);
-  margin-bottom: 1rem;
-}
-
-.timerLabel {
-  font-size: 0.6rem;
-  font-weight: 500;
-  color: var(--text-faint);
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  margin-top: 0.1rem;
-}
-
 .settingsBtn {
   position: absolute;
   top: 0.75rem;
@@ -194,27 +108,6 @@
 @media (max-width: 600px) {
   .page {
     padding: 0.75rem 1rem 2rem;
-  }
-
-  .countdownHero {
-    padding: 1.5rem 1rem 1.25rem;
-  }
-
-  .countdownNumber {
-    font-size: 3.5rem;
-  }
-
-  .countdownSubtext {
-    font-size: 0.9rem;
-  }
-
-  .timerValue {
-    font-size: 1.2rem;
-  }
-
-  .timerSep {
-    font-size: 1.2rem;
-    margin-bottom: 0.75rem;
   }
 
   .monthSelector {

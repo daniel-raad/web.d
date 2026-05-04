@@ -72,7 +72,7 @@ export default function ChatWidget() {
               <div className={styles.empty}>
                 {user
                   ? "Hey Daniel — ask me to check your todos, log habits, or anything else."
-                  : "Hi! I can tell you about Daniel — his work, training, and what he's building."}
+                  : "Hi! I can tell you about Daniel — his work, habits, and what he's building."}
               </div>
             )}
             {messages.map((m, i) => (

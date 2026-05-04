@@ -7,89 +7,6 @@
   font-family: "JetBrains Mono", "SF Mono", "Fira Code", "Courier New", monospace;
 }
 
-/* --- Countdown Hero --- */
-.countdownHero {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 1.5rem 1rem 1.25rem;
-  margin-bottom: 1.25rem;
-  background: var(--accent-bg);
-  border: 1px solid var(--border-accent);
-  border-radius: 3px;
-}
-
-.countdownLabel {
-  font-size: 0.9rem;
-  font-weight: 700;
-  letter-spacing: 0.25em;
-  text-transform: uppercase;
-  margin-bottom: 0.2rem;
-}
-
-.ironmanRed {
-  color: #e02726;
-}
-
-.ironmanWhite {
-  color: var(--text);
-}
-
-.countdownNumber {
-  font-size: 4rem;
-  font-weight: 800;
-  color: var(--accent);
-  line-height: 1;
-  letter-spacing: -0.02em;
-}
-
-.countdownSubtext {
-  font-size: 0.85rem;
-  font-weight: 400;
-  color: var(--text-faint);
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  margin-top: 0.15rem;
-}
-
-.countdownTimer {
-  display: flex;
-  align-items: center;
-  gap: 0.3rem;
-  margin-top: 0.75rem;
-}
-
-.timerSegment {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-.timerValue {
-  font-size: 1.3rem;
-  font-weight: 700;
-  color: var(--text-secondary);
-  letter-spacing: 0.05em;
-  min-width: 2.4ch;
-  text-align: center;
-}
-
-.timerSep {
-  font-size: 1.3rem;
-  font-weight: 700;
-  color: var(--accent-bg);
-  margin-bottom: 0.8rem;
-}
-
-.timerUnit {
-  font-size: 0.55rem;
-  font-weight: 400;
-  color: var(--text-faint);
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  margin-top: 0.05rem;
-}
-
 /* --- Tab Bar --- */
 .tabBar {
   display: flex;
@@ -352,62 +269,6 @@
   color: #fff;
 }
 
-/* --- Hub: Training --- */
-
-.hubTrainingList {
-  display: flex;
-  flex-direction: column;
-  gap: 0.4rem;
-}
-
-.hubTrainingSession {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 0.4rem 0.25rem;
-  border-radius: 2px;
-  cursor: pointer;
-  transition: background 0.1s;
-}
-
-.hubTrainingSession:hover {
-  background: var(--accent-bg);
-}
-
-.hubSessionDone {
-  opacity: 0.5;
-}
-
-.hubTrainingIcon {
-  font-size: 1rem;
-  flex-shrink: 0;
-}
-
-.hubTrainingLabel {
-  font-size: 0.82rem;
-  font-weight: 600;
-}
-
-.hubSessionDone .hubTrainingLabel {
-  text-decoration: line-through;
-  color: var(--text-faint) !important;
-}
-
-.hubTrainingDur {
-  font-size: 0.75rem;
-  color: var(--text-faint);
-  margin-left: auto;
-}
-
-.hubTrainingZone {
-  font-size: 0.68rem;
-  font-weight: 600;
-  color: var(--accent);
-  background: var(--accent-bg);
-  padding: 0.1rem 0.35rem;
-  border-radius: 2px;
-}
-
 /* --- Hub: Habits --- */
 
 .hubHabitGrid {
@@ -560,27 +421,69 @@
   color: var(--text-faint);
 }
 
+/* --- Integrations --- */
+.hubIntegrationRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.hubIntegrationLabel {
+  font-size: 0.9rem;
+  color: var(--color-text, #ddd);
+}
+
+.hubIntegrationStatus {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.85rem;
+  color: var(--color-muted, #888);
+}
+
+.hubIntegrationConnected {
+  color: #4caf50;
+  font-weight: 600;
+}
+
+.hubIntegrationFlash {
+  color: #4caf50;
+  font-size: 0.8rem;
+  margin-left: 0.4rem;
+}
+
+.hubIntegrationError {
+  color: #ff6b6b;
+  font-size: 0.8rem;
+  margin-left: 0.4rem;
+}
+
+.hubIntegrationBtn {
+  background: transparent;
+  border: 1px solid var(--color-border, #444);
+  color: var(--color-text, #ddd);
+  padding: 0.35rem 0.75rem;
+  border-radius: 4px;
+  font-size: 0.8rem;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+.hubIntegrationBtn:hover:not(:disabled) {
+  background: var(--color-hover, #2a2a2a);
+}
+
+.hubIntegrationBtn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
 /* --- Responsive --- */
 @media (max-width: 600px) {
   .dashboard {
     padding: 0.75rem 1rem 2rem;
-  }
-
-  .countdownHero {
-    padding: 1.25rem 0.75rem 1rem;
-  }
-
-  .countdownNumber {
-    font-size: 3rem;
-  }
-
-  .timerValue {
-    font-size: 1rem;
-  }
-
-  .timerSep {
-    font-size: 1rem;
-    margin-bottom: 0.6rem;
   }
 
   .tabBar {

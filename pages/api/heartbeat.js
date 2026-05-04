@@ -20,23 +20,22 @@ const PROMPTS = {
   morning: `Good morning Daniel! This is his daily standup. Do the following:
 
 1. Call get_memory to recall context.
-2. Call get_today to get the full snapshot — training, habits, todos, sleep, weight, everything.
+2. Call get_today to get the full snapshot — habits, todos, sleep, weight, everything.
 3. Call get_recent_checkins (limit 3) to see what was discussed in last night's evening check-in. If Daniel replied with plans or priorities, hold him to them.
 4. Call get_todos to see the full task list (get_today only shows due/overdue — you need the full picture for the standup).
 
 Format it as a clear morning brief:
 - Accountability (if he said he'd do something last night, lead with that)
-- Today's training (specific sessions from get_today — e.g. "45min easy run + 20min strength", not just "training")
 - Work standup (top 3-5 actionable tasks across Palantir, Conversify, personal — focus on due/overdue)
 - Habits to tick off
 
 Keep it punchy and actionable. This should feel like a standup, not a novel.`,
 
-  midday: `It's midday. Call get_today to get the full day snapshot — habits, training, todos, everything. Give Daniel a quick progress check — what's done, what's still open, and a nudge on anything he might be forgetting. Keep it short.`,
+  midday: `It's midday. Call get_today to get the full day snapshot — habits, todos, everything. Give Daniel a quick progress check — what's done, what's still open, and a nudge on anything he might be forgetting. Keep it short.`,
 
   evening: `Evening check-in. Do the following:
 
-1. Call get_today to see the full day snapshot — habits done, training completed, todos status, sleep/weight logged.
+1. Call get_today to see the full day snapshot — habits done, todos status, sleep/weight logged.
 2. Call get_recent_checkins (limit 3) to see what was said in this morning's standup — what did Daniel commit to today?
 3. Call get_completed_todos with today's date as both startDate and endDate to see what was actually finished today.
 
@@ -47,16 +46,14 @@ End by asking what he wants to focus on tomorrow. One sentence, conversational.`
   weekly_reflection: `It's Sunday evening — time for a weekly reflection. Do the following:
 
 1. Call get_week_summary with this week's date range to get the full picture.
-2. Call get_ironman_plan to see training progress.
-3. Call get_completed_todos with the same date range to see everything completed this week.
-4. Call get_todos to see what's still open.
-5. Call get_recent_checkins (limit 10) to review the week's check-in history — what did Daniel commit to vs what happened?
+2. Call get_completed_todos with the same date range to see everything completed this week.
+3. Call get_todos to see what's still open.
+4. Call get_recent_checkins (limit 10) to review the week's check-in history — what did Daniel commit to vs what happened?
 
 Give Daniel an honest weekly review:
 - Habit completion rate (% and trend vs. what you'd expect)
 - Best and worst days this week
 - Sleep average and pattern
-- Training progress — use get_ironman_plan's dueProgress/overallDueProgress, not raw progress, when a training week is still in progress. Future/upcoming sessions are not missed; only call out sessions with status/totals.missed. Use the tool's currentWeek and dateRange before saying a new training week starts.
 - Todo throughput — what got done, what's been sitting
 - One specific, actionable thing to improve next week
 
@@ -88,7 +85,7 @@ export default async function handler(req, res) {
   if (isWeeklyReflection) {
     const { start, end } = getWeekRange(today)
     prompt = prompt.replace("this week's date range", `startDate: "${start}", endDate: "${end}"`)
-    prompt += `\n\nCalendar review range: ${start} to ${end}. Keep this separate from the Ironman training week's dateRange returned by get_ironman_plan.`
+    prompt += `\n\nCalendar review range: ${start} to ${end}.`
   }
 
   const personality = await getPersonalitySection()

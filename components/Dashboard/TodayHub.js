@@ -1,12 +1,12 @@
 import { useState, useEffect, useCallback, useRef } from "react"
 import Link from "next/link"
+import { useRouter } from "next/router"
 import {
-  getConfig, getMonthHabits, getEntries, toggleHabit,
+  getMonthHabits, getEntries, toggleHabit,
   saveWeight, saveSleep, saveMoment,
   getTodos, updateTodo,
-  getIronmanPlan, saveIronmanPlan,
 } from "../../lib/firestore"
-import { DEFAULT_IRONMAN_START_DATE, DISCIPLINE_INFO, getCurrentWeek, getTodayTrainingSessions } from "../Todos/ironmanData"
+import { getIdToken } from "../../lib/AuthContext"
 import { compareDateKeys, dateKeyToLocalDate, getDateKey } from "../../lib/dates.js"
 import styles from "../../styles/Dashboard.module.css"
 
@@ -17,20 +17,20 @@ const MONTH_NAMES = [
 ]
 
 export default function TodayHub() {
+  const router = useRouter()
   const now = new Date()
   const dateStr = getDateKey(now)
   const [year, month] = dateStr.split("-").map(Number)
 
-  const [config, setConfig] = useState(null)
   const [habits, setHabits] = useState([])
   const [entries, setEntries] = useState({})
   const [todos, setTodos] = useState([])
-  const [ironman, setIronman] = useState({})
   const [loading, setLoading] = useState(true)
-  const [countdown, setCountdown] = useState(null)
   const [weightVal, setWeightVal] = useState("")
   const [sleepVal, setSleepVal] = useState("")
   const [momentVal, setMomentVal] = useState("")
+  const [stravaStatus, setStravaStatus] = useState(null)
+  const [stravaBusy, setStravaBusy] = useState(false)
   const weightTimer = useRef(null)
   const sleepTimer = useRef(null)
   const momentTimer = useRef(null)
@@ -38,18 +38,14 @@ export default function TodayHub() {
   // Load all data
   useEffect(() => {
     async function load() {
-      const [cfg, h, e, t, ip] = await Promise.all([
-        getConfig(),
+      const [h, e, t] = await Promise.all([
         getMonthHabits(year, month),
         getEntries(year, month),
         getTodos(),
-        getIronmanPlan(),
       ])
-      setConfig(cfg)
       setHabits(h)
       setEntries(e)
       setTodos(t)
-      setIronman(ip)
       const todayEntry = e[dateStr] || {}
       setWeightVal(todayEntry.weight ?? "")
       setSleepVal(todayEntry.sleep ?? "")
@@ -59,18 +55,41 @@ export default function TodayHub() {
     load()
   }, [year, month, dateStr])
 
-  // Countdown (every minute)
+  // Strava status
   useEffect(() => {
-    if (!config?.targetDate) return
-    const target = new Date(config.targetDate + "T00:00:00")
-    function tick() {
-      const diff = target - new Date()
-      setCountdown(diff > 0 ? Math.floor(diff / (1000 * 60 * 60 * 24)) : 0)
+    async function loadStrava() {
+      const token = await getIdToken()
+      if (!token) return
+      const res = await fetch("/api/strava/status", {
+        headers: { Authorization: `Bearer ${token}` },
+      })
+      if (res.ok) setStravaStatus(await res.json())
     }
-    tick()
-    const interval = setInterval(tick, 60000)
-    return () => clearInterval(interval)
-  }, [config])
+    loadStrava()
+  }, [router.query.strava])
+
+  const handleStravaConnect = useCallback(async () => {
+    setStravaBusy(true)
+    try {
+      const token = await getIdToken()
+      const res = await fetch("/api/strava/connect", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      if (!res.ok) {
+        const body = await res.json().catch(() => ({}))
+        alert(`Strava connect failed: ${body.error || res.status}`)
+        return
+      }
+      const { url } = await res.json()
+      window.location.href = url
+    } finally {
+      setStravaBusy(false)
+    }
+  }, [])
 
   // --- Handlers ---
 
@@ -124,14 +143,6 @@ export default function TodayHub() {
     await updateTodo(id, { completed: true, completedAt })
   }
 
-  const handleSessionToggle = (key) => {
-    setIronman((prev) => {
-      const checked = { ...(prev.checked || {}), [key]: !(prev.checked || {})[key] }
-      saveIronmanPlan({ checked })
-      return { ...prev, checked }
-    })
-  }
-
   // --- Derived data ---
 
   if (loading) {
@@ -151,23 +162,6 @@ export default function TodayHub() {
   const unscheduledCount = todos.filter((t) => !t.completed && !t.dueDate).length
   const activeCount = todos.filter((t) => !t.completed).length
 
-  const startDate = ironman?.startDate || DEFAULT_IRONMAN_START_DATE
-  const currentWeek = getCurrentWeek(startDate, dateStr)
-  const todaySessions = getTodayTrainingSessions(
-    currentWeek,
-    startDate,
-    ironman?.checked || {},
-    {
-      today: dateStr,
-      dayOrders: ironman?.dayOrders || {},
-      sessionMoves: ironman?.sessionMoves || {},
-    }
-  ).map((session) => ({
-    session,
-    key: session.key,
-    checked: session.checked,
-  }))
-
   const todayDate = dateKeyToLocalDate(dateStr)
   const dateLabel = `${DAY_NAMES[todayDate.getDay()]}, ${MONTH_NAMES[todayDate.getMonth()]} ${todayDate.getDate()}`
 
@@ -177,57 +171,12 @@ export default function TodayHub() {
       <div className={styles.hubHeader}>
         <div className={styles.hubDate}>{dateLabel}</div>
         <div className={styles.hubSummary}>
-          {countdown !== null && (
-            <span className={styles.hubStat}>
-              <span className={styles.ironmanRed}>IRON</span>
-              <span className={styles.ironmanWhite}>MAN</span>
-              <span className={styles.ironmanRed}> 70.3</span>
-              <span className={styles.hubStatSep}>&middot;</span>
-              {countdown}d
-            </span>
-          )}
           <span className={styles.hubStat}>
             {habitsDone}/{habits.length} habits
           </span>
           <span className={styles.hubStat}>{todayTodos.length} due</span>
         </div>
       </div>
-
-      {/* Training */}
-      <section className={styles.hubSection}>
-        <div className={styles.hubSectionHeader}>
-          <span className={styles.hubSectionTitle}>Training</span>
-          <Link href="/dashboard/training">
-            <a className={styles.hubViewAll}>View full plan &rarr;</a>
-          </Link>
-        </div>
-        {todaySessions.length === 0 ? (
-          <div className={styles.hubEmpty}>Rest day</div>
-        ) : (
-          <div className={styles.hubTrainingList}>
-            {todaySessions.map(({ session, key, checked }) => {
-              const info = DISCIPLINE_INFO[session.d] || { label: session.d, icon: "\uD83D\uDCCB", color: "#6b7280" }
-              return (
-                <div
-                  key={key}
-                  className={`${styles.hubTrainingSession} ${checked ? styles.hubSessionDone : ""}`}
-                  onClick={() => handleSessionToggle(key)}
-                >
-                  <span className={`${styles.hubCheck} ${checked ? styles.hubCheckDone : ""}`}>
-                    {checked ? "\u2713" : ""}
-                  </span>
-                  <span className={styles.hubTrainingIcon}>{info.icon}</span>
-                  <span className={styles.hubTrainingLabel} style={{ color: checked ? undefined : info.color }}>
-                    {info.label}
-                  </span>
-                  <span className={styles.hubTrainingDur}>{session.dur}</span>
-                  {session.z !== "-" && <span className={styles.hubTrainingZone}>{session.z}</span>}
-                </div>
-              )
-            })}
-          </div>
-        )}
-      </section>
 
       {/* Habits */}
       <section className={styles.hubSection}>
@@ -331,6 +280,47 @@ export default function TodayHub() {
           placeholder="What made today memorable?"
           rows={2}
         />
+      </section>
+
+      {/* Integrations */}
+      <section className={styles.hubSection}>
+        <div className={styles.hubSectionHeader}>
+          <span className={styles.hubSectionTitle}>Integrations</span>
+        </div>
+        <div className={styles.hubIntegrationRow}>
+          <div className={styles.hubIntegrationLabel}>
+            Strava
+            {router.query.strava === "connected" && (
+              <span className={styles.hubIntegrationFlash}> · just connected</span>
+            )}
+            {router.query.strava === "error" && (
+              <span className={styles.hubIntegrationError}> · {router.query.reason || "failed"}</span>
+            )}
+          </div>
+          {stravaStatus?.connected ? (
+            <div className={styles.hubIntegrationStatus}>
+              <span className={styles.hubIntegrationConnected}>Connected</span>
+              {stravaStatus.athleteName && <span> · {stravaStatus.athleteName}</span>}
+              <button
+                type="button"
+                className={styles.hubIntegrationBtn}
+                onClick={handleStravaConnect}
+                disabled={stravaBusy}
+              >
+                Reconnect
+              </button>
+            </div>
+          ) : (
+            <button
+              type="button"
+              className={styles.hubIntegrationBtn}
+              onClick={handleStravaConnect}
+              disabled={stravaBusy}
+            >
+              {stravaBusy ? "Connecting..." : "Connect Strava"}
+            </button>
+          )}
+        </div>
       </section>
     </div>
   )
