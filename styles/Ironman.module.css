@@ -1,0 +1,368 @@
+.page {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 1rem 1.5rem 3rem;
+  font-family: "JetBrains Mono", "SF Mono", "Fira Code", "Courier New", monospace;
+}
+
+.signedOut {
+  text-align: center;
+  padding: 3rem 1rem;
+  color: var(--text-faint);
+  font-size: 0.9rem;
+}
+
+.signedOut button {
+  margin-top: 1rem;
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--text);
+  padding: 0.5rem 1rem;
+  font-family: inherit;
+  cursor: pointer;
+  border-radius: 3px;
+}
+
+.countdownCard {
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  padding: 1.25rem 1.5rem;
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.countdownTitle {
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-bottom: 0.25rem;
+}
+
+.countdownRace {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.countdownRaceRed {
+  color: #ef4444;
+}
+
+.countdownDate {
+  font-size: 0.8rem;
+  color: var(--text-faint);
+  margin-top: 0.15rem;
+}
+
+.countdownDays {
+  font-family: inherit;
+  font-size: 2.6rem;
+  font-weight: 700;
+  color: var(--accent);
+  line-height: 1;
+}
+
+.countdownDaysLabel {
+  font-size: 0.7rem;
+  color: var(--text-faint);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-top: 0.25rem;
+  text-align: right;
+}
+
+.section {
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  padding: 0.9rem 1.1rem;
+  margin-bottom: 1rem;
+}
+
+.sectionHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.75rem;
+}
+
+.sectionTitle {
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.sectionMeta {
+  font-size: 0.72rem;
+  color: var(--text-faint);
+}
+
+.weekRow {
+  display: grid;
+  grid-template-columns: 90px 1fr 110px;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.4rem 0;
+  border-top: 1px solid var(--border);
+}
+
+.weekRow:first-of-type {
+  border-top: none;
+}
+
+.weekDiscipline {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text);
+  text-transform: capitalize;
+}
+
+.weekDisciplineEmoji {
+  margin-right: 0.35rem;
+}
+
+.barTrack {
+  width: 100%;
+  height: 8px;
+  background: var(--border);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.barFill {
+  height: 100%;
+  background: var(--accent);
+  transition: width 0.3s ease;
+}
+
+.barFillComplete {
+  background: #4caf50;
+}
+
+.weekStats {
+  font-size: 0.78rem;
+  color: var(--text-faint);
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+.weekStatsDone {
+  color: var(--text);
+  font-weight: 600;
+}
+
+.weekTotalRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 0.6rem;
+  padding-top: 0.6rem;
+  border-top: 1px solid var(--border);
+  font-size: 0.8rem;
+}
+
+.weekTotalLabel {
+  color: var(--text-faint);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  font-size: 0.7rem;
+}
+
+.weekTotalValue {
+  color: var(--text);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.notes {
+  font-size: 0.78rem;
+  color: var(--text-faint);
+  margin-top: 0.6rem;
+  padding-top: 0.6rem;
+  border-top: 1px solid var(--border);
+  white-space: pre-wrap;
+}
+
+.targetsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 0.6rem;
+}
+
+.targetGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.targetLabel {
+  font-size: 0.7rem;
+  color: var(--text-faint);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.targetInput {
+  background: var(--bg-subtle, transparent);
+  border: 1px solid var(--border);
+  border-radius: 2px;
+  color: var(--text);
+  padding: 0.35rem 0.5rem;
+  font-size: 0.85rem;
+  font-family: inherit;
+  font-variant-numeric: tabular-nums;
+}
+
+.targetInput:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+
+.notesInput {
+  width: 100%;
+  background: var(--bg-subtle, transparent);
+  border: 1px solid var(--border);
+  border-radius: 2px;
+  color: var(--text);
+  padding: 0.5rem 0.6rem;
+  font-size: 0.82rem;
+  font-family: inherit;
+  resize: vertical;
+  min-height: 3rem;
+  margin-top: 0.75rem;
+}
+
+.notesInput:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+
+.targetsActions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+  margin-top: 0.75rem;
+}
+
+.saveBtn {
+  background: var(--accent);
+  border: 1px solid var(--accent);
+  color: #fff;
+  padding: 0.4rem 1rem;
+  border-radius: 2px;
+  font-size: 0.78rem;
+  font-family: inherit;
+  cursor: pointer;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.saveBtn:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.savedFlash {
+  font-size: 0.75rem;
+  color: #4caf50;
+  align-self: center;
+}
+
+.sessions {
+  display: flex;
+  flex-direction: column;
+}
+
+.sessionRow {
+  display: grid;
+  grid-template-columns: 70px 1fr auto;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.5rem 0.25rem;
+  border-top: 1px solid var(--border);
+  font-size: 0.82rem;
+}
+
+.sessionRow:first-of-type {
+  border-top: none;
+}
+
+.sessionDate {
+  font-size: 0.72rem;
+  color: var(--text-faint);
+  font-variant-numeric: tabular-nums;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.sessionMain {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  min-width: 0;
+}
+
+.sessionName {
+  color: var(--text);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.sessionType {
+  font-size: 0.7rem;
+  color: var(--text-faint);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.sessionStats {
+  font-size: 0.75rem;
+  color: var(--text-faint);
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.empty {
+  font-size: 0.8rem;
+  color: var(--text-faint);
+  padding: 0.5rem 0;
+}
+
+.connectStrava {
+  font-size: 0.8rem;
+  color: var(--text-faint);
+  padding: 0.5rem 0;
+}
+
+.connectStrava a {
+  color: var(--accent);
+  text-decoration: underline;
+}
+
+@media (max-width: 600px) {
+  .page {
+    padding: 0.75rem 1rem 2rem;
+  }
+
+  .weekRow {
+    grid-template-columns: 70px 1fr 90px;
+    gap: 0.5rem;
+  }
+
+  .sessionRow {
+    grid-template-columns: 60px 1fr auto;
+  }
+
+  .countdownDays {
+    font-size: 2rem;
+  }
+}
