@@ -6,6 +6,7 @@ import {
   generatePlan,
   getPlan,
 } from "../../lib/firestore"
+import { colorForTemplate } from "../../lib/goalColors"
 import styles from "../../styles/Dashboard.module.css"
 
 const STATUS_OPTIONS = [
@@ -425,10 +426,12 @@ export default function PlanSection({ date, initialPlan, onChange }) {
           const range = formatFloorTarget(item.floor, item.target, item.quantityUnit)
           const isExpanded = expanded?.idx === idx
           const mode = isExpanded ? expanded.mode : null
+          const accent = colorForTemplate(item.templateId)
           return (
             <div
               key={`${item.templateId}-${idx}`}
               className={`${styles.planItem} ${isDone ? styles.planItemDone : ""} ${isSkipped ? styles.planItemSkipped : ""}`}
+              style={{ borderLeft: `3px solid ${accent}` }}
             >
               <div className={styles.planItemHeader}>
                 <div className={styles.planItemTitle}>

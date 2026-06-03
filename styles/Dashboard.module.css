@@ -381,11 +381,252 @@
   color: var(--bg, #fff);
 }
 
+/* --- Progress page --- */
+
+.heatmapCell {
+  border-radius: 2px;
+  border: 1px solid var(--border);
+  background: transparent;
+}
+
+.heatmapStacked {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  background: transparent;
+  border: 1px solid var(--border);
+}
+
+.heatmapStacked > div {
+  min-height: 0;
+}
+
+/* GitHub-style 7-row weeks-as-columns layout */
+.githubHeatmap {
+  margin-top: 0.4rem;
+  overflow-x: auto;
+}
+
+.githubHeatmapMain {
+  display: inline-block;
+}
+
+.githubMonthRow {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: 12px;
+  grid-column-gap: 3px;
+  margin-left: 32px;
+  margin-bottom: 4px;
+  font-size: 0.62rem;
+  color: var(--text-muted);
+}
+
+.githubMonthLabel {
+  white-space: nowrap;
+  height: 12px;
+  line-height: 12px;
+}
+
+.githubHeatmapGridWrap {
+  display: flex;
+  gap: 4px;
+}
+
+.githubDayLabels {
+  display: grid;
+  grid-template-rows: repeat(7, 12px);
+  grid-row-gap: 3px;
+  font-size: 0.62rem;
+  color: var(--text-muted);
+  width: 28px;
+}
+
+.githubDayLabel {
+  height: 12px;
+  line-height: 12px;
+}
+
+.githubHeatmapGrid {
+  display: grid;
+  grid-template-rows: repeat(7, 12px);
+  grid-auto-flow: column;
+  grid-column-gap: 3px;
+  grid-row-gap: 3px;
+}
+
+.githubHeatmapPad {
+  width: 12px;
+  height: 12px;
+}
+
+.githubHeatmapCell {
+  width: 12px;
+  height: 12px;
+  border-radius: 2px;
+}
+
+.heatmapToday {
+  outline: 1px solid var(--accent);
+  outline-offset: 1px;
+}
+
+.heatmapLegendGoals {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem 1rem;
+  margin-top: 0.7rem;
+  font-size: 0.7rem;
+  color: var(--text-muted);
+}
+
+.heatmapLegendGoalItem {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.heatmapLegendGoalLabel {
+  color: var(--text-secondary);
+}
+
+.progressStatsRow {
+  display: flex;
+  gap: 1.2rem;
+  flex-wrap: wrap;
+  margin-top: 0.3rem;
+}
+
+.progressStat {
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+}
+
+.progressStatValue {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.progressStatLabel {
+  font-size: 0.66rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+/* --- Hub: Goals progress --- */
+
+.goalsProgressList {
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+}
+
+.goalRow {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.goalRowHeader {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.8rem;
+}
+
+.goalDot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.goalTitle {
+  color: var(--text);
+  font-weight: 600;
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.goalStreak {
+  font-size: 0.74rem;
+  color: var(--text-muted);
+  letter-spacing: 0.02em;
+}
+
+.goalStreakBest {
+  color: var(--text-faint);
+}
+
+.goalStrip {
+  display: flex;
+  gap: 3px;
+}
+
+.goalCell {
+  width: 14px;
+  height: 14px;
+  border-radius: 2px;
+  border: 1px solid var(--border);
+  background: transparent;
+}
+
+.goalCellHit {
+  border: 1px solid transparent;
+}
+
+.goalCellToday {
+  outline: 1px solid var(--accent);
+  outline-offset: 1px;
+}
+
+.goalSubStrips {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin-top: 4px;
+  padding-left: 16px;
+}
+
+.goalSubStripRow {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.goalSubStripLabel {
+  font-size: 0.62rem;
+  color: var(--text-muted);
+  width: 50px;
+  text-align: right;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.goalSubStrip {
+  display: flex;
+  gap: 2px;
+}
+
+.goalSubCell {
+  width: 8px;
+  height: 8px;
+  border-radius: 2px;
+  border: 1px solid var(--border);
+  background: transparent;
+}
+
 /* --- Hub: Plan --- */
 
 .planEnergyBasis {
   font-size: 0.7rem;
-  color: var(--text-faint);
+  color: var(--text-muted);
   font-family: inherit;
 }
 
@@ -423,7 +664,7 @@
 
 .planNotes {
   font-size: 0.78rem;
-  color: var(--text-faint);
+  color: var(--text-secondary);
   font-style: italic;
   padding: 0.3rem 0 0.5rem 0;
   border-bottom: 1px dashed var(--border);
@@ -481,7 +722,7 @@
 
 .planItemRange {
   font-size: 0.72rem;
-  color: var(--text-faint);
+  color: var(--text-muted);
   letter-spacing: 0.02em;
 }
 
@@ -519,15 +760,15 @@
 }
 
 .planItemRationale {
-  font-size: 0.74rem;
-  color: var(--text-faint);
+  font-size: 0.78rem;
+  color: var(--text-secondary);
   padding-top: 0.3rem;
-  line-height: 1.35;
+  line-height: 1.4;
 }
 
 .planItemTimeSlot {
   font-size: 0.66rem;
-  color: var(--text-faint);
+  color: var(--text-muted);
   padding-top: 0.25rem;
   letter-spacing: 0.05em;
   text-transform: uppercase;

@@ -9,6 +9,7 @@ import { getIdToken } from "../../lib/AuthContext"
 import { dateKeyToLocalDate, getDateKey } from "../../lib/dates.js"
 import styles from "../../styles/Dashboard.module.css"
 import PlanSection from "./PlanSection"
+import GoalsProgress from "./GoalsProgress"
 
 const DAY_NAMES = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
 const MONTH_NAMES = [
@@ -168,6 +169,9 @@ export default function TodayHub() {
 
       {/* Today's plan — floor-first */}
       <PlanSection date={dateStr} initialPlan={plan} />
+
+      {/* Goals progress strips */}
+      <GoalsProgress />
 
       {/* Body — weight, sleep, energy */}
       <section className={styles.hubSection}>
