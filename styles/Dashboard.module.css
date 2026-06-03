@@ -348,6 +348,303 @@
   border-color: var(--accent);
 }
 
+.hubEnergyPills {
+  display: flex;
+  gap: 0.25rem;
+}
+
+.hubEnergyPill {
+  width: 26px;
+  height: 26px;
+  border: 1px solid var(--border);
+  border-radius: 2px;
+  background: var(--bg-subtle, transparent);
+  color: var(--text-faint);
+  font-size: 0.72rem;
+  font-family: inherit;
+  cursor: pointer;
+  padding: 0;
+}
+
+.hubEnergyPill:hover {
+  border-color: var(--accent);
+  color: var(--text);
+}
+
+.hubEnergyPillActive {
+  background: var(--accent);
+  color: var(--bg, #fff);
+  border-color: var(--accent);
+}
+
+.hubEnergyPillActive:hover {
+  color: var(--bg, #fff);
+}
+
+/* --- Hub: Plan --- */
+
+.planEnergyBasis {
+  font-size: 0.7rem;
+  color: var(--text-faint);
+  font-family: inherit;
+}
+
+.planGenerateRow {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin-top: 0.5rem;
+}
+
+.planGenerateBtn {
+  font-size: 0.78rem;
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  background: var(--bg-subtle, transparent);
+  color: var(--text);
+  padding: 0.35rem 0.7rem;
+  font-family: inherit;
+  cursor: pointer;
+}
+
+.planGenerateBtn:hover:not(:disabled) {
+  border-color: var(--accent);
+}
+
+.planGenerateBtn:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
+.planGenerateError {
+  font-size: 0.72rem;
+  color: #ff6b6b;
+}
+
+.planNotes {
+  font-size: 0.78rem;
+  color: var(--text-faint);
+  font-style: italic;
+  padding: 0.3rem 0 0.5rem 0;
+  border-bottom: 1px dashed var(--border);
+  margin-bottom: 0.5rem;
+}
+
+.planItemList {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.planItem {
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  padding: 0.5rem 0.6rem;
+  background: var(--bg-subtle, transparent);
+  transition: opacity 120ms ease;
+}
+
+.planItemDone {
+  border-color: var(--accent);
+  opacity: 0.85;
+}
+
+.planItemSkipped {
+  opacity: 0.45;
+}
+
+.planItemHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.planItemTitle {
+  display: flex;
+  align-items: baseline;
+  gap: 0.4rem;
+  flex: 1;
+  min-width: 0;
+}
+
+.planItemEmoji {
+  font-size: 0.95rem;
+}
+
+.planItemLabel {
+  font-size: 0.88rem;
+  color: var(--text);
+  font-weight: 600;
+}
+
+.planItemRange {
+  font-size: 0.72rem;
+  color: var(--text-faint);
+  letter-spacing: 0.02em;
+}
+
+.planItemStatusBtns {
+  display: flex;
+  gap: 0.25rem;
+}
+
+.planStatusBtn {
+  font-size: 0.68rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  border: 1px solid var(--border);
+  border-radius: 2px;
+  background: transparent;
+  color: var(--text-faint);
+  padding: 0.2rem 0.45rem;
+  font-family: inherit;
+  cursor: pointer;
+}
+
+.planStatusBtn:hover {
+  border-color: var(--accent);
+  color: var(--text);
+}
+
+.planStatusBtnActive {
+  background: var(--accent);
+  color: var(--bg, #fff);
+  border-color: var(--accent);
+}
+
+.planStatusBtnActive:hover {
+  color: var(--bg, #fff);
+}
+
+.planItemRationale {
+  font-size: 0.74rem;
+  color: var(--text-faint);
+  padding-top: 0.3rem;
+  line-height: 1.35;
+}
+
+.planItemTimeSlot {
+  font-size: 0.66rem;
+  color: var(--text-faint);
+  padding-top: 0.25rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.planItemLogged {
+  font-size: 0.74rem;
+  color: var(--text);
+  padding-top: 0.4rem;
+  display: flex;
+  align-items: baseline;
+  gap: 0.4rem;
+  flex-wrap: wrap;
+}
+
+.planItemLoggedTag {
+  font-size: 0.62rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--bg, #fff);
+  background: var(--accent);
+  padding: 0.1rem 0.4rem;
+  border-radius: 2px;
+}
+
+.planLogForm {
+  margin-top: 0.5rem;
+  padding-top: 0.5rem;
+  border-top: 1px dashed var(--border);
+}
+
+.planLogFormGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.5rem 0.75rem;
+}
+
+.planLogField {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.planLogFieldWide {
+  grid-column: 1 / -1;
+}
+
+.planLogField label {
+  font-size: 0.66rem;
+  color: var(--text-faint);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.planLogField input,
+.planLogField textarea {
+  background: var(--bg-subtle, transparent);
+  border: 1px solid var(--border);
+  border-radius: 2px;
+  color: var(--text);
+  padding: 0.3rem 0.45rem;
+  font-size: 0.8rem;
+  font-family: inherit;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.planLogField input:focus,
+.planLogField textarea:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+
+.planLogField textarea {
+  resize: vertical;
+  min-height: 36px;
+}
+
+.planFormActions {
+  display: flex;
+  gap: 0.4rem;
+  align-items: center;
+  margin-top: 0.6rem;
+}
+
+.planFormSave {
+  font-size: 0.74rem;
+  border: 1px solid var(--accent);
+  border-radius: 2px;
+  background: var(--accent);
+  color: var(--bg, #fff);
+  padding: 0.3rem 0.7rem;
+  font-family: inherit;
+  cursor: pointer;
+}
+
+.planFormSave:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
+.planFormCancel {
+  font-size: 0.74rem;
+  border: 1px solid var(--border);
+  border-radius: 2px;
+  background: transparent;
+  color: var(--text-faint);
+  padding: 0.3rem 0.7rem;
+  font-family: inherit;
+  cursor: pointer;
+}
+
+.planFormCancel:hover:not(:disabled) {
+  border-color: var(--accent);
+  color: var(--text);
+}
+
 /* --- Hub: Todos --- */
 
 .hubTodoList {

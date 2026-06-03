@@ -1,14 +1,14 @@
 import { useState, useEffect, useCallback, useRef } from "react"
-import Link from "next/link"
 import { useRouter } from "next/router"
 import {
-  getMonthHabits, getEntries, toggleHabit,
-  saveWeight, saveSleep, saveMoment,
-  getTodos, updateTodo,
+  getEntries,
+  saveWeight, saveSleep, saveEnergy, saveMoment,
+  getPlan,
 } from "../../lib/firestore"
 import { getIdToken } from "../../lib/AuthContext"
-import { compareDateKeys, dateKeyToLocalDate, getDateKey } from "../../lib/dates.js"
+import { dateKeyToLocalDate, getDateKey } from "../../lib/dates.js"
 import styles from "../../styles/Dashboard.module.css"
+import PlanSection from "./PlanSection"
 
 const DAY_NAMES = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
 const MONTH_NAMES = [
@@ -22,12 +22,12 @@ export default function TodayHub() {
   const dateStr = getDateKey(now)
   const [year, month] = dateStr.split("-").map(Number)
 
-  const [habits, setHabits] = useState([])
   const [entries, setEntries] = useState({})
-  const [todos, setTodos] = useState([])
+  const [plan, setPlan] = useState(null)
   const [loading, setLoading] = useState(true)
   const [weightVal, setWeightVal] = useState("")
   const [sleepVal, setSleepVal] = useState("")
+  const [energyVal, setEnergyVal] = useState(null)
   const [momentVal, setMomentVal] = useState("")
   const [stravaStatus, setStravaStatus] = useState(null)
   const [stravaBusy, setStravaBusy] = useState(false)
@@ -38,17 +38,16 @@ export default function TodayHub() {
   // Load all data
   useEffect(() => {
     async function load() {
-      const [h, e, t] = await Promise.all([
-        getMonthHabits(year, month),
+      const [e, p] = await Promise.all([
         getEntries(year, month),
-        getTodos(),
+        getPlan(dateStr),
       ])
-      setHabits(h)
       setEntries(e)
-      setTodos(t)
+      setPlan(p?.exists ? p.plan : null)
       const todayEntry = e[dateStr] || {}
       setWeightVal(todayEntry.weight ?? "")
       setSleepVal(todayEntry.sleep ?? "")
+      setEnergyVal(todayEntry.energy ?? null)
       setMomentVal(todayEntry.moment ?? "")
       setLoading(false)
     }
@@ -93,14 +92,6 @@ export default function TodayHub() {
 
   // --- Handlers ---
 
-  const handleHabitToggle = async (habitId, value) => {
-    setEntries((prev) => {
-      const e = prev[dateStr] || { habits: {} }
-      return { ...prev, [dateStr]: { ...e, habits: { ...e.habits, [habitId]: value } } }
-    })
-    await toggleHabit(dateStr, habitId, value)
-  }
-
   const handleWeightChange = useCallback(
     (e) => {
       const val = e.target.value
@@ -127,6 +118,14 @@ export default function TodayHub() {
     [dateStr]
   )
 
+  const handleEnergyClick = useCallback(
+    (value) => {
+      setEnergyVal(value)
+      saveEnergy(dateStr, value)
+    },
+    [dateStr]
+  )
+
   const handleMomentChange = useCallback(
     (e) => {
       const val = e.target.value
@@ -136,12 +135,6 @@ export default function TodayHub() {
     },
     [dateStr]
   )
-
-  const handleTodoToggle = async (id) => {
-    const completedAt = Date.now()
-    setTodos((prev) => prev.map((t) => (t.id === id ? { ...t, completed: true, completedAt } : t)))
-    await updateTodo(id, { completed: true, completedAt })
-  }
 
   // --- Derived data ---
 
@@ -153,14 +146,8 @@ export default function TodayHub() {
     )
   }
 
-  const entry = entries[dateStr] || { habits: {} }
-  const habitsDone = habits.filter((h) => entry.habits[h.id]).length
-
-  const todayTodos = todos
-    .filter((t) => !t.completed && t.dueDate && t.dueDate <= dateStr)
-    .sort((a, b) => (a.dueDate > b.dueDate ? 1 : -1))
-  const unscheduledCount = todos.filter((t) => !t.completed && !t.dueDate).length
-  const activeCount = todos.filter((t) => !t.completed).length
+  const planItems = plan?.items || []
+  const planDone = planItems.filter((i) => i.status === "done").length
 
   const todayDate = dateKeyToLocalDate(dateStr)
   const dateLabel = `${DAY_NAMES[todayDate.getDay()]}, ${MONTH_NAMES[todayDate.getMonth()]} ${todayDate.getDate()}`
@@ -171,43 +158,21 @@ export default function TodayHub() {
       <div className={styles.hubHeader}>
         <div className={styles.hubDate}>{dateLabel}</div>
         <div className={styles.hubSummary}>
-          <span className={styles.hubStat}>
-            {habitsDone}/{habits.length} habits
-          </span>
-          <span className={styles.hubStat}>{todayTodos.length} due</span>
+          {planItems.length > 0 && (
+            <span className={styles.hubStat}>
+              {planDone}/{planItems.length} plan
+            </span>
+          )}
         </div>
       </div>
 
-      {/* Habits */}
+      {/* Today's plan — floor-first */}
+      <PlanSection date={dateStr} initialPlan={plan} />
+
+      {/* Body — weight, sleep, energy */}
       <section className={styles.hubSection}>
         <div className={styles.hubSectionHeader}>
-          <span className={styles.hubSectionTitle}>
-            Habits
-            <span className={styles.hubSectionCount}>
-              {habitsDone}/{habits.length}
-            </span>
-          </span>
-          <Link href="/dashboard/habits">
-            <a className={styles.hubViewAll}>View all &rarr;</a>
-          </Link>
-        </div>
-        <div className={styles.hubHabitGrid}>
-          {habits.map((h) => {
-            const isDone = !!entry.habits[h.id]
-            return (
-              <div
-                key={h.id}
-                className={`${styles.hubHabitItem} ${isDone ? styles.hubHabitDone : ""}`}
-                onClick={() => handleHabitToggle(h.id, !isDone)}
-              >
-                <span className={`${styles.hubCheck} ${isDone ? styles.hubCheckDone : ""}`}>
-                  {isDone ? "\u2713" : ""}
-                </span>
-                {h.emoji !== "\u2705" && <span className={styles.hubHabitEmoji}>{h.emoji}</span>}
-                <span className={styles.hubHabitName}>{h.name}</span>
-              </div>
-            )
-          })}
+          <span className={styles.hubSectionTitle}>Body</span>
         </div>
         <div className={styles.hubInputRow}>
           <div className={styles.hubInputGroup}>
@@ -233,39 +198,23 @@ export default function TodayHub() {
               max="24"
             />
           </div>
-        </div>
-      </section>
-
-      {/* Todos */}
-      <section className={styles.hubSection}>
-        <div className={styles.hubSectionHeader}>
-          <span className={styles.hubSectionTitle}>Todos</span>
-          <Link href="/dashboard/todos">
-            <a className={styles.hubViewAll}>View all ({activeCount}) &rarr;</a>
-          </Link>
-        </div>
-        {todayTodos.length === 0 ? (
-          <div className={styles.hubEmpty}>Nothing due today</div>
-        ) : (
-          <div className={styles.hubTodoList}>
-            {todayTodos.map((t) => {
-              const overdueDays = compareDateKeys(dateStr, t.dueDate)
-              return (
-                <div key={t.id} className={styles.hubTodoItem}>
-                  <div className={styles.hubCheck} onClick={() => handleTodoToggle(t.id)} />
-                  <span className={styles.hubTodoText}>{t.text}</span>
-                  {overdueDays > 0 && (
-                    <span className={styles.hubTodoOverdue}>{overdueDays}d overdue</span>
-                  )}
-                  {overdueDays === 0 && <span className={styles.hubTodoToday}>today</span>}
-                </div>
-              )
-            })}
+          <div className={styles.hubInputGroup}>
+            <label>Energy</label>
+            <div className={styles.hubEnergyPills}>
+              {[1, 2, 3, 4, 5].map((n) => (
+                <button
+                  key={n}
+                  type="button"
+                  className={`${styles.hubEnergyPill} ${energyVal === n ? styles.hubEnergyPillActive : ""}`}
+                  onClick={() => handleEnergyClick(n)}
+                  aria-label={`Energy ${n}`}
+                >
+                  {n}
+                </button>
+              ))}
+            </div>
           </div>
-        )}
-        {unscheduledCount > 0 && (
-          <div className={styles.hubUnscheduled}>+ {unscheduledCount} without a date</div>
-        )}
+        </div>
       </section>
 
       {/* Moment */}

@@ -1,7 +1,13 @@
 import { adminDb } from "../../lib/firebaseAdmin"
-import { ABOUT_DANIEL, READ_TOOLS, runChatLoop, getPersonalitySection } from "../../lib/chatEngine"
+import { ABOUT_DANIEL, READ_TOOLS, WRITE_TOOLS, runChatLoop, getPersonalitySection } from "../../lib/chatEngine"
 import { addDaysToDateKey, getDateContext } from "../../lib/dates.js"
 import { sendMessage } from "../../lib/telegram"
+
+// The evening check-in needs to write tomorrow's structured plan. Curated
+// write set — only propose_plan, not the full WRITE_TOOLS surface, so the
+// heartbeat agent stays read-mostly and can't surprise-edit todos or logs.
+const PROPOSE_PLAN_TOOL = WRITE_TOOLS.find((t) => t.name === "propose_plan")
+const EVENING_TOOLS = PROPOSE_PLAN_TOOL ? [...READ_TOOLS, PROPOSE_PLAN_TOOL] : READ_TOOLS
 
 function getTimeOfDay(hour) {
   // 2 daily check-ins only: morning (anchor) and evening (review + plan tomorrow)
@@ -19,39 +25,57 @@ function getWeekRange(today) {
 const PROMPTS = {
   morning: `Daniel's morning anchor — 6am GMT. He's likely just done his Ironman training session. Do this:
 
-1. Call get_focus_snapshot — revenue progress vs £10k, top Revenue todos, training load, sleep, days left in month, AND Ironman block (days to race + this-week's progress per discipline vs targets).
-2. Call get_recent_checkins (limit 1) to see what he committed to last night. Lead with accountability if there's something concrete.
-3. Call get_recent_activities (days: 2) to see his training from this morning if Strava already synced. Read the numbers — distance, pace, HR, elevation. Acknowledge specifics.
+1. Call get_goals to load his active goals. These are the source of truth — read targets, deadlines, and lead measures from here, never hardcode.
+2. Call get_plan with today's date to recall last night's structured plan — what was committed for today.
+3. Call get_focus_snapshot — top Revenue todos, training load, sleep, ENERGY (today + 7-day avg), days left in month, AND Ironman block (days to race + this-week's progress per discipline vs targets).
+4. Call get_recent_checkins (limit 1) for last night's narrative.
+5. Call get_recent_activities (days: 2) to see his training from this morning if Strava already synced. Read the numbers — distance, pace, HR, elevation. Acknowledge specifics.
 
 Then write his morning brief like a real coach who's read the data:
 - One line on this morning's session (or yesterday's if not synced yet) — name the specific numbers that mattered. "Solid 12k Z2, HR held 148. Clean execution." Not "great job!".
-- The week-to-date training picture: how he's tracking per discipline vs target. If a discipline is falling behind with X days left in the week, NAME IT and lock today's or tomorrow's session for it.
-- The ONE Revenue todo that matters today.
-- Sleep / recovery flag if there's a real problem (<6.5hrs, HR drift, soreness pile-up). Connect it to performance — under-recovery breaks the block.
+- The plan: surface what was scheduled for today (from get_plan) — name the top 2 items by templateId with floor + target. If the plan doesn't exist (nothing was written last night), say so plainly.
+- The week-to-date training picture per the relevant goal's weeklyTargets. If a lead measure is falling behind with X days left in the week, NAME IT and lock today's or tomorrow's session for it.
+- The ONE Revenue todo that matters today (cross-referenced against the outcome-leads goal).
+- Sleep / energy / recovery flag if there's a real problem (<6.5hrs, energy ≤2, HR drift, soreness pile-up). Connect it to performance — under-recovery breaks the block.
 
-Keep it punchy — a paragraph or two max. He's heading to Palantir. End with one direct ask, alternating between the two goals: either "What are you closing on Conversify today?" or "Lock the [discipline] session for tomorrow morning — yes?"`,
+If today's energy isn't logged (snapshot todayLogs.energy is null), ask for it on a 1-5 scale at the end — "Energy this morning, 1-5?" — it shapes how hard the next session can be pushed.
+
+Keep it punchy — a paragraph or two max. End with one direct ask anchored to whichever goal is most off-pace today. Alternate between Revenue and Training questions across days.`,
 
   evening: `Daniel's evening review + tomorrow's plan — 9pm GMT, winding down. Do this:
 
-1. Call get_focus_snapshot for the full picture (includes Ironman block: days to race, this-week's progress per discipline).
-2. Call get_completed_todos (startDate and endDate both = today) to see what shipped.
-3. Call get_today for habits, sleep, weight, work log, training log.
-4. Call get_recent_activities (days: 1) for today's Strava activity (read the numbers — pace, HR, RPE proxy).
-5. Call get_recent_checkins (limit 1) — what was promised this morning vs delivered?
+1. Call get_goals to load active goals. The goals collection is the source of truth — read targets, deadlines, and lead measures from here.
+2. Call get_task_templates to see the reusable task shapes and their suggestedFloor / suggestedTarget. These are the only valid templateIds for propose_plan.
+3. Call get_focus_snapshot for the full picture (today's energy, 7-day energy avg, sleep, training load, Ironman block).
+4. Call get_completed_todos (startDate and endDate both = today) to see what shipped.
+5. Call get_today for sleep, weight, energy, work log, training log.
+6. Call get_recent_activities (days: 1) for today's Strava activity (read the numbers — pace, HR, RPE proxy).
+7. Call get_recent_checkins (limit 1) — what was promised this morning vs delivered?
 
-Write the evening review in two short sections:
+Then DECIDE tomorrow's shape. Use this logic:
+- Energy ≤2 → recovery day. Pick floors only. Drop any quality session.
+- Energy 3 → baseline. Templates' suggestedFloor / suggestedTarget as-is.
+- Energy ≥4 AND a lead measure is short → lock a quality / catch-up session. Push the target.
+- Energy ≥4 AND on-pace → maintain. Don't manufacture work.
+- No energy logged → use 7-day energyAvg if available, else assume 3. Note it in energyBasis.source.
+
+Call propose_plan with:
+- date = TOMORROW (today + 1 in YYYY-MM-DD)
+- items = 3-5 items, ordered by priority. Each must use a real templateId. Each carries floor + target + a one-line rationale citing the goal / week-gap / energy.
+- energyBasis = { value, source, note } explaining how energy shaped the targets.
+- notes = the overall shape of tomorrow in one sentence.
+
+After writing the plan, send Telegram in this format:
 
 **Today's recap** (3-4 lines max):
 - Revenue: did anything move? Closed work, demos booked, etc.
-- Training: what got done — name the numbers (distance, pace, HR, RPE if logged). Acknowledge it like a coach who sees the data, not a hype bot.
-- The honest gap: what was promised this morning and didn't happen. State it plainly, no guilt.
+- Training: what got done — name the numbers (distance, pace, HR, RPE if logged). Coach voice, not hype.
+- The honest gap: what was promised this morning and didn't happen. Plain.
 
-**Tomorrow's plan** (one line each):
-- Revenue: the one £10k-mover for tomorrow.
-- Training: the planned session, picked based on his current-week gap to target + recent load. Be specific — "60 min Z2 run, HR cap 150" not "easy run". If he's already over volume and recovery markers are off, prescribe rest and explain why.
-- One non-negotiable habit (sleep before 11pm — it's a performance lever, not a chore).
+**Tomorrow's plan** (mirror what you wrote via propose_plan — one line per item):
+- TemplateId · floor → target · rationale.
 
-If he's tracking ahead on training, push the bar — suggest one quality session for the week ahead. If a discipline is short with 1-2 days left, lock the catch-up. End with a real question that prompts him to commit or log something missing (gym sets, RPE, work hours).`,
+End with one real question. If today's energy isn't logged (todayLogs.energy is null), ask for it: "Energy today, 1-5?" — it'll inform the morning. Otherwise ask Daniel to commit or log the most important missing thing.`,
 
   weekly_reflection: `It's Sunday evening — time for a weekly reflection. Do the following:
 
@@ -61,9 +85,9 @@ If he's tracking ahead on training, push the bar — suggest one quality session
 4. Call get_recent_checkins (limit 10) to review the week's check-in history — what did Daniel commit to vs what happened?
 
 Give Daniel an honest weekly review:
-- Habit completion rate (% and trend vs. what you'd expect)
-- Best and worst days this week
-- Sleep average and pattern
+- Goal-by-goal hit-rate: for each active goal, floor-hits / days in window, plus the gap to target. Call out the goal that's furthest off-pace.
+- Best and worst days this week (by instance volume / energy)
+- Sleep + energy average and pattern
 - Todo throughput — what got done, what's been sitting
 - One specific, actionable thing to improve next week
 
@@ -83,10 +107,14 @@ export default async function handler(req, res) {
 
   const now = new Date()
   const { today, dayName, dayOfWeek, hour, currentTime } = getDateContext(now)
-  const timeOfDay = getTimeOfDay(hour)
+  // ?force=morning | evening | weekly_reflection lets us test out of band — gated
+  // by the secret so it's not a public surface.
+  const force = String(req.query.force || "").toLowerCase()
+  const timeOfDay = force === "morning" || force === "evening" ? force : getTimeOfDay(hour)
 
   // Sunday evening = weekly reflection instead of normal evening
-  const isWeeklyReflection = timeOfDay === "evening" && dayOfWeek === 0
+  const isWeeklyReflection =
+    force === "weekly_reflection" || (timeOfDay === "evening" && dayOfWeek === 0 && !force)
   const promptKey = isWeeklyReflection ? "weekly_reflection" : timeOfDay
 
   let prompt = PROMPTS[promptKey]
@@ -101,16 +129,20 @@ export default async function handler(req, res) {
   const personality = await getPersonalitySection()
   const systemPrompt = `${personality}You are Daniel's personal coach on Telegram. You are part Ironman 70.3 fitness coach, part founder accountability partner. You're sending him a scheduled ${isWeeklyReflection ? "weekly reflection" : `${timeOfDay} check-in`}. Today is ${dayName} ${today}, current time is ${currentTime}.
 
-DANIEL'S TWO BIG GOALS:
-1. £10,000/month after-tax from Conversify.
-2. Finish Ironman 70.3 Estonia (2026-08-23) strong — not just survive.
-Every check-in orients him toward both. Don't trade one for the other.
+GOALS: Daniel's active goals live in the goals collection — call get_goals at the start of every check-in to load them. The collection is the source of truth. Do NOT hardcode targets, deadlines, or thresholds in your replies; read them from the goal docs.
+
+Each goal has a TYPE that tells you how to evaluate progress:
+- deadline-plan: fixed deadline + weeklyTargets (lead measures). Progress = on-pace vs deadline AND weekly targets hit.
+- outcome-leads: a target outcome (£, users) + leadMeasures. Progress = current vs target on the outcome AND consistency on lead measures.
+- process-cadence: no endpoint, just floor + target + primaryPrimitive (e.g. duration). Progress = hit-rate of floor over a rolling window.
+
+Every check-in orients him toward all active goals. Don't trade one for another.
 
 YOU ARE A FULL FITNESS COACH (not a motivational poster):
 - You know polarized training: most volume in Z2, some hard work, recovery as work.
-- You read the data before talking. get_focus_snapshot returns this-week's progress per discipline (swim/bike/run/strength) vs targets. Use it. If a discipline is short with N days left in the week, NAME the gap and lock a specific session.
+- You read the data before talking. get_focus_snapshot returns this-week's progress per discipline vs targets. Use it. If a lead measure is short with N days left in the week, NAME the gap and lock a specific session.
 - Use get_recent_activities to read pace, HR, elevation, duration. Acknowledge specifics — "Z2 ride held 145 avg HR, that's the work" — not generic praise.
-- Push for more — but only when the data supports it. Hitting targets? Raise the bar for next week. Falling behind? Lock the catch-up session. Already over-cooked (high volume + sleep dropping + HR creeping)? Prescribe rest and explain why. That's coaching too.
+- Push for more — but only when the data supports it AND energy supports it. Hitting targets? Raise the bar for next week. Falling behind? Lock the catch-up session. Already over-cooked (high volume + sleep dropping + HR creeping + energy ≤2)? Prescribe rest and explain why. That's coaching too.
 - Use set_training_plan if Daniel asks to change volume, raise targets, or switch blocks (base/build/peak/taper).
 
 TONE RULES (strict):
@@ -127,10 +159,14 @@ MEMORY: Call get_memory first to recall context about Daniel before crafting you
 
 ${ABOUT_DANIEL}`
 
+  // Evening check-in writes tomorrow's plan via propose_plan; morning + weekly
+  // reflection are read-only.
+  const tools = timeOfDay === "evening" && !isWeeklyReflection ? EVENING_TOOLS : READ_TOOLS
+
   try {
     const reply = await runChatLoop({
       messages: [{ role: "user", content: prompt }],
-      tools: READ_TOOLS,
+      tools,
       systemPrompt,
       maxTokens: isWeeklyReflection ? 2048 : 1024,
     })
