@@ -560,6 +560,13 @@
   letter-spacing: 0.02em;
 }
 
+.goalMeta {
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  padding-left: 16px;
+  letter-spacing: 0.02em;
+}
+
 .goalStreakBest {
   color: var(--text-faint);
 }
@@ -628,6 +635,34 @@
   font-size: 0.7rem;
   color: var(--text-muted);
   font-family: inherit;
+}
+
+.planHeaderMeta {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.planRegenerateBtn {
+  font-size: 0.72rem;
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  background: transparent;
+  color: var(--text-muted);
+  padding: 0.2rem 0.55rem;
+  font-family: inherit;
+  cursor: pointer;
+  letter-spacing: 0.02em;
+}
+
+.planRegenerateBtn:hover:not(:disabled) {
+  border-color: var(--accent);
+  color: var(--text);
+}
+
+.planRegenerateBtn:disabled {
+  opacity: 0.5;
+  cursor: default;
 }
 
 .planGenerateRow {

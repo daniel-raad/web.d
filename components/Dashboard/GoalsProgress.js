@@ -13,6 +13,43 @@ function streakEmoji(current) {
   return ""
 }
 
+function unitFor(primitive) {
+  if (primitive === "duration") return "min"
+  return ""
+}
+
+function formatTarget(goal) {
+  if (goal.target == null && goal.floor == null) return null
+  const unit = unitFor(goal.primaryPrimitive)
+  if (goal.type === "process-cadence" && goal.floor != null) {
+    return `floor ${goal.floor}${unit ? ` ${unit}` : ""}/day`
+  }
+  if (goal.target != null) {
+    return `target ${goal.target}${unit ? ` ${unit}` : ""}`
+  }
+  return null
+}
+
+function daysUntil(deadline) {
+  if (!deadline) return null
+  const today = new Date()
+  today.setHours(0, 0, 0, 0)
+  const [y, m, d] = String(deadline).split("-").map(Number)
+  if (!y || !m || !d) return null
+  const target = new Date(y, m - 1, d)
+  const ms = target.getTime() - today.getTime()
+  return Math.round(ms / (24 * 60 * 60 * 1000))
+}
+
+function formatDeadline(deadline) {
+  if (!deadline) return null
+  const dleft = daysUntil(deadline)
+  if (dleft == null) return `by ${deadline}`
+  if (dleft === 0) return `due today (${deadline})`
+  if (dleft > 0) return `${dleft}d left · ${deadline}`
+  return `${Math.abs(dleft)}d overdue · ${deadline}`
+}
+
 function formatHitValue(goal, hit) {
   if (!hit.hit) return `${hit.date} — missed`
   if (hit.value != null && goal.primaryPrimitive === "duration") {
@@ -86,6 +123,9 @@ export default function GoalsProgress() {
         {data.goals.map((goal) => {
           const color = colorForGoal(goal.id)
           const { current, best } = goal.streak || { current: 0, best: 0 }
+          const targetLabel = formatTarget(goal)
+          const deadlineLabel = formatDeadline(goal.deadline)
+          const metaParts = [targetLabel, deadlineLabel].filter(Boolean)
           return (
             <div key={goal.id} className={styles.goalRow}>
               <div className={styles.goalRowHeader}>
@@ -102,6 +142,9 @@ export default function GoalsProgress() {
                   )}
                 </span>
               </div>
+              {metaParts.length > 0 && (
+                <div className={styles.goalMeta}>{metaParts.join(" · ")}</div>
+              )}
               <div className={styles.goalStrip}>
                 {goal.hits.map((h) => {
                   const isToday = h.date === today

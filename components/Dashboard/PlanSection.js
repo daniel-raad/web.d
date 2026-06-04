@@ -408,13 +408,28 @@ export default function PlanSection({ date, initialPlan, onChange }) {
             {doneCount}/{items.length}
           </span>
         </span>
-        {plan.energyBasis?.value != null && (
-          <span className={styles.planEnergyBasis}>
-            energy {plan.energyBasis.value}
-            {plan.energyBasis.source ? ` · ${plan.energyBasis.source}` : ""}
-          </span>
-        )}
+        <span className={styles.planHeaderMeta}>
+          {plan.energyBasis?.value != null && (
+            <span className={styles.planEnergyBasis}>
+              energy {plan.energyBasis.value}
+              {plan.energyBasis.source ? ` · ${plan.energyBasis.source}` : ""}
+            </span>
+          )}
+          <button
+            type="button"
+            className={styles.planRegenerateBtn}
+            onClick={handleGenerate}
+            disabled={generating}
+            title="Regenerate today's plan"
+          >
+            {generating ? "Regenerating…" : "Regenerate"}
+          </button>
+        </span>
       </div>
+
+      {generateError && (
+        <div className={styles.planGenerateError}>{generateError}</div>
+      )}
 
       {plan.notes && <div className={styles.planNotes}>{plan.notes}</div>}
 
