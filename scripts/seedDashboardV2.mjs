@@ -134,13 +134,13 @@ const GOALS = [
     createdAt: Date.now(),
   },
   {
-    id: "conversify-10k-mrr",
+    id: "income-10k-after-tax",
     type: "outcome-leads",
-    title: "Conversify £10,000/month after-tax",
+    title: "£10,000/month after-tax (any stream)",
     status: "active",
     priority: 1,
     rationale:
-      "Replaces salary (~£6k/month) with ~1.67× headroom. Unlocks full-time on Conversify. Every Revenue todo and Conversify session is measured against this.",
+      "Replaces salary (~£6k/month) with ~1.67× headroom. Unlocks full-time on the next chapter. Any after-tax income stream counts — Conversify, consulting, contracts, equity, royalties.",
     target: 10000,
     current: 0, // seeded; live source is assistant/revenue.monthly
     unit: "GBP",
@@ -149,6 +149,7 @@ const GOALS = [
       "demos booked",
       "venues live",
       "Conversify build sessions (focused, not admin)",
+      "any other income-generating work shipped",
     ],
     leadMeasureTemplates: ["conversify"],
     context: { monthlySalaryGBP: 6000 },
@@ -257,7 +258,7 @@ const TASK_TEMPLATES = [
     id: "conversify",
     label: "Conversify build",
     emoji: "💼",
-    goalId: "conversify-10k-mrr",
+    goalId: "income-10k-after-tax",
     primitives: ["duration", "intensity", "description", "outcome"],
     suggestedFloor: { duration: 60 },
     suggestedTarget: { duration: 120 },

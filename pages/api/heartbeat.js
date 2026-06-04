@@ -29,10 +29,10 @@ const PROMPTS = {
 2. Call get_plan with today's date to recall last night's structured plan — what was committed for today.
 3. Call get_focus_snapshot — top Revenue todos, training load, sleep, ENERGY (today + 7-day avg), days left in month, AND Ironman block (days to race + this-week's progress per discipline vs targets).
 4. Call get_recent_checkins (limit 1) for last night's narrative.
-5. Call get_recent_activities (days: 2) to see his training from this morning if Strava already synced. Read the numbers — distance, pace, HR, elevation. Acknowledge specifics.
+5. Call get_recent_activities (days: 3) to see his training. Read the numbers — distance, pace, HR, elevation. Acknowledge specifics. CRITICAL: each activity has a 'date', 'daysAgo', and 'dayLabel' field. Use those to know when each session actually happened — do NOT call any activity "yesterday" unless its daysAgo equals 1. The response also returns 'todayDate' for your reference frame.
 
 Then write his morning brief like a real coach who's read the data:
-- One line on this morning's session (or yesterday's if not synced yet) — name the specific numbers that mattered. "Solid 12k Z2, HR held 148. Clean execution." Not "great job!".
+- One line on this morning's session (daysAgo 0) if it's there. Otherwise reference the most recent session by its actual day label ("Tuesday's 7k", "2 days ago's bike"). Name the specific numbers that mattered. "Solid 12k Z2, HR held 148. Clean execution." Not "great job!".
 - The plan: surface what was scheduled for today (from get_plan) — name the top 2 items by templateId with floor + target. If the plan doesn't exist (nothing was written last night), say so plainly.
 - The week-to-date training picture per the relevant goal's weeklyTargets. If a lead measure is falling behind with X days left in the week, NAME IT and lock today's or tomorrow's session for it.
 - The ONE Revenue todo that matters today (cross-referenced against the outcome-leads goal).
