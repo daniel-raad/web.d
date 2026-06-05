@@ -1,341 +1,265 @@
 import Head from "next/head"
 import Link from "next/link"
-import { useEffect, useState } from "react"
+import { useEffect, useMemo, useState } from "react"
 import Header from "../../components/Header"
-import { getProgress } from "../../lib/firestore"
-import { colorForGoal, colorForTemplate } from "../../lib/goalColors"
+import { getStintProgress, getStintTrend } from "../../lib/firestore"
 import { getDateKey, getDayOfWeekForDateKey } from "../../lib/dates.js"
+import s from "../../styles/Stint.module.css"
 
-const MONTH_LABELS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
-const DAY_LABELS = ["", "Mon", "", "Wed", "", "Fri", ""] // GitHub shows Mon/Wed/Fri
-import styles from "../../styles/Dashboard.module.css"
+const STORE_KEY = "progress.view"
 
-const HEATMAP_DAYS = 60
-const STRIP_DAYS = 30
+function pct(n) { return Number.isFinite(n) ? `${Math.round(n * 100)}%` : "—" }
 
-function GithubHeatmap({ data, today }) {
-  if (!data || !data.dates?.length) return null
+// --- GitHub-style heatmap (one row per goal, columns of weeks) ---
 
-  // First date's day-of-week determines how many padding cells go at the top
-  // of the leftmost column. With grid-auto-flow: column + 7 rows, padding
-  // cells naturally push the first real date down to its correct row.
-  const firstDate = data.dates[0]
-  const firstDow = getDayOfWeekForDateKey(firstDate)
-  const totalCells = firstDow + data.dates.length
-  const numColumns = Math.ceil(totalCells / 7)
-
-  // Month labels: for each column, the month of its first date. Show the
-  // label when month changes vs the previous column.
-  const monthLabels = []
-  let lastMonth = -1
-  for (let col = 0; col < numColumns; col++) {
-    const cellIdxInGrid = col * 7
-    const dateIdx = cellIdxInGrid - firstDow
-    let label = ""
-    if (dateIdx >= 0 && dateIdx < data.dates.length) {
-      const month = Number(data.dates[dateIdx].slice(5, 7)) - 1
-      if (month !== lastMonth) {
-        label = MONTH_LABELS[month]
-        lastMonth = month
-      }
-    }
-    monthLabels.push(label)
-  }
-
+function GithubGoals({ goals, today }) {
+  if (!goals.length) return null
+  const first = goals.find((g) => g.hits?.length)
+  if (!first) return null
+  const dates = first.hits.map((d) => d.date)
+  const firstDow = getDayOfWeekForDateKey(dates[0])
+  const numColumns = Math.ceil((firstDow + dates.length) / 7)
   return (
-    <div className={styles.githubHeatmap}>
-      <div className={styles.githubHeatmapMain}>
-        <div className={styles.githubMonthRow}>
-          {monthLabels.map((label, i) => (
-            <div key={i} className={styles.githubMonthLabel}>
-              {label}
+    <div className={s.ghWrap}>
+      {goals.map((g) => {
+        const color = g.color || "#6366f1"
+        return (
+          <div key={g.id} className={s.ghRow}>
+            <div className={s.ghLabel}>
+              <span style={{ fontSize: "1rem" }}>{g.icon || "🎯"}</span>
+              <span>{g.title}</span>
+              <span style={{ marginLeft: "auto", fontSize: "0.7rem", color: "var(--text-faint)" }}>{pct(g.hitRate)}</span>
             </div>
-          ))}
-        </div>
-        <div className={styles.githubHeatmapGridWrap}>
-          <div className={styles.githubDayLabels}>
-            {DAY_LABELS.map((label, i) => (
-              <div key={i} className={styles.githubDayLabel}>
-                {label}
-              </div>
-            ))}
-          </div>
-          <div
-            className={styles.githubHeatmapGrid}
-            style={{ gridTemplateColumns: `repeat(${numColumns}, 12px)` }}
-          >
-            {Array.from({ length: firstDow }).map((_, i) => (
-              <div key={`pad-${i}`} className={styles.githubHeatmapPad} />
-            ))}
-            {data.dates.map((date, dateIdx) => {
-              const isToday = date === today
-              const goalsHitToday = data.goals
-                .filter((g) => g.hits[dateIdx]?.hit)
-                .map((g) => g.title)
-              const title = `${date} — ${goalsHitToday.length}/${data.goals.length}${goalsHitToday.length ? ": " + goalsHitToday.join(", ") : ""}`
-              return (
+            <div className={s.ghGrid} style={{ gridTemplateColumns: `repeat(${numColumns}, 11px)` }}>
+              {Array.from({ length: firstDow }).map((_, i) => <div key={`pad-${i}`} style={{ width: 11, height: 11 }} />)}
+              {g.hits.map((h) => (
                 <div
-                  key={date}
-                  className={`${styles.heatmapStacked} ${styles.githubHeatmapCell} ${isToday ? styles.heatmapToday : ""}`}
-                  title={title}
-                >
-                  {data.goals.map((goal) => {
-                    const h = goal.hits[dateIdx]
-                    const color = colorForGoal(goal.id)
-                    let opacity = 0
-                    if (h?.hit) {
-                      opacity = h.templatesTotal && h.templatesTotal > 1
-                        ? 0.3 + ((h.templatesHit || 0) / h.templatesTotal) * 0.7
-                        : 1
-                    }
-                    return (
-                      <div
-                        key={goal.id}
-                        style={{
-                          backgroundColor: opacity > 0 ? color : "transparent",
-                          opacity: opacity > 0 ? opacity : 1,
-                          flex: 1,
-                        }}
-                      />
-                    )
-                  })}
-                </div>
-              )
-            })}
+                  key={h.date}
+                  className={`${s.ghCell} ${h.date === today ? s.ghCellToday : ""}`}
+                  style={h.hit ? { background: color } : undefined}
+                  title={`${h.date} — ${h.hit ? "hit" : "miss"}`}
+                />
+              ))}
+            </div>
           </div>
-        </div>
-      </div>
+        )
+      })}
     </div>
   )
 }
 
-function streakEmoji(current) {
-  if (current >= 14) return "🚀"
-  if (current >= 7) return "🔥"
-  if (current >= 3) return "✨"
-  return ""
+// --- Line chart (small SVG) -----------------------------------------------
+
+function LineChart({ days, valueOf, color = "#6366f1", height = 110, label, unit = "", stints = [], minOverride, maxOverride, today }) {
+  const width = 800
+  const padL = 32, padR = 8, padT = 8, padB = 18
+  const w = width - padL - padR
+  const h = height - padT - padB
+
+  const filled = days.map((d) => valueOf(d)).filter((v) => v != null && Number.isFinite(v))
+  if (filled.length === 0) {
+    return (
+      <div className={s.chartBlock}>
+        <div className={s.chartTitle}>{label}</div>
+        <div style={{ fontSize: "0.8rem", color: "var(--text-faint)", padding: "0.85rem 0" }}>No data yet.</div>
+      </div>
+    )
+  }
+  const yMin = minOverride != null ? minOverride : Math.min(...filled)
+  const yMaxRaw = maxOverride != null ? maxOverride : Math.max(...filled)
+  const yMax = yMaxRaw === yMin ? yMin + 1 : yMaxRaw
+  const xFor = (i) => padL + (i / Math.max(1, days.length - 1)) * w
+  const yFor = (v) => padT + h - ((v - yMin) / (yMax - yMin)) * h
+
+  // Path: skip nulls but keep continuity (split into segments).
+  const segments = []
+  let cur = []
+  days.forEach((d, i) => {
+    const v = valueOf(d)
+    if (v != null && Number.isFinite(v)) cur.push([i, v])
+    else if (cur.length > 0) { segments.push(cur); cur = [] }
+  })
+  if (cur.length > 0) segments.push(cur)
+
+  // Stint boundaries
+  const stintBoundaries = stints
+    .map((st) => days.findIndex((d) => d.date === st.startDate))
+    .filter((i) => i > 0)
+  const todayIdx = days.findIndex((d) => d.date === today)
+
+  const tickVals = [yMin, (yMin + yMax) / 2, yMax]
+  const fmtTick = (v) => {
+    if (Math.abs(v) >= 100) return Math.round(v).toString()
+    if (Math.abs(v) >= 10) return v.toFixed(1)
+    return v.toFixed(2)
+  }
+
+  return (
+    <div className={s.chartBlock}>
+      <div className={s.chartHead}>
+        <div className={s.chartTitle}>{label}</div>
+        <div className={s.chartMeta}>
+          {filled.length} day{filled.length === 1 ? "" : "s"} logged
+          {filled.length > 0 && ` · latest ${fmtTick(filled[filled.length - 1])}${unit}`}
+        </div>
+      </div>
+      <svg viewBox={`0 0 ${width} ${height}`} style={{ width: "100%", height, display: "block" }} preserveAspectRatio="none">
+        {tickVals.map((v, i) => (
+          <g key={i}>
+            <line x1={padL} x2={width - padR} y1={yFor(v)} y2={yFor(v)} stroke="currentColor" strokeOpacity="0.08" />
+            <text x={padL - 4} y={yFor(v) + 3} textAnchor="end" fontSize="9" fill="currentColor" opacity="0.45">{fmtTick(v)}</text>
+          </g>
+        ))}
+        {stintBoundaries.map((i, k) => (
+          <line key={k} x1={xFor(i)} x2={xFor(i)} y1={padT} y2={padT + h} stroke="currentColor" strokeOpacity="0.18" strokeDasharray="2 4" />
+        ))}
+        {todayIdx >= 0 && (
+          <line x1={xFor(todayIdx)} x2={xFor(todayIdx)} y1={padT} y2={padT + h} stroke={color} strokeOpacity="0.5" />
+        )}
+        {segments.map((seg, k) => {
+          const d = seg.map(([i, v], j) => `${j === 0 ? "M" : "L"}${xFor(i).toFixed(1)},${yFor(v).toFixed(1)}`).join(" ")
+          return <path key={k} d={d} fill="none" stroke={color} strokeWidth="2" />
+        })}
+        {segments.flatMap((seg, k) => seg.map(([i, v], j) => (
+          <circle key={`${k}-${j}`} cx={xFor(i)} cy={yFor(v)} r="2" fill={color} />
+        )))}
+      </svg>
+    </div>
+  )
 }
 
-function pct(n) {
-  return `${Math.round(n * 100)}%`
-}
+// --- Page -----------------------------------------------------------------
 
 export default function ProgressPage() {
-  const [data, setData] = useState(null)
+  const [stintProg, setStintProg] = useState(null)
+  const [trend, setTrend] = useState(null)
+  const [view, setView] = useState("github")
   const [loading, setLoading] = useState(true)
   const today = getDateKey()
+
+  useEffect(() => {
+    try {
+      const stored = window.localStorage.getItem(STORE_KEY)
+      if (stored === "github" || stored === "graph") setView(stored)
+    } catch {}
+  }, [])
+  useEffect(() => { try { window.localStorage.setItem(STORE_KEY, view) } catch {} }, [view])
 
   useEffect(() => {
     let cancelled = false
     async function load() {
       try {
-        const res = await getProgress(HEATMAP_DAYS)
-        if (!cancelled) setData(res)
+        const [sp, t] = await Promise.all([getStintProgress(), getStintTrend()])
+        if (!cancelled) {
+          setStintProg(sp)
+          setTrend(t)
+        }
       } finally {
         if (!cancelled) setLoading(false)
       }
     }
     load()
-    return () => {
-      cancelled = true
-    }
+    return () => { cancelled = true }
   }, [])
+
+  const goals = stintProg?.goals?.filter((g) => g.state !== "archived") || []
+  const days = trend?.days || []
+  const stints = trend?.stints || []
+
+  // Compute composite score series (% 0-100) for header summary.
+  const recentScore = useMemo(() => {
+    if (days.length === 0) return null
+    const recent = days.slice(-7).filter((d) => d.score != null)
+    if (recent.length === 0) return null
+    return recent.reduce((a, b) => a + b.score, 0) / recent.length
+  }, [days])
 
   return (
     <div>
-      <Head>
-        <title>Progress - Daniel Raad</title>
-        <meta name="description" content="Goal progress over time" />
-        <link rel="icon" href="/astro.png" />
-      </Head>
-
+      <Head><title>Trend - Daniel Raad</title></Head>
       <Header compact />
-
-      <style jsx global>{`
-        .fixed.bottom-0 { display: none; }
-      `}</style>
-
-      <div className={`${styles.dashboard} terminal`}>
-        <div className={styles.hubHeader}>
-          <div className={styles.hubDate}>Progress</div>
-          <div className={styles.hubSummary}>
-            <Link href="/dashboard">
-              <a className={styles.hubViewAll}>&larr; Today</a>
-            </Link>
-          </div>
+      <style jsx global>{`.fixed.bottom-0 { display: none; }`}</style>
+      <div className={s.page}>
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", marginBottom: "0.85rem" }}>
+          <div className={s.heroDate}>Trend</div>
+          <Link href="/dashboard"><a className={s.linkSubtle}>&larr; Dashboard</a></Link>
         </div>
 
-        {loading && (
-          <section className={styles.hubSection}>
-            <div className={styles.hubEmpty}>Loading…</div>
+        <nav className={s.topNav}>
+          <Link href="/dashboard"><a className={s.topNavLink}>Today</a></Link>
+          <Link href="/dashboard/stints"><a className={s.topNavLink}>Stints</a></Link>
+          <Link href="/dashboard/progress"><a className={s.topNavLinkActive}>Trend</a></Link>
+        </nav>
+
+        <div style={{ fontSize: "2.2rem", fontWeight: 800, letterSpacing: "-0.025em", marginBottom: "0.3rem" }}>
+          {recentScore != null ? `${Math.round(recentScore * 100)}%` : "—"}
+        </div>
+        <div style={{ color: "var(--text-secondary)", marginBottom: "1.25rem" }}>
+          7-day rolling daily-progress (plan completion × energy)
+        </div>
+
+        <div className={s.viewToggleBar}>
+          <button type="button" className={`${s.viewToggleBtn} ${view === "github" ? s.viewToggleBtnActive : ""}`} onClick={() => setView("github")}>Heatmap</button>
+          <button type="button" className={`${s.viewToggleBtn} ${view === "graph" ? s.viewToggleBtnActive : ""}`} onClick={() => setView("graph")}>Graph</button>
+        </div>
+
+        {loading && <div className={s.bootstrap}>Loading…</div>}
+
+        {!loading && view === "github" && (
+          <section className={s.section}>
+            <div className={s.sectionTitle}>Per-goal cadence · current stint window</div>
+            {goals.length === 0 ? (
+              <div className={s.bootstrap}>No active stint or no goals tracked yet.</div>
+            ) : (
+              <GithubGoals goals={goals} today={today} />
+            )}
           </section>
         )}
 
-        {!loading && data && (
-          <>
-            {/* Heatmap — last 60 days, goal-aware stacked bands */}
-            <section className={styles.hubSection}>
-              <div className={styles.hubSectionHeader}>
-                <span className={styles.hubSectionTitle}>
-                  Daily completion · last {HEATMAP_DAYS} days
-                </span>
-                <span className={styles.planEnergyBasis}>
-                  {data.goals.length} active goal{data.goals.length === 1 ? "" : "s"}
-                </span>
-              </div>
-
-              {/* GitHub-style 7-row grid: weeks flow left → right, days flow
-                  top → bottom within each column. Today sits in the rightmost
-                  column at its actual day-of-week. */}
-              <GithubHeatmap data={data} today={today} />
-
-
-              {/* Per-goal legend — one swatch per active goal so it's obvious
-                  which colour means what. */}
-              <div className={styles.heatmapLegendGoals}>
-                {data.goals.map((goal) => (
-                  <span key={goal.id} className={styles.heatmapLegendGoalItem}>
-                    <span
-                      className={styles.goalDot}
-                      style={{ backgroundColor: colorForGoal(goal.id) }}
-                      aria-hidden
-                    />
-                    <span className={styles.heatmapLegendGoalLabel}>{goal.title}</span>
-                  </span>
-                ))}
-              </div>
-            </section>
-
-            {/* Per-goal section */}
-            {data.goals.map((goal) => {
-              const color = colorForGoal(goal.id)
-              const { current, best } = goal.streak || { current: 0, best: 0 }
-              const hits30 = goal.hits.slice(-STRIP_DAYS)
-              return (
-                <section key={goal.id} className={styles.hubSection}>
-                  <div className={styles.hubSectionHeader}>
-                    <span className={styles.hubSectionTitle}>
-                      <span
-                        className={styles.goalDot}
-                        style={{ backgroundColor: color, marginRight: "0.5rem", display: "inline-block" }}
-                        aria-hidden
-                      />
-                      {goal.title}
-                    </span>
-                    <span className={styles.planEnergyBasis}>{goal.type}</span>
-                  </div>
-
-                  <div className={styles.progressStatsRow}>
-                    <div className={styles.progressStat}>
-                      <div className={styles.progressStatValue}>
-                        {streakEmoji(current)} {current}d
-                      </div>
-                      <div className={styles.progressStatLabel}>current streak</div>
-                    </div>
-                    <div className={styles.progressStat}>
-                      <div className={styles.progressStatValue}>{best}d</div>
-                      <div className={styles.progressStatLabel}>best streak</div>
-                    </div>
-                    <div className={styles.progressStat}>
-                      <div className={styles.progressStatValue}>{pct(goal.hitRate7d)}</div>
-                      <div className={styles.progressStatLabel}>last 7d</div>
-                    </div>
-                    <div className={styles.progressStat}>
-                      <div className={styles.progressStatValue}>{pct(goal.hitRate14d)}</div>
-                      <div className={styles.progressStatLabel}>last 14d</div>
-                    </div>
-                    <div className={styles.progressStat}>
-                      <div className={styles.progressStatValue}>{pct(goal.hitRateAll)}</div>
-                      <div className={styles.progressStatLabel}>last {goal.hits.length}d</div>
-                    </div>
-                  </div>
-
-                  <div className={styles.goalStrip} style={{ marginTop: "0.5rem" }}>
-                    {hits30.map((h) => {
-                      const isToday = h.date === today
-                      // For multi-template goals, grade by # disciplines hit.
-                      let cellInline
-                      if (h.hit) {
-                        if (h.templatesTotal && h.templatesTotal > 1) {
-                          const f = (h.templatesHit || 0) / h.templatesTotal
-                          cellInline = {
-                            backgroundColor: color,
-                            opacity: 0.3 + f * 0.7,
-                            borderColor: "transparent",
-                          }
-                        } else {
-                          cellInline = { backgroundColor: color, borderColor: color }
-                        }
-                      }
-                      return (
-                        <div
-                          key={h.date}
-                          className={`${styles.goalCell} ${h.hit ? styles.goalCellHit : ""} ${isToday ? styles.goalCellToday : ""}`}
-                          style={cellInline}
-                          title={
-                            h.hit
-                              ? `${h.date} — ${
-                                  h.templatesTotal && h.templatesTotal > 1
-                                    ? `${h.templatesHit}/${h.templatesTotal} disciplines`
-                                    : h.value != null
-                                    ? `${h.value}${goal.primaryPrimitive === "duration" ? " min" : ""}`
-                                    : `${h.count} session${h.count > 1 ? "s" : ""}`
-                                }`
-                              : `${h.date} — missed`
-                          }
-                        />
-                      )
-                    })}
-                  </div>
-
-                  {goal.perTemplate && (
-                    <div className={styles.goalSubStrips} style={{ marginTop: "0.5rem" }}>
-                      {goal.leadMeasureTemplates.map((tplId) => {
-                        const tplColor = colorForTemplate(tplId)
-                        const tplHits = (goal.perTemplate[tplId] || []).slice(-STRIP_DAYS)
-                        return (
-                          <div key={tplId} className={styles.goalSubStripRow}>
-                            <span className={styles.goalSubStripLabel}>{tplId}</span>
-                            <div className={styles.goalSubStrip}>
-                              {tplHits.map((h) => {
-                                const isToday = h.date === today
-                                return (
-                                  <div
-                                    key={h.date}
-                                    className={`${styles.goalSubCell} ${h.hit ? styles.goalCellHit : ""} ${isToday ? styles.goalCellToday : ""}`}
-                                    style={
-                                      h.hit
-                                        ? { backgroundColor: tplColor, borderColor: tplColor }
-                                        : undefined
-                                    }
-                                    title={`${h.date} — ${h.hit ? `${h.count} session${h.count > 1 ? "s" : ""}` : "missed"}`}
-                                  />
-                                )
-                              })}
-                            </div>
-                          </div>
-                        )
-                      })}
-                    </div>
-                  )}
-
-                  {goal.type === "process-cadence" && goal.floor != null && (
-                    <div className={styles.planItemRationale}>
-                      Floor: {goal.floor}
-                      {goal.primaryPrimitive === "duration" ? " min" : ""} · Target:{" "}
-                      {goal.target}
-                      {goal.primaryPrimitive === "duration" ? " min" : ""}
-                    </div>
-                  )}
-                  {goal.type === "deadline-plan" && goal.deadline && (
-                    <div className={styles.planItemRationale}>
-                      Deadline: {goal.deadline}
-                    </div>
-                  )}
-                </section>
-              )
-            })}
-          </>
+        {!loading && view === "graph" && (
+          <section className={s.section}>
+            <LineChart
+              days={days}
+              valueOf={(d) => d.score == null ? null : d.score * 100}
+              color="#6366f1"
+              label="Daily progress (plan × energy)"
+              unit="%"
+              stints={stints}
+              today={today}
+              minOverride={0}
+              maxOverride={100}
+            />
+            <LineChart
+              days={days}
+              valueOf={(d) => d.weight}
+              color="#10b981"
+              label="Weight"
+              unit=" kg"
+              stints={stints}
+              today={today}
+            />
+            <LineChart
+              days={days}
+              valueOf={(d) => d.sleep}
+              color="#8b5cf6"
+              label="Sleep"
+              unit=" hrs"
+              stints={stints}
+              today={today}
+              minOverride={0}
+            />
+            <LineChart
+              days={days}
+              valueOf={(d) => d.energy}
+              color="#f59e0b"
+              label="Energy"
+              unit=""
+              stints={stints}
+              today={today}
+              minOverride={1}
+              maxOverride={5}
+            />
+          </section>
         )}
       </div>
     </div>

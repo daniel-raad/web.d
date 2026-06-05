@@ -1,0 +1,978 @@
+/* Stint dashboard styling — deliberately NOT terminal. System sans-serif,
+   big typography, generous whitespace, color-tinted tiles. */
+
+.page {
+  max-width: 980px;
+  margin: 0 auto;
+  padding: 1rem 1.25rem 4rem;
+  font-family: -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  color: var(--text);
+  letter-spacing: -0.01em;
+}
+
+@media (min-width: 900px) {
+  .page { padding: 1.5rem 2rem 5rem; }
+}
+
+/* === Hero (the stint card) === */
+
+.hero {
+  position: relative;
+  border-radius: 18px;
+  padding: 2.25rem 2rem 2rem;
+  margin-bottom: 1.5rem;
+  background: linear-gradient(150deg, color-mix(in srgb, var(--stint-color, #6366f1) 18%, transparent), transparent 75%), var(--accent-bg, #1a1a1a);
+  overflow: hidden;
+  border: 1px solid color-mix(in srgb, var(--stint-color, #6366f1) 25%, var(--border));
+}
+
+@supports not (color: color-mix(in srgb, red, blue)) {
+  .hero { background: var(--accent-bg, #1a1a1a); }
+}
+
+.heroDate {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  font-weight: 600;
+  color: var(--text-faint);
+  margin-bottom: 0.4rem;
+}
+
+.heroStint {
+  font-size: 2.2rem;
+  font-weight: 800;
+  line-height: 1.05;
+  letter-spacing: -0.025em;
+  margin-bottom: 0.2rem;
+}
+
+@media (min-width: 700px) {
+  .heroStint { font-size: 2.6rem; }
+}
+
+.heroDay {
+  font-size: 1.05rem;
+  font-weight: 500;
+  color: var(--text-secondary);
+  margin-bottom: 1.25rem;
+}
+
+.heroDay strong {
+  font-weight: 700;
+  color: var(--text);
+}
+
+.heroIntent {
+  font-size: 1.1rem;
+  line-height: 1.45;
+  color: var(--text);
+  font-weight: 500;
+  margin-bottom: 1.5rem;
+  max-width: 38em;
+  border-left: 3px solid var(--stint-color, #6366f1);
+  padding-left: 0.85rem;
+}
+
+.heroIntentMuted {
+  font-style: italic;
+  color: var(--text-secondary);
+  font-weight: 400;
+}
+
+.heroProgress {
+  margin-bottom: 0.5rem;
+  height: 8px;
+  border-radius: 100px;
+  background: rgba(127,127,127,0.18);
+  overflow: hidden;
+}
+
+.heroProgressFill {
+  height: 100%;
+  background: var(--stint-color, #6366f1);
+  border-radius: 100px;
+  transition: width 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.heroMeta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.78rem;
+  color: var(--text-faint);
+  margin-top: 0.5rem;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+}
+
+.heroActions {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 1.1rem;
+  flex-wrap: wrap;
+}
+
+.actionPrimary,
+.actionSecondary {
+  font-family: inherit;
+  font-size: 0.85rem;
+  font-weight: 500;
+  padding: 0.55rem 1rem;
+  border-radius: 100px;
+  cursor: pointer;
+  border: 1px solid transparent;
+  transition: transform 120ms ease, background 120ms ease;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.actionPrimary {
+  background: var(--stint-color, #6366f1);
+  color: white;
+  border-color: var(--stint-color, #6366f1);
+}
+
+.actionPrimary:hover:not(:disabled) { transform: translateY(-1px); }
+.actionPrimary:disabled { opacity: 0.6; cursor: default; }
+
+.actionSecondary {
+  background: transparent;
+  color: var(--text);
+  border-color: var(--border);
+}
+
+.actionSecondary:hover { border-color: var(--text-faint); }
+
+/* === No-stint / bootstrap === */
+
+.bootstrap {
+  border-radius: 18px;
+  padding: 2.5rem 2rem;
+  background: var(--accent-bg);
+  border: 2px dashed var(--border);
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+
+.bootstrapTitle {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+}
+
+.bootstrapBody {
+  color: var(--text-secondary);
+  margin-bottom: 1rem;
+  max-width: 38em;
+  margin-left: auto;
+  margin-right: auto;
+  line-height: 1.5;
+}
+
+.bootstrapGoals {
+  display: flex;
+  gap: 0.4rem;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin: 1rem 0 1.4rem;
+}
+
+.bootstrapGoalChip {
+  font-size: 0.78rem;
+  padding: 0.35rem 0.75rem;
+  border-radius: 100px;
+  background: rgba(127,127,127,0.12);
+  color: var(--text);
+}
+
+/* === View toggle (Github / Graph) === */
+
+.viewToggleBar {
+  display: inline-flex;
+  gap: 0;
+  padding: 0.2rem;
+  border-radius: 100px;
+  background: rgba(127,127,127,0.1);
+  margin-bottom: 1.25rem;
+}
+
+.viewToggleBtn {
+  border: none;
+  background: transparent;
+  color: var(--text-faint);
+  font-family: inherit;
+  font-size: 0.78rem;
+  font-weight: 600;
+  padding: 0.45rem 1.1rem;
+  border-radius: 100px;
+  cursor: pointer;
+  letter-spacing: 0.02em;
+}
+
+.viewToggleBtnActive {
+  background: var(--accent-bg, #1a1a1a);
+  color: var(--text);
+  box-shadow: 0 1px 2px rgba(0,0,0,0.2);
+}
+
+/* === Github-style heatmap === */
+
+.ghWrap {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-top: 0.4rem;
+  overflow-x: auto;
+}
+
+.ghRow {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.ghLabel {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.92rem;
+  font-weight: 600;
+}
+
+.ghGrid {
+  display: grid;
+  grid-template-rows: repeat(7, 11px);
+  grid-auto-flow: column;
+  grid-column-gap: 2px;
+  grid-row-gap: 2px;
+}
+
+.ghCell {
+  width: 11px;
+  height: 11px;
+  border-radius: 2px;
+  background: rgba(127,127,127,0.18);
+}
+
+.ghCellToday {
+  outline: 1px solid var(--text);
+  outline-offset: 1px;
+}
+
+/* === Line chart block === */
+
+.chartBlock {
+  border-radius: 14px;
+  padding: 1rem 1.15rem 1.15rem;
+  background: var(--accent-bg, #1a1a1a);
+  border: 1px solid var(--border);
+  margin-bottom: 0.85rem;
+}
+
+.chartHead {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 0.4rem;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.chartTitle {
+  font-size: 0.95rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+.chartMeta {
+  font-size: 0.72rem;
+  color: var(--text-faint);
+}
+
+/* === Top nav strip (Today / Stints / Memories / Trend / Todos) === */
+
+.topNav {
+  display: flex;
+  gap: 0.35rem;
+  flex-wrap: wrap;
+  margin-bottom: 1.5rem;
+  padding-bottom: 0.85rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.topNavLink,
+.topNavLinkActive {
+  font-size: 0.85rem;
+  font-weight: 500;
+  padding: 0.4rem 0.9rem;
+  border-radius: 100px;
+  text-decoration: none;
+  color: var(--text-faint);
+  transition: background 120ms ease, color 120ms ease;
+}
+
+.topNavLink:hover {
+  background: rgba(127,127,127,0.08);
+  color: var(--text);
+}
+
+.topNavLinkActive {
+  background: rgba(99,102,241,0.18);
+  color: #818cf8;
+  font-weight: 600;
+}
+
+/* === Goal row (75-day tracker variant) === */
+
+.goalRowList {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+}
+
+.goalRow {
+  position: relative;
+  border-radius: 14px;
+  padding: 1rem 1.15rem 0.85rem;
+  background: var(--accent-bg, #1a1a1a);
+  border: 1px solid var(--border);
+  overflow: hidden;
+}
+
+.goalRow::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  width: 3px;
+  background: var(--goal-color, #6366f1);
+}
+
+.goalRowHead {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-left: 6px;
+  margin-bottom: 0.65rem;
+}
+
+.goalRowTitleBlock {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  flex: 1;
+  min-width: 0;
+}
+
+.goalRowIcon {
+  width: 34px;
+  height: 34px;
+  border-radius: 9px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.15rem;
+  flex-shrink: 0;
+}
+
+.goalRowTitleText {
+  flex: 1;
+  min-width: 0;
+}
+
+.goalRowTitle {
+  font-size: 1.02rem;
+  font-weight: 700;
+  letter-spacing: -0.005em;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.goalRowStateBadge {
+  font-size: 0.58rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  padding: 0.15rem 0.45rem;
+  border-radius: 100px;
+  background: rgba(127,127,127,0.2);
+  color: var(--text-faint);
+}
+
+.goalRowWhy {
+  font-size: 0.78rem;
+  color: var(--text-secondary);
+  font-style: italic;
+  margin-top: 0.1rem;
+  line-height: 1.35;
+}
+
+.goalRowStats {
+  text-align: right;
+  flex-shrink: 0;
+}
+
+.goalRowHitRate {
+  font-size: 1.7rem;
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  color: var(--goal-color, #6366f1);
+  line-height: 1;
+}
+
+.goalRowHitMeta {
+  font-size: 0.66rem;
+  color: var(--text-faint);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-top: 0.25rem;
+}
+
+.goalRowTracker {
+  margin-left: 6px;
+  display: grid;
+  gap: 2px;
+  margin-bottom: 0.6rem;
+}
+
+.trackerCell {
+  height: 16px;
+  border-radius: 2px;
+  background: rgba(127,127,127,0.16);
+}
+
+.trackerCellToday {
+  outline: 1px solid var(--goal-color, #6366f1);
+  outline-offset: 1px;
+}
+
+.goalRowActions {
+  margin-left: 6px;
+  display: flex;
+  gap: 0.35rem;
+  flex-wrap: wrap;
+}
+
+.actionTiny {
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--text-faint);
+  font-family: inherit;
+  font-size: 0.7rem;
+  letter-spacing: 0.03em;
+  padding: 0.3rem 0.65rem;
+  border-radius: 100px;
+  cursor: pointer;
+  transition: border-color 120ms ease, color 120ms ease;
+}
+
+.actionTiny:hover {
+  border-color: var(--text-faint);
+  color: var(--text);
+}
+
+/* === Goal grid === */
+
+.goalGrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.85rem;
+  margin-bottom: 1.5rem;
+}
+
+@media (min-width: 700px) {
+  .goalGrid { grid-template-columns: 1fr 1fr; gap: 1rem; }
+}
+
+.goalTile {
+  position: relative;
+  border-radius: 16px;
+  padding: 1.25rem 1.25rem 1rem;
+  background: var(--accent-bg, #1a1a1a);
+  border: 1px solid var(--border);
+  overflow: hidden;
+  transition: transform 160ms ease, border-color 160ms ease;
+  display: block;
+  text-decoration: none;
+  color: inherit;
+}
+
+.goalTile::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, color-mix(in srgb, var(--goal-color, #6366f1) 22%, transparent), transparent 60%);
+  opacity: 0.9;
+  pointer-events: none;
+}
+
+@supports not (color: color-mix(in srgb, red, blue)) {
+  .goalTile::before { display: none; }
+}
+
+.goalTile:hover {
+  transform: translateY(-2px);
+  border-color: color-mix(in srgb, var(--goal-color, #6366f1) 50%, var(--border));
+}
+
+@supports not (color: color-mix(in srgb, red, blue)) {
+  .goalTile:hover { border-color: var(--text-faint); }
+}
+
+.goalTileHead {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  margin-bottom: 0.4rem;
+  position: relative;
+}
+
+.goalTileIcon {
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.3rem;
+  background: rgba(255,255,255,0.06);
+  flex-shrink: 0;
+}
+
+.goalTileTitle {
+  font-size: 1.05rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  flex: 1;
+  min-width: 0;
+}
+
+.goalStateBadge {
+  font-size: 0.6rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  padding: 0.18rem 0.5rem;
+  border-radius: 100px;
+  background: rgba(127,127,127,0.18);
+  color: var(--text-faint);
+}
+
+.goalStateBadgeDone {
+  background: #10b981;
+  color: white;
+}
+
+.goalStateBadgeAbandoned {
+  background: rgba(239,68,68,0.18);
+  color: #ef4444;
+}
+
+.goalTileWhy {
+  font-size: 0.86rem;
+  color: var(--text-secondary);
+  line-height: 1.45;
+  margin-bottom: 0.85rem;
+  font-style: italic;
+  position: relative;
+  min-height: 1.3em;
+}
+
+.goalTileStats {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  position: relative;
+  margin-bottom: 0.6rem;
+}
+
+.goalTileHitRate {
+  font-size: 2.4rem;
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  color: var(--goal-color, #6366f1);
+  line-height: 1;
+}
+
+.goalTileHitMeta {
+  font-size: 0.72rem;
+  color: var(--text-faint);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  text-align: right;
+}
+
+.goalTileSpark {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(8px, 1fr));
+  gap: 2px;
+  position: relative;
+  margin-top: 0.4rem;
+}
+
+.goalTileSparkCell {
+  height: 14px;
+  border-radius: 2px;
+  background: rgba(127,127,127,0.18);
+}
+
+.goalTileSparkCellToday {
+  outline: 1px solid var(--goal-color, #6366f1);
+  outline-offset: 1px;
+}
+
+.goalTileMeta {
+  font-size: 0.7rem;
+  color: var(--text-faint);
+  margin-top: 0.6rem;
+  display: flex;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+  position: relative;
+}
+
+.goalTileMeta span:not(:last-child)::after {
+  content: "·";
+  margin-left: 0.6rem;
+  opacity: 0.5;
+}
+
+/* === Add goal CTA === */
+
+.addGoalTile {
+  border-radius: 16px;
+  padding: 1.25rem;
+  border: 2px dashed var(--border);
+  background: transparent;
+  color: var(--text-faint);
+  font-family: inherit;
+  font-size: 0.95rem;
+  font-weight: 500;
+  text-align: center;
+  cursor: pointer;
+  transition: border-color 120ms ease, color 120ms ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 80px;
+}
+
+.addGoalTile:hover {
+  border-color: var(--text-faint);
+  color: var(--text);
+}
+
+/* === Section header === */
+
+.section {
+  margin-bottom: 1.75rem;
+}
+
+.sectionTitle {
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  color: var(--text-faint);
+  margin-bottom: 0.75rem;
+}
+
+.sectionHead {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.75rem;
+}
+
+.linkSubtle {
+  font-size: 0.78rem;
+  color: var(--text-faint);
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.linkSubtle:hover {
+  color: var(--text);
+}
+
+/* === Inline forms (still styled but more relaxed) === */
+
+.form {
+  border-radius: 14px;
+  padding: 1.2rem 1.3rem;
+  background: var(--accent-bg, #1a1a1a);
+  border: 1px solid var(--border);
+  margin-bottom: 1rem;
+}
+
+.formGrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.85rem 1rem;
+  margin-bottom: 1rem;
+}
+
+@media (min-width: 700px) {
+  .formGrid { grid-template-columns: 1fr 1fr; }
+  .formGridWide { grid-column: 1 / -1; }
+}
+
+.field { display: flex; flex-direction: column; gap: 0.35rem; }
+
+.field label {
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text-faint);
+}
+
+.field input,
+.field textarea,
+.field select {
+  font-family: inherit;
+  font-size: 0.95rem;
+  padding: 0.55rem 0.8rem;
+  background: rgba(127,127,127,0.08);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--text);
+}
+
+.field input:focus,
+.field textarea:focus,
+.field select:focus {
+  outline: none;
+  border-color: var(--stint-color, var(--accent));
+  background: rgba(127,127,127,0.12);
+}
+
+.field textarea { min-height: 80px; resize: vertical; }
+
+.fieldWide { grid-column: 1 / -1; }
+
+.iconRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem;
+}
+
+.iconBtn {
+  width: 34px;
+  height: 34px;
+  border-radius: 8px;
+  background: rgba(127,127,127,0.08);
+  border: 1px solid var(--border);
+  font-size: 1.1rem;
+  cursor: pointer;
+  padding: 0;
+}
+
+.iconBtnActive {
+  background: rgba(255,255,255,0.08);
+  border-color: var(--text-faint);
+}
+
+.colorRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.colorSwatch {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 2px solid transparent;
+  cursor: pointer;
+  padding: 0;
+  transition: transform 120ms ease;
+}
+
+.colorSwatchActive {
+  border-color: var(--text);
+  transform: scale(1.1);
+}
+
+.formActions {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.errorText {
+  color: #ef4444;
+  font-size: 0.82rem;
+}
+
+/* === Plan section — softer than terminal === */
+
+.planCard {
+  border-radius: 14px;
+  padding: 1.2rem 1.3rem 1.4rem;
+  background: var(--accent-bg, #1a1a1a);
+  border: 1px solid var(--border);
+  margin-bottom: 1.25rem;
+}
+
+.planHead {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.6rem;
+}
+
+.planTitle {
+  font-size: 1.2rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+.planCount {
+  font-size: 0.95rem;
+  color: var(--text-faint);
+  font-weight: 500;
+  margin-left: 0.4rem;
+}
+
+.planNotes {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  font-style: italic;
+  margin-bottom: 0.85rem;
+  padding-bottom: 0.85rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.planItems {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+/* === Past stints list === */
+
+.stintsHistory {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.stintHistoryCard {
+  border-radius: 12px;
+  padding: 1rem 1.15rem;
+  background: var(--accent-bg, #1a1a1a);
+  border: 1px solid var(--border);
+  text-decoration: none;
+  color: inherit;
+  display: block;
+  transition: border-color 120ms ease;
+}
+
+.stintHistoryCard:hover {
+  border-color: var(--text-faint);
+}
+
+.stintHistoryHead {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 0.6rem;
+  margin-bottom: 0.3rem;
+}
+
+.stintHistoryTitle {
+  font-size: 1.1rem;
+  font-weight: 700;
+}
+
+.stintHistoryDates {
+  font-size: 0.78rem;
+  color: var(--text-faint);
+}
+
+.stintHistoryIntent {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  font-style: italic;
+  line-height: 1.4;
+}
+
+.stintHistoryStateBadge {
+  font-size: 0.62rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 0.18rem 0.55rem;
+  border-radius: 100px;
+}
+
+.stintDeleteBtn {
+  position: absolute;
+  top: 0.6rem;
+  right: 0.6rem;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  border: 1px solid var(--border);
+  background: rgba(127,127,127,0.1);
+  color: var(--text-faint);
+  font-family: inherit;
+  font-size: 0.85rem;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 120ms ease, color 120ms ease, border-color 120ms ease;
+  z-index: 2;
+}
+
+.stintDeleteBtn:hover {
+  background: rgba(239,68,68,0.18);
+  border-color: #ef4444;
+  color: #ef4444;
+}
+
+.stateActive { background: rgba(99,102,241,0.18); color: #818cf8; }
+.stateCompleted { background: rgba(16,185,129,0.18); color: #10b981; }
+.statePlanning { background: rgba(245,158,11,0.18); color: #f59e0b; }
+
+/* === Review form === */
+
+.reviewForm {
+  border-radius: 14px;
+  padding: 1.5rem;
+  background: var(--accent-bg, #1a1a1a);
+  border: 1px solid var(--border);
+  margin-top: 1rem;
+}
+
+.ratingRow {
+  display: flex;
+  gap: 0.4rem;
+}
+
+.ratingBtn {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 1px solid var(--border);
+  background: rgba(127,127,127,0.08);
+  color: var(--text-faint);
+  font-family: inherit;
+  font-weight: 600;
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+.ratingBtnActive {
+  background: var(--stint-color, var(--accent));
+  border-color: var(--stint-color, var(--accent));
+  color: white;
+}

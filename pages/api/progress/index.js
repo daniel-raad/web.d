@@ -1,5 +1,5 @@
-import { adminDb } from "../../lib/firebaseAdmin"
-import { addDaysToDateKey, getDateKey } from "../../lib/dates.js"
+import { adminDb } from "../../../lib/firebaseAdmin"
+import { addDaysToDateKey, getDateKey } from "../../../lib/dates.js"
 
 // GET /api/progress?days=N
 // Returns per-goal day-by-day hit/miss arrays + streaks. Public read (same
@@ -15,7 +15,7 @@ import { addDaysToDateKey, getDateKey } from "../../lib/dates.js"
 //                      outcome dollars are tracked separately).
 
 const DEFAULT_DAYS = 30
-const MAX_DAYS = 90
+const MAX_DAYS = 400
 
 function buildDateList(startDate, endDate) {
   const out = []
@@ -181,6 +181,8 @@ export default async function handler(req, res) {
       target: goal.target ?? null,
       primaryPrimitive: goal.primaryPrimitive ?? null,
       deadline: goal.deadline ?? null,
+      yearGoalId: goal.yearGoalId || null,
+      stintId: goal.stintId || null,
       leadMeasureTemplates: leadTemplates,
       hits,
       perTemplate,

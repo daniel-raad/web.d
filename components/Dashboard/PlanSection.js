@@ -5,6 +5,7 @@ import {
   logInstance,
   generatePlan,
   getPlan,
+  saveEnergy,
 } from "../../lib/firestore"
 import { colorForTemplate } from "../../lib/goalColors"
 import styles from "../../styles/Dashboard.module.css"
@@ -67,9 +68,12 @@ function formatFloorTarget(floor, target, quantityUnit) {
 
 // --- Log form -------------------------------------------------------------
 
-function LogForm({ item, date, itemIndex, onSaved, onClose }) {
+function LogForm({ item, date, itemIndex, energyToday, onSaved, onClose }) {
   const primitives = item.primitives || []
   const [values, setValues] = useState({})
+  // Pre-fill energy from today's entry so the user sees what's already saved
+  // and can edit it from the same tick action.
+  const [energy, setEnergy] = useState(energyToday ?? null)
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState(null)
 
@@ -89,12 +93,19 @@ function LogForm({ item, date, itemIndex, onSaved, onClose }) {
           clean[k] = v
         }
       }
-      await logInstance({
-        date,
-        templateId: item.templateId,
-        values: clean,
-        linkedPlanItem: { date, itemIndex, status: "done" },
-      })
+      // Save energy alongside the instance log if it changed.
+      const promises = [
+        logInstance({
+          date,
+          templateId: item.templateId,
+          values: clean,
+          linkedPlanItem: { date, itemIndex, status: "done" },
+        }),
+      ]
+      if (energy != null && energy !== energyToday) {
+        promises.push(saveEnergy(date, energy))
+      }
+      await Promise.all(promises)
       if (onSaved) onSaved()
     } catch (e) {
       setError(e.message || "Save failed")
@@ -157,6 +168,21 @@ function LogForm({ item, date, itemIndex, onSaved, onClose }) {
           }
           return null
         })}
+        <div className={`${styles.planLogField} ${styles.planLogFieldWide}`}>
+          <label>Energy now (1-5)</label>
+          <div className={styles.hubEnergyPills}>
+            {[1, 2, 3, 4, 5].map((n) => (
+              <button
+                key={n}
+                type="button"
+                className={`${styles.hubEnergyPill} ${energy === n ? styles.hubEnergyPillActive : ""}`}
+                onClick={() => setEnergy(energy === n ? null : n)}
+              >
+                {n}
+              </button>
+            ))}
+          </div>
+        </div>
       </div>
       <div className={styles.planFormActions}>
         <button type="button" className={styles.planFormSave} onClick={handleSave} disabled={saving}>
@@ -296,11 +322,12 @@ function EditForm({ item, date, itemIndex, onSaved, onClose }) {
 
 // --- Main PlanSection -----------------------------------------------------
 
-export default function PlanSection({ date, initialPlan, onChange }) {
+export default function PlanSection({ date, initialPlan, onChange, goalsById, energyToday }) {
   const [plan, setPlan] = useState(initialPlan)
   const [generating, setGenerating] = useState(false)
   const [generateError, setGenerateError] = useState(null)
   const [expanded, setExpanded] = useState(null) // { idx, mode: "log" | "edit" }
+  const gMap = goalsById instanceof Map ? goalsById : null
 
   const refreshPlan = useCallback(async () => {
     const res = await getPlan(date)
@@ -399,6 +426,23 @@ export default function PlanSection({ date, initialPlan, onChange }) {
   const items = plan.items || []
   const doneCount = items.filter((i) => i.status === "done").length
 
+  // Group plan items by goal so we can render a "Today serves: A · B"
+  // focus line under the plan header.
+  const focusGroups = []
+  if (gMap) {
+    const seen = new Set()
+    for (const it of items) {
+      if (!it.goalId) continue
+      if (seen.has(it.goalId)) continue
+      const g = gMap.get(it.goalId)
+      if (g) {
+        focusGroups.push(g)
+        seen.add(it.goalId)
+      }
+    }
+  }
+  const untiedCount = gMap ? items.filter((i) => !i.goalId).length : 0
+
   return (
     <section className={styles.hubSection}>
       <div className={styles.hubSectionHeader}>
@@ -431,6 +475,28 @@ export default function PlanSection({ date, initialPlan, onChange }) {
         <div className={styles.planGenerateError}>{generateError}</div>
       )}
 
+      {focusGroups.length > 0 && (
+        <div className={styles.planFocusLine}>
+          <strong>Today serves:</strong>{" "}
+          {focusGroups.map((g, i) => (
+            <span key={g.id}>
+              <span
+                className={styles.planItemYearGoalDot}
+                style={{ background: g.color }}
+                aria-hidden
+              />
+              {g.title}
+              {i < focusGroups.length - 1 ? " · " : ""}
+            </span>
+          ))}
+          {untiedCount > 0 && (
+            <span style={{ color: "#f59e0b", marginLeft: "0.5rem" }}>
+              · {untiedCount} item{untiedCount === 1 ? "" : "s"} untied to a goal
+            </span>
+          )}
+        </div>
+      )}
+
       {plan.notes && <div className={styles.planNotes}>{plan.notes}</div>}
 
       <div className={styles.planItemList}>
@@ -450,6 +516,14 @@ export default function PlanSection({ date, initialPlan, onChange }) {
             >
               <div className={styles.planItemHeader}>
                 <div className={styles.planItemTitle}>
+                  {gMap && item.goalId && gMap.get(item.goalId) && (
+                    <span
+                      className={styles.planItemYearGoalDot}
+                      style={{ background: gMap.get(item.goalId).color }}
+                      title={gMap.get(item.goalId).title}
+                      aria-label={`Goal: ${gMap.get(item.goalId).title}`}
+                    />
+                  )}
                   {item.emoji && (
                     <span className={styles.planItemEmoji}>{item.emoji}</span>
                   )}
@@ -497,6 +571,7 @@ export default function PlanSection({ date, initialPlan, onChange }) {
                   item={item}
                   date={date}
                   itemIndex={idx}
+                  energyToday={energyToday}
                   onSaved={() => {
                     setExpanded(null)
                     refreshPlan()

@@ -40,7 +40,7 @@ export default async function handler(req, res) {
   // never hardcode.
   const systemPrompt = `${personality}You are Daniel's personal coach, generating a structured daily plan on demand. Today is ${dayName} ${today}, current time is ${currentTime}. The plan you are writing is for ${date}${isToday ? " (TODAY)" : isFuture ? " (FUTURE)" : " (PAST — likely backfilling a missed plan)"}.
 
-GOALS: Daniel's active goals live in the goals collection. Call get_goals first. The collection is the source of truth — read targets, deadlines, and lead measures from there. Never hardcode.
+STINT: Call get_current_stint first — returns the active stint (intent, day X/75, days left) AND its goals (up to 4, each with hit-rate). Every plan item MUST serve one of those goals; if you can't tie an item to one, drop it. The collection is the source of truth — read targets, deadlines, and lead measures from there. Never hardcode.
 
 TEMPLATES: Call get_task_templates to load the reusable task shapes — these are the ONLY valid templateIds for propose_plan. Each carries primitives + suggestedFloor + suggestedTarget.
 
