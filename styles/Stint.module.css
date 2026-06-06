@@ -976,3 +976,178 @@
   border-color: var(--stint-color, var(--accent));
   color: white;
 }
+
+/* ============================================================
+   Mobile (≤640px) — designed for one-handed phone use.
+   Tighter padding, larger touch targets, restructured goal row
+   so the title gets full width and the hit-rate sits as a chip
+   on the same line. The 75-day strip becomes a flatter ribbon.
+   ============================================================ */
+
+@media (max-width: 640px) {
+  .page {
+    padding: 0.75rem 0.85rem 3rem;
+  }
+
+  /* --- Hero --- */
+  .hero {
+    border-radius: 16px;
+    padding: 1.4rem 1.1rem 1.3rem;
+    margin-bottom: 1.1rem;
+  }
+  .heroDate { font-size: 0.62rem; letter-spacing: 0.16em; }
+  .heroStint { font-size: 1.6rem; line-height: 1.1; }
+  .heroDay { font-size: 0.92rem; margin-bottom: 0.9rem; }
+  .heroIntent {
+    font-size: 0.95rem;
+    line-height: 1.4;
+    margin-bottom: 1.1rem;
+    padding-left: 0.7rem;
+    border-left-width: 2px;
+  }
+  .heroMeta { font-size: 0.72rem; }
+  .heroActions { gap: 0.4rem; margin-top: 0.9rem; }
+  .actionPrimary,
+  .actionSecondary {
+    font-size: 0.8rem;
+    padding: 0.55rem 0.9rem;
+    min-height: 38px;
+  }
+
+  /* --- Section header --- */
+  .section { margin-bottom: 1.25rem; }
+  .sectionHead { margin-bottom: 0.55rem; }
+  .sectionTitle { font-size: 0.68rem; letter-spacing: 0.14em; }
+  .linkSubtle { font-size: 0.8rem; padding: 0.25rem 0.5rem; }
+
+  /* --- Goal row: tighter, with stat as a right-aligned chip --- */
+  .goalRowList { gap: 0.7rem; }
+
+  .goalRow {
+    padding: 0.85rem 0.95rem 0.8rem;
+    border-radius: 12px;
+  }
+  .goalRow::before { width: 4px; }
+
+  .goalRowHead {
+    gap: 0.6rem;
+    margin-left: 8px;
+    margin-bottom: 0.6rem;
+    align-items: center;
+  }
+
+  .goalRowTitleBlock { gap: 0.55rem; }
+
+  .goalRowIcon {
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    font-size: 1.05rem;
+  }
+
+  .goalRowTitle {
+    font-size: 0.95rem;
+    line-height: 1.25;
+  }
+
+  /* On phone, collapse the long "why" line to one line with ellipsis so
+     the row stays scannable. Tap the row to see the full description. */
+  .goalRowWhy {
+    font-size: 0.74rem;
+    margin-top: 0.15rem;
+    line-height: 1.3;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  /* Hit-rate becomes a compact stacked block — % on top, days underneath,
+     no longer competing with the title for horizontal space. */
+  .goalRowStats {
+    min-width: 56px;
+  }
+  .goalRowHitRate {
+    font-size: 1.3rem;
+    letter-spacing: -0.03em;
+  }
+  .goalRowHitMeta {
+    font-size: 0.58rem;
+    letter-spacing: 0.07em;
+    margin-top: 0.15rem;
+  }
+
+  /* --- 75-day tracker: thinner ribbon, tighter gaps --- */
+  .goalRowTracker {
+    margin-left: 8px;
+    margin-bottom: 0.7rem;
+    gap: 1.5px;
+  }
+  .trackerCell {
+    height: 14px;
+    border-radius: 1.5px;
+  }
+
+  /* --- Actions: even-sized, comfortable to tap --- */
+  .goalRowActions {
+    margin-left: 8px;
+    gap: 0.3rem;
+  }
+  .actionTiny {
+    font-size: 0.72rem;
+    padding: 0.45rem 0.75rem;
+    min-height: 34px;
+    flex: 1 1 auto;
+    text-align: center;
+    justify-content: center;
+  }
+
+  /* --- Top navigation strip (Today / Stints / etc.) --- */
+  .topNav {
+    gap: 0.25rem;
+    margin-bottom: 1.1rem;
+    padding-bottom: 0.7rem;
+    overflow-x: auto;
+    flex-wrap: nowrap;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+  .topNav::-webkit-scrollbar { display: none; }
+  .topNavLink,
+  .topNavLinkActive {
+    font-size: 0.8rem;
+    padding: 0.4rem 0.8rem;
+    flex-shrink: 0;
+  }
+
+  /* --- Forms --- */
+  .form { padding: 1rem 1rem 1.1rem; border-radius: 12px; }
+  .formGrid { gap: 0.7rem 0.8rem; margin-bottom: 0.85rem; }
+  .field input,
+  .field textarea,
+  .field select {
+    font-size: 1rem; /* 16px — prevents iOS auto-zoom on focus */
+    padding: 0.6rem 0.75rem;
+  }
+  .formActions { gap: 0.4rem; }
+
+  /* --- Stint history --- */
+  .stintHistoryCard { padding: 0.85rem 1rem; }
+  .stintHistoryTitle { font-size: 1rem; }
+  .stintHistoryDates { font-size: 0.72rem; }
+  .stintHistoryIntent { font-size: 0.84rem; }
+
+  /* --- Bootstrap empty state --- */
+  .bootstrap { padding: 1.75rem 1.1rem; border-radius: 16px; }
+  .bootstrapTitle { font-size: 1.25rem; }
+  .bootstrapBody { font-size: 0.92rem; }
+}
+
+/* Very small phones (≤360px): drop one more notch */
+@media (max-width: 360px) {
+  .heroStint { font-size: 1.4rem; }
+  .heroIntent { font-size: 0.9rem; }
+  .goalRowTitle { font-size: 0.9rem; }
+  .goalRowHitRate { font-size: 1.2rem; }
+  .actionTiny { font-size: 0.68rem; padding: 0.4rem 0.55rem; }
+}

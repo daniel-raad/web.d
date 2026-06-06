@@ -8,6 +8,7 @@ export default function Dashboard() {
       <Head>
         <title>Dashboard - Daniel Raad</title>
         <meta name="description" content="Personal Dashboard" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
         <link rel="icon" href="/astro.png" />
       </Head>
 

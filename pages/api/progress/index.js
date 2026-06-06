@@ -141,9 +141,12 @@ export default async function handler(req, res) {
           return acc + (Number.isFinite(Number(v)) ? Number(v) : 0)
         }, 0)
         const floor = Number(goal.floor) || 0
+        // Floor is the "minimum won day" gate. When unset, any logged instance
+        // counts — otherwise the day silently reads as a miss despite real work.
+        const hit = floor > 0 ? sum >= floor : dayInstances.length > 0
         return {
           date,
-          hit: sum >= floor && floor > 0,
+          hit,
           value: sum,
           count: dayInstances.length,
         }
