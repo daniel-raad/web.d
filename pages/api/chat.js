@@ -1,5 +1,5 @@
 import { getAuth } from "firebase-admin/auth"
-import { READ_TOOLS, WRITE_TOOLS, runChatLoop, getPersonalitySection, buildSystemPrompt } from "../../lib/chatEngine"
+import { READ_TOOLS, WRITE_TOOLS, VAULT_TOOLS, runChatLoop, getPersonalitySection, buildSystemPrompt } from "../../lib/chatEngine"
 import { getDateContext } from "../../lib/dates.js"
 import { checkRateLimit } from "../../lib/rateLimit"
 
@@ -37,7 +37,7 @@ export default async function handler(req, res) {
     }
   }
 
-  const tools = isAuthed ? [...READ_TOOLS, ...WRITE_TOOLS] : READ_TOOLS
+  const tools = isAuthed ? [...READ_TOOLS, ...WRITE_TOOLS, ...VAULT_TOOLS] : READ_TOOLS
 
   const now = new Date()
   const { today, dayName, currentTime } = getDateContext(now)
