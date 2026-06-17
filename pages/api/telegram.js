@@ -134,7 +134,7 @@ export default async function handler(req, res) {
       messages,
       tools,
       systemPrompt,
-      model: "claude-sonnet-4-20250514",
+      model: "claude-sonnet-4-5",
       maxTokens: 2048,
     })
 
