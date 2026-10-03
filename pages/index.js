@@ -7,7 +7,7 @@ export default function Home() {
     <div>
       <Head>
         <title>Daniel Raad</title>
-        <meta name="description" content="Daniel Raad - Full-Stack Engineer" />
+        <meta name="description" content="Daniel Raad - Agent Engineer" />
         <link rel="icon" href="/astro.png" />
       </Head>
 
