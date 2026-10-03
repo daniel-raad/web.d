@@ -115,7 +115,7 @@ EVERY TIME you run, regardless of what triggered you, do the following:
 CATEGORY HYGIENE:
 - If a todo has an empty category or "Uncategorized", assign it to the best matching official category based on its text.
 - If a todo's category doesn't match the official list (typo, old name), fix it to the closest official category.
-- Use your judgement — "Fix deploy pipeline" is Conversify or Palantir depending on context. When ambiguous, leave it and flag it.
+- Use your judgement — "Fix deploy pipeline" is Work unless the text clearly points elsewhere. When ambiguous, leave it and flag it.
 
 DUPLICATE DETECTION:
 - Look for todos that are duplicates or near-duplicates (same intent, different wording).

@@ -122,7 +122,7 @@ function IntentEditor({ stint, onSaved, onCancel }) {
         </div>
         <div className={`${s.field} ${s.fieldWide}`}>
           <label>Intent (one paragraph: what these 75 days are FOR)</label>
-          <textarea value={intent} onChange={(e) => setIntent(e.target.value)} placeholder="e.g. Lock the training floor every week through the race + ship the AI webhook that's blocking demos." style={{ minHeight: 100 }} />
+          <textarea value={intent} onChange={(e) => setIntent(e.target.value)} placeholder="e.g. Build deep Sierra craft, keep health steady, and ship one compounding personal project." style={{ minHeight: 100 }} />
         </div>
         <div className={s.field}>
           <label>Start date</label>
@@ -352,7 +352,7 @@ function NewGoalForm({ used, onCreated, onCancel }) {
       <div className={s.formGrid}>
         <div className={`${s.field} ${s.fieldWide}`}>
           <label>Title</label>
-          <input value={title} onChange={(e) => setTitle(e.target.value)} placeholder="e.g. Finish Ironman 70.3" />
+          <input value={title} onChange={(e) => setTitle(e.target.value)} placeholder="e.g. Become excellent at agent engineering" />
         </div>
         <div className={s.field}>
           <label>Icon</label>
@@ -429,7 +429,7 @@ function BootstrapPanel({ onBooted }) {
         <div className={s.formGrid}>
           <div className={`${s.field} ${s.fieldWide}`}>
             <label>Intent (the prompt for the block)</label>
-            <textarea value={intent} onChange={(e) => setIntent(e.target.value)} placeholder="e.g. Lock the training floor every week through the race + ship the AI webhook that's blocking demos." />
+            <textarea value={intent} onChange={(e) => setIntent(e.target.value)} placeholder="e.g. Build deep Sierra craft, keep health steady, and ship one compounding personal project." />
           </div>
         </div>
       </div>

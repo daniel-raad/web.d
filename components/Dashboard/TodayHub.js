@@ -16,6 +16,22 @@ import s from "../../styles/Stint.module.css"
 const DAYS = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
 const MONTHS_LONG = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
 
+function planCounts(plan) {
+  const items = plan?.items || []
+  return {
+    total: items.length,
+    done: items.filter((i) => i.status === "done").length,
+    partial: items.filter((i) => i.status === "partial").length,
+    skipped: items.filter((i) => i.status === "skipped").length,
+    open: items.filter((i) => !["done", "skipped"].includes(i.status)).length,
+  }
+}
+
+function currentPlanItem(plan) {
+  const items = plan?.items || []
+  return items.find((i) => !["done", "skipped"].includes(i.status)) || items[0] || null
+}
+
 export default function TodayHub() {
   const router = useRouter()
   const now = new Date()
@@ -114,6 +130,9 @@ export default function TodayHub() {
   const goals = stintData?.goals || []
   const goalsById = new Map(goals.map((g) => [g.id, g]))
   const hasActiveStint = !!stintData?.stint
+  const activeGoals = goals.filter((g) => (g.state || "active") === "active")
+  const counts = planCounts(plan)
+  const nextItem = currentPlanItem(plan)
 
   return (
     <div className={s.page}>
@@ -126,7 +145,40 @@ export default function TodayHub() {
         <Link href="/dashboard/progress"><a className={s.topNavLink}>Trend</a></Link>
       </nav>
 
-      <StintBoard onChange={loadAll} />
+      <section className={s.commandCenter}>
+        <div className={s.commandIntro}>
+          <div className={s.sectionTitle}>Command center</div>
+          <div className={s.commandTitle}>Today is for execution, not admin.</div>
+          <div className={s.commandCopy}>
+            Use this screen to scan the plan. Use Telegram to resolve, reschedule, or log the work as it happens.
+          </div>
+        </div>
+        <div className={s.commandStats}>
+          <div className={s.commandStat}>
+            <span className={s.commandStatLabel}>Plan</span>
+            <strong>{counts.done}/{counts.total || 0}</strong>
+            <span>{counts.open} open{counts.partial ? ` · ${counts.partial} partial` : ""}</span>
+          </div>
+          <div className={s.commandStat}>
+            <span className={s.commandStatLabel}>Now</span>
+            <strong>{nextItem?.label || nextItem?.templateId || "No plan"}</strong>
+            <span>{nextItem?.rationale || "Generate a plan or start a stint."}</span>
+          </div>
+          <div className={s.commandStat}>
+            <span className={s.commandStatLabel}>Stint</span>
+            <strong>{activeGoals.length} active</strong>
+            <span>{stintData?.stint ? stintData.stint.title || `Stint ${stintData.stint.index}` : "No active stint"}</span>
+          </div>
+        </div>
+        <div className={s.telegramBox}>
+          <div className={s.telegramBoxTitle}>Telegram commands that still work</div>
+          <div className={s.telegramCommands}>
+            <span>done first plan item</span>
+            <span>logged 90 min Sierra agents</span>
+            <span>move dashboard polish to tomorrow</span>
+          </div>
+        </div>
+      </section>
 
       {/* Plan only makes sense within a stint — outside, hide it. */}
       {hasActiveStint && (
@@ -142,6 +194,8 @@ export default function TodayHub() {
           </div>
         </section>
       )}
+
+      <StintBoard onChange={loadAll} />
 
       {/* Today's log — collapsed by default. Click to expand. */}
       <section className={s.section}>

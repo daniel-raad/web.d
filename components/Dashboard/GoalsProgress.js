@@ -63,9 +63,9 @@ function formatHitValue(goal, hit) {
   return hit.date
 }
 
-// Build the cell's inline style. For multi-template goals (Ironman), opacity
-// grades by how many lead measures hit. For everything else, hit = full color,
-// miss = transparent (CSS handles the border).
+// Build the cell's inline style. For multi-template goals, opacity grades by
+// how many lead measures hit. For everything else, hit = full color, miss =
+// transparent (CSS handles the border).
 function cellStyle(hit, color) {
   if (!hit.hit) return undefined
   if (hit.templatesTotal && hit.templatesTotal > 1) {
