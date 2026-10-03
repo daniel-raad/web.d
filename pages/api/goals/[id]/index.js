@@ -1,6 +1,6 @@
 import { adminDb } from "../../../../lib/firebaseAdmin"
 import { requireAuth } from "../../../../lib/authMiddleware"
-import { GOAL_STATES, withGoalDisplayDefaults } from "../../../../lib/stints"
+import { GOAL_ENFORCEMENTS, GOAL_STATES, withGoalDisplayDefaults } from "../../../../lib/stints"
 
 // GET    /api/goals/[id]    → single goal
 // PATCH  /api/goals/[id]    → partial update (incl. state transitions and stintId reassign)
@@ -8,7 +8,7 @@ import { GOAL_STATES, withGoalDisplayDefaults } from "../../../../lib/stints"
 
 const ALLOWED = [
   "title", "type", "priority", "rationale", "why", "color", "icon",
-  "target", "floor", "unit", "cadence", "deadline",
+  "target", "floor", "unit", "cadence", "deadline", "enforcement",
   "primaryPrimitive", "weeklyTargets", "leadMeasures",
   "leadMeasureTemplates", "window", "context",
   "state", "stintId", "completion",
@@ -37,6 +37,9 @@ export default async function handler(req, res) {
     for (const k of ALLOWED) if (body[k] !== undefined) patch[k] = body[k]
     if (patch.state && !GOAL_STATES.includes(patch.state)) {
       return res.status(400).json({ error: `invalid state. allowed: ${GOAL_STATES.join(", ")}` })
+    }
+    if (patch.enforcement && !GOAL_ENFORCEMENTS.includes(patch.enforcement)) {
+      return res.status(400).json({ error: `invalid enforcement. allowed: ${GOAL_ENFORCEMENTS.join(", ")}` })
     }
 
     // If flipping to completed and no completion payload, stamp one.

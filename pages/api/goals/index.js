@@ -3,6 +3,7 @@ import { requireAuth } from "../../../lib/authMiddleware"
 import {
   DEFAULT_GOAL_COLORS,
   DEFAULT_GOAL_ICONS,
+  GOAL_ENFORCEMENTS,
   GOAL_STATES,
   slugifyTitle,
   withGoalDisplayDefaults,
@@ -14,7 +15,7 @@ import { getDateKey } from "../../../lib/dates.js"
 
 const ALLOWED = [
   "title", "type", "priority", "rationale", "why", "color", "icon",
-  "target", "floor", "unit", "cadence", "deadline",
+  "target", "floor", "unit", "cadence", "deadline", "enforcement",
   "primaryPrimitive", "weeklyTargets", "leadMeasures",
   "leadMeasureTemplates", "window", "context",
   "state",
@@ -56,6 +57,9 @@ export default async function handler(req, res) {
       updatedAt: Date.now(),
     }
     for (const k of ALLOWED) if (body[k] !== undefined) doc[k] = body[k]
+    if (doc.enforcement && !GOAL_ENFORCEMENTS.includes(doc.enforcement)) {
+      return res.status(400).json({ error: `invalid enforcement. allowed: ${GOAL_ENFORCEMENTS.join(", ")}` })
+    }
 
     await adminDb.collection("goals").doc(id).set(doc)
     const after = await adminDb.collection("goals").doc(id).get()

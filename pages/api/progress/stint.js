@@ -2,6 +2,7 @@ import { adminDb } from "../../../lib/firebaseAdmin"
 import {
   buildDates,
   getCurrentStint,
+  goalProgressSummary,
   hitsForGoalInWindow,
   withGoalDisplayDefaults,
 } from "../../../lib/stints"
@@ -9,9 +10,9 @@ import { getDateKey } from "../../../lib/dates.js"
 
 // GET /api/progress/stint
 //
-// Returns the current stint window + per-goal hits across the 75-day window.
+// Returns the current stint window + per-goal hits across the active block.
 // Goals are loaded standalone (not filtered by stintId) — the stint just
-// provides the window. The UI uses this to render one row of 75 boxes per
+// provides the window. The UI uses this to render one row of boxes per
 // active goal.
 
 export default async function handler(req, res) {
@@ -39,23 +40,11 @@ export default async function handler(req, res) {
 
   const enriched = goals.map((g) => {
     const hits = hitsForGoalInWindow(g, instances, dates)
-    const upToToday = hits.filter((h) => h.date <= today)
-    const hitsCount = upToToday.filter((h) => h.hit).length
-    const hitRate = upToToday.length > 0 ? hitsCount / upToToday.length : 0
-    // current streak (back from latest in-window day with data)
-    let currentStreak = 0
-    for (let i = upToToday.length - 1; i >= 0; i--) {
-      if (upToToday[i].hit) currentStreak += 1
-      else break
-    }
+    const summary = goalProgressSummary(g, hits, today)
     return {
       ...g,
       hits,
-      hitsCount,
-      hitRate,
-      currentStreak,
-      daysElapsed: upToToday.length,
-      daysTotal: dates.length,
+      ...summary,
     }
   })
 

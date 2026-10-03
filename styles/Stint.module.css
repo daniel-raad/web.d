@@ -325,72 +325,72 @@
   font-weight: 600;
 }
 
-/* === Command center === */
+/* === Today overview === */
 
-.commandCenter {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 0.85rem;
+.todayPanel {
   margin-bottom: 1.5rem;
   padding: 1rem;
   border: 1px solid var(--border);
-  border-radius: 16px;
+  border-radius: 10px;
   background: var(--accent-bg, #1a1a1a);
 }
 
-@media (min-width: 820px) {
-  .commandCenter {
-    grid-template-columns: 1.1fr 1.3fr;
-    align-items: stretch;
-  }
+.todayHeader {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 0.9rem;
 }
 
-.commandIntro {
-  min-width: 0;
-}
-
-.commandTitle {
-  font-size: 1.25rem;
-  font-weight: 800;
-  letter-spacing: -0.02em;
+.todayTitle {
+  margin: 0;
+  color: var(--text);
+  font-size: 1.45rem;
+  font-weight: 750;
   line-height: 1.15;
-  margin-bottom: 0.35rem;
 }
 
-.commandCopy {
-  max-width: 38em;
-  color: var(--text-secondary);
-  font-size: 0.9rem;
-  line-height: 1.45;
+.todayStatus {
+  flex-shrink: 0;
+  padding: 0.36rem 0.6rem;
+  border: 1px solid rgba(16,185,129,0.28);
+  border-radius: 999px;
+  color: #86efac;
+  background: rgba(16,185,129,0.1);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
 }
 
-.commandStats {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 0.55rem;
-}
-
-@media (min-width: 620px) {
-  .commandStats {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-  }
-}
-
-@media (min-width: 820px) {
-  .commandStats {
-    grid-column: 1 / -1;
-  }
-}
-
-.commandStat {
-  min-width: 0;
-  padding: 0.8rem;
-  border: 1px solid var(--border);
-  border-radius: 12px;
+.todayStatusMuted {
+  border-color: var(--border);
+  color: var(--text-faint);
   background: rgba(127,127,127,0.07);
 }
 
-.commandStatLabel {
+.todayGrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.65rem;
+}
+
+.todayFocus,
+.todayMetric,
+.telegramRail {
+  min-width: 0;
+  padding: 0.85rem;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: rgba(127,127,127,0.055);
+}
+
+.todayFocus {
+  border-left: 3px solid #6366f1;
+}
+
+.todayKicker {
   display: block;
   margin-bottom: 0.35rem;
   color: var(--text-faint);
@@ -400,66 +400,93 @@
   text-transform: uppercase;
 }
 
-.commandStat strong {
+.todayFocus strong,
+.todayMetric strong {
   display: block;
-  margin-bottom: 0.25rem;
+  margin-bottom: 0.24rem;
   color: var(--text);
-  font-size: 1.2rem;
-  line-height: 1.15;
+  font-size: 1.08rem;
+  line-height: 1.2;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
-.commandStat span:last-child {
+.todayFocus span:last-child,
+.todayMetric span:last-child {
   display: -webkit-box;
-  min-height: 2.4em;
   color: var(--text-secondary);
   font-size: 0.78rem;
-  line-height: 1.25;
+  line-height: 1.3;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
 
-.telegramBox {
-  padding: 0.85rem;
-  border: 1px solid rgba(99,102,241,0.28);
-  border-radius: 12px;
-  background: rgba(99,102,241,0.08);
+.todayMeter {
+  height: 4px;
+  margin-top: 0.65rem;
+  border-radius: 999px;
+  background: rgba(127,127,127,0.16);
+  overflow: hidden;
 }
 
-@media (min-width: 820px) {
-  .telegramBox {
-    align-self: end;
+.todayMeterFill {
+  height: 100%;
+  border-radius: 999px;
+  background: #6366f1;
+}
+
+.telegramRail {
+  background: rgba(99,102,241,0.055);
+}
+
+.telegramCommandList {
+  display: grid;
+  gap: 0.35rem;
+}
+
+.telegramCommandList code {
+  display: block;
+  min-width: 0;
+  padding: 0.34rem 0.45rem;
+  border: 1px solid rgba(99,102,241,0.18);
+  border-radius: 6px;
+  color: var(--text-secondary);
+  background: rgba(255,255,255,0.035);
+  font-family: inherit;
+  font-size: 0.74rem;
+  line-height: 1.2;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+@media (min-width: 700px) {
+  .todayGrid {
+    grid-template-columns: minmax(0, 1.4fr) minmax(150px, 0.65fr) minmax(150px, 0.75fr);
+  }
+
+  .telegramRail {
+    grid-column: 1 / -1;
+  }
+
+  .telegramCommandList {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 }
 
-.telegramBoxTitle {
-  margin-bottom: 0.55rem;
-  color: var(--text);
-  font-size: 0.82rem;
-  font-weight: 700;
+@media (min-width: 980px) {
+  .todayGrid {
+    grid-template-columns: minmax(0, 1.45fr) minmax(140px, 0.55fr) minmax(160px, 0.7fr) minmax(190px, 0.85fr);
+  }
+
+  .telegramRail {
+    grid-column: auto;
+  }
 }
 
-.telegramCommands {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.4rem;
-}
-
-.telegramCommands span {
-  max-width: 100%;
-  padding: 0.35rem 0.55rem;
-  border: 1px solid rgba(99,102,241,0.24);
-  border-radius: 999px;
-  color: var(--text-secondary);
-  background: rgba(255,255,255,0.04);
-  font-size: 0.76rem;
-  line-height: 1.2;
-}
-
-/* === Goal row (75-day tracker variant) === */
+/* === Goal row (100-day tracker variant) === */
 
 .goalRowList {
   display: flex;
@@ -538,6 +565,28 @@
   color: var(--text-faint);
 }
 
+.goalModeBadge {
+  font-size: 0.58rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 0.15rem 0.45rem;
+  border-radius: 100px;
+  border: 1px solid transparent;
+}
+
+.goalModeBadgeStrict {
+  color: #fca5a5;
+  background: rgba(239,68,68,0.12);
+  border-color: rgba(239,68,68,0.24);
+}
+
+.goalModeBadgeRelaxed {
+  color: #93c5fd;
+  background: rgba(59,130,246,0.12);
+  border-color: rgba(59,130,246,0.22);
+}
+
 .goalRowWhy {
   font-size: 0.78rem;
   color: var(--text-secondary);
@@ -578,6 +627,10 @@
   height: 16px;
   border-radius: 2px;
   background: rgba(127,127,127,0.16);
+}
+
+.trackerCellMiss {
+  background: rgba(239,68,68,0.5);
 }
 
 .trackerCellToday {

@@ -133,49 +133,59 @@ export default function TodayHub() {
   const activeGoals = goals.filter((g) => (g.state || "active") === "active")
   const counts = planCounts(plan)
   const nextItem = currentPlanItem(plan)
+  const planPercent = counts.total ? Math.round((counts.done / counts.total) * 100) : 0
+  const stintLabel = stintData?.stint
+    ? stintData.stint.title || `Stint ${stintData.stint.index}`
+    : "No active stint"
 
   return (
     <div className={s.page}>
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", marginBottom: "0.85rem" }}>
-        <div className={s.heroDate}>{dateLabel}</div>
-      </div>
       <nav className={s.topNav}>
         <Link href="/dashboard"><a className={s.topNavLinkActive}>Today</a></Link>
         <Link href="/dashboard/stints"><a className={s.topNavLink}>Stints</a></Link>
         <Link href="/dashboard/progress"><a className={s.topNavLink}>Trend</a></Link>
       </nav>
 
-      <section className={s.commandCenter}>
-        <div className={s.commandIntro}>
-          <div className={s.sectionTitle}>Command center</div>
-          <div className={s.commandTitle}>Today is for execution, not admin.</div>
-          <div className={s.commandCopy}>
-            Use this screen to scan the plan. Use Telegram to resolve, reschedule, or log the work as it happens.
+      <section className={s.todayPanel}>
+        <div className={s.todayHeader}>
+          <div>
+            <div className={s.sectionTitle}>Today</div>
+            <h1 className={s.todayTitle}>{dateLabel}</h1>
+          </div>
+          <div className={hasActiveStint ? s.todayStatus : `${s.todayStatus} ${s.todayStatusMuted}`}>
+            {hasActiveStint ? "Stint active" : "No stint"}
           </div>
         </div>
-        <div className={s.commandStats}>
-          <div className={s.commandStat}>
-            <span className={s.commandStatLabel}>Plan</span>
+
+        <div className={s.todayGrid}>
+          <div className={s.todayFocus}>
+            <span className={s.todayKicker}>Current</span>
+            <strong>{nextItem?.label || nextItem?.templateId || "No plan set"}</strong>
+            <span>{nextItem?.rationale || (hasActiveStint ? "Generate today’s plan when you are ready." : "Start a stint to anchor the next 100 days.")}</span>
+          </div>
+
+          <div className={s.todayMetric}>
+            <span className={s.todayKicker}>Plan</span>
             <strong>{counts.done}/{counts.total || 0}</strong>
             <span>{counts.open} open{counts.partial ? ` · ${counts.partial} partial` : ""}</span>
+            <div className={s.todayMeter} aria-hidden="true">
+              <div className={s.todayMeterFill} style={{ width: `${planPercent}%` }} />
+            </div>
           </div>
-          <div className={s.commandStat}>
-            <span className={s.commandStatLabel}>Now</span>
-            <strong>{nextItem?.label || nextItem?.templateId || "No plan"}</strong>
-            <span>{nextItem?.rationale || "Generate a plan or start a stint."}</span>
-          </div>
-          <div className={s.commandStat}>
-            <span className={s.commandStatLabel}>Stint</span>
+
+          <div className={s.todayMetric}>
+            <span className={s.todayKicker}>Goals</span>
             <strong>{activeGoals.length} active</strong>
-            <span>{stintData?.stint ? stintData.stint.title || `Stint ${stintData.stint.index}` : "No active stint"}</span>
+            <span>{stintLabel}</span>
           </div>
-        </div>
-        <div className={s.telegramBox}>
-          <div className={s.telegramBoxTitle}>Telegram commands that still work</div>
-          <div className={s.telegramCommands}>
-            <span>done first plan item</span>
-            <span>logged 90 min Sierra agents</span>
-            <span>move dashboard polish to tomorrow</span>
+
+          <div className={s.telegramRail}>
+            <span className={s.todayKicker}>Telegram</span>
+            <div className={s.telegramCommandList}>
+              <code>done first item</code>
+              <code>log 90m Sierra agents</code>
+              <code>move item 2 tomorrow</code>
+            </div>
           </div>
         </div>
       </section>

@@ -11,6 +11,7 @@ import {
   patchStint,
 } from "../../lib/firestore"
 import { getDateKey, dateKeyToLocalDate } from "../../lib/dates.js"
+import { DEFAULT_STINT_DAYS } from "../../lib/stintConfig.js"
 import s from "../../styles/Stint.module.css"
 import StintReviewForm from "./StintReviewForm"
 
@@ -21,10 +22,28 @@ const GOAL_TYPES = [
   { value: "outcome-leads", label: "Outcome + leads" },
   { value: "deadline-plan", label: "Deadline plan" },
 ]
+const ENFORCEMENT_OPTIONS = [
+  { value: "strict", label: "Strict" },
+  { value: "relaxed", label: "Relaxed" },
+]
 const STATE_LABEL = { active: "Active", paused: "Paused", completed: "Done", abandoned: "Dropped", archived: "Archived" }
 const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
 
 function pct(n) { return Number.isFinite(n) ? `${Math.round(n * 100)}%` : "—" }
+
+function compactNumber(n) {
+  if (!Number.isFinite(Number(n))) return "—"
+  return `${Math.round(Number(n) * 10) / 10}`
+}
+
+function enforcementLabel(goal) {
+  return goal.enforcement === "strict" ? "Strict" : "Relaxed"
+}
+
+function cadenceLabel(goal) {
+  if (!goal.cadence) return goal.enforcement === "strict" ? "Daily" : "Pace"
+  return String(goal.cadence).replace("-", " ")
+}
 
 function fmtRange(start, end) {
   if (!start || !end) return ""
@@ -39,6 +58,11 @@ function dInclusive(a, b) {
   return Math.round((Date.UTC(by, bm - 1, bd) - Date.UTC(ay, am - 1, ad)) / 86400000) + 1
 }
 
+function lengthFromRange(start, end) {
+  const days = dInclusive(start, end)
+  return days > 0 ? days : DEFAULT_STINT_DAYS
+}
+
 // --- Hero (stint header) ---
 
 function StintHero({ stint, today, onReview, onEditIntent, onRestart, onDelete }) {
@@ -51,14 +75,14 @@ function StintHero({ stint, today, onReview, onEditIntent, onRestart, onDelete }
 
   return (
     <div className={s.hero} style={{ "--stint-color": stintColor }}>
-      <div className={s.heroDate}>The Current 75</div>
+      <div className={s.heroDate}>The Current {DEFAULT_STINT_DAYS}</div>
       <div className={s.heroStint}>{stint.title || `Stint ${stint.index}`}</div>
       <div className={s.heroDay}>
         <strong>Day {elapsed}</strong> of {totalDays}
         {remaining > 0 && <> · {remaining} {remaining === 1 ? "day" : "days"} left</>}
       </div>
       <div className={`${s.heroIntent} ${!stint.intent ? s.heroIntentMuted : ""}`}>
-        {stint.intent || "No intent set — write the prompt for these 75 days."}
+        {stint.intent || `No intent set — write the prompt for these ${DEFAULT_STINT_DAYS} days.`}
       </div>
       <div className={s.heroProgress}>
         <div className={s.heroProgressFill} style={{ width: `${pctElapsed}%` }} />
@@ -69,7 +93,7 @@ function StintHero({ stint, today, onReview, onEditIntent, onRestart, onDelete }
       </div>
       <div className={s.heroActions}>
         <button type="button" className={s.actionSecondary} onClick={onEditIntent}>Edit intent</button>
-        <button type="button" className={s.actionSecondary} onClick={onRestart} title="Reset the 75-day window starting today">Restart</button>
+        <button type="button" className={s.actionSecondary} onClick={onRestart} title={`Reset the ${DEFAULT_STINT_DAYS}-day window starting today`}>Restart</button>
         {isAlmostDone && (
           <button type="button" className={s.actionPrimary} onClick={onReview}>Run stint review</button>
         )}
@@ -96,7 +120,7 @@ function IntentEditor({ stint, onSaved, onCancel }) {
   const [title, setTitle] = useState(stint.title || "")
   const [intent, setIntent] = useState(stint.intent || "")
   const [startDate, setStartDate] = useState(stint.startDate || "")
-  const [lengthDays, setLengthDays] = useState(75)
+  const [lengthDays, setLengthDays] = useState(lengthFromRange(stint.startDate, stint.endDate))
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState(null)
 
@@ -104,9 +128,13 @@ function IntentEditor({ stint, onSaved, onCancel }) {
     setSaving(true); setError(null)
     try {
       const patch = { title, intent }
-      if (startDate && startDate !== stint.startDate) {
+      const nextLength = Number(lengthDays) || DEFAULT_STINT_DAYS
+      if (
+        startDate &&
+        (startDate !== stint.startDate || nextLength !== lengthFromRange(stint.startDate, stint.endDate))
+      ) {
         patch.startDate = startDate
-        patch.endDate = addDays(startDate, Number(lengthDays) - 1 || 74)
+        patch.endDate = addDays(startDate, nextLength - 1)
       }
       await patchStint(stint.id, patch)
       onSaved?.()
@@ -118,10 +146,10 @@ function IntentEditor({ stint, onSaved, onCancel }) {
       <div className={s.formGrid}>
         <div className={`${s.field} ${s.fieldWide}`}>
           <label>Stint title</label>
-          <input value={title} onChange={(e) => setTitle(e.target.value)} placeholder="Stint 1 — base + revenue" />
+          <input value={title} onChange={(e) => setTitle(e.target.value)} placeholder="Stint 1 — craft + health" />
         </div>
         <div className={`${s.field} ${s.fieldWide}`}>
-          <label>Intent (one paragraph: what these 75 days are FOR)</label>
+          <label>Intent (one paragraph: what this block is FOR)</label>
           <textarea value={intent} onChange={(e) => setIntent(e.target.value)} placeholder="e.g. Build deep Sierra craft, keep health steady, and ship one compounding personal project." style={{ minHeight: 100 }} />
         </div>
         <div className={s.field}>
@@ -142,14 +170,26 @@ function IntentEditor({ stint, onSaved, onCancel }) {
   )
 }
 
-// --- 75-day tracker row for one goal ---
+// --- Block tracker row for one goal ---
 
 function GoalTrackerRow({ goal, onChange }) {
   const [editing, setEditing] = useState(false)
   const color = goal.color || "#6366f1"
   const days = goal.hits || []
   const state = goal.state || "active"
+  const enforcement = goal.enforcement || "relaxed"
+  const isStrict = enforcement === "strict"
   const isMuted = state === "paused" || state === "abandoned" || state === "completed"
+  const progressLabel = isStrict
+    ? `${goal.currentStreak || 0} day streak`
+    : goal.target
+    ? `${compactNumber(goal.progressValue)} / ${compactNumber(goal.target)} ${goal.unit || ""}`.trim()
+    : pct(goal.hitRate)
+  const metaLabel = isStrict
+    ? `${goal.hitsCount}/${goal.daysElapsed} required days`
+    : goal.pace
+    ? `${goal.pace === "behind" ? "behind pace" : "on pace"} · ${goal.hitsCount}/${goal.daysElapsed} active days`
+    : `${goal.hitsCount}/${goal.daysElapsed} active days`
 
   const transition = async (next) => {
     await patchGoal(goal.id, { state: next })
@@ -172,6 +212,9 @@ function GoalTrackerRow({ goal, onChange }) {
           <div className={s.goalRowTitleText}>
             <div className={s.goalRowTitle}>
               {goal.title}
+              <span className={`${s.goalModeBadge} ${isStrict ? s.goalModeBadgeStrict : s.goalModeBadgeRelaxed}`}>
+                {enforcementLabel(goal)} · {cadenceLabel(goal)}
+              </span>
               {state !== "active" && (
                 <span className={s.goalRowStateBadge}>{STATE_LABEL[state]}</span>
               )}
@@ -180,20 +223,20 @@ function GoalTrackerRow({ goal, onChange }) {
           </div>
         </div>
         <div className={s.goalRowStats}>
-          <div className={s.goalRowHitRate} style={{ color }}>{pct(goal.hitRate)}</div>
-          <div className={s.goalRowHitMeta}>{goal.hitsCount}/{goal.daysElapsed} days</div>
+          <div className={s.goalRowHitRate} style={{ color }}>{progressLabel}</div>
+          <div className={s.goalRowHitMeta}>{metaLabel}</div>
         </div>
       </div>
 
-      <div className={s.goalRowTracker} style={{ gridTemplateColumns: `repeat(${days.length || 75}, 1fr)` }}>
+      <div className={s.goalRowTracker} style={{ gridTemplateColumns: `repeat(${days.length || DEFAULT_STINT_DAYS}, 1fr)` }}>
         {days.map((d) => {
           const isToday = d.date === (new Date()).toISOString().slice(0, 10) // crude; safe for "is right now"
           return (
             <div
               key={d.date}
-              className={`${s.trackerCell} ${isToday ? s.trackerCellToday : ""}`}
+              className={`${s.trackerCell} ${isStrict && d.required !== false && d.date <= (new Date()).toISOString().slice(0, 10) && !d.hit ? s.trackerCellMiss : ""} ${isToday ? s.trackerCellToday : ""}`}
               style={d.hit ? { background: color } : undefined}
-              title={`${d.date} — ${d.hit ? "hit" : "miss"}`}
+              title={`${d.date} — ${d.hit ? "hit" : isStrict && d.required !== false ? "miss" : "not required"}`}
             />
           )
         })}
@@ -226,6 +269,8 @@ function GoalEditForm({ goal, onSaved, onCancel }) {
     icon: goal.icon || "🎯",
     color: goal.color || DEFAULT_COLORS[0],
     type: goal.type || "process-cadence",
+    enforcement: goal.enforcement || "relaxed",
+    cadence: goal.cadence || "",
     floor: goal.floor ?? "",
     target: goal.target ?? "",
     unit: goal.unit || "",
@@ -243,6 +288,8 @@ function GoalEditForm({ goal, onSaved, onCancel }) {
         icon: values.icon,
         color: values.color,
         type: values.type,
+        enforcement: values.enforcement,
+        cadence: values.cadence || null,
         floor: values.floor === "" ? null : Number(values.floor),
         target: values.target === "" ? null : Number(values.target),
         unit: values.unit || null,
@@ -286,6 +333,21 @@ function GoalEditForm({ goal, onSaved, onCancel }) {
           </select>
         </div>
         <div className={s.field}>
+          <label>Mode</label>
+          <select value={values.enforcement} onChange={(e) => setValues({ ...values, enforcement: e.target.value })}>
+            {ENFORCEMENT_OPTIONS.map((t) => <option key={t.value} value={t.value}>{t.label}</option>)}
+          </select>
+        </div>
+        <div className={s.field}>
+          <label>Cadence</label>
+          <select value={values.cadence} onChange={(e) => setValues({ ...values, cadence: e.target.value })}>
+            <option value="">Default</option>
+            <option value="daily">Daily</option>
+            <option value="weekdays">Weekdays</option>
+            <option value="weekly">Weekly</option>
+          </select>
+        </div>
+        <div className={s.field}>
           <label>Floor</label>
           <input type="number" value={values.floor} onChange={(e) => setValues({ ...values, floor: e.target.value })} />
         </div>
@@ -319,6 +381,8 @@ function NewGoalForm({ used, onCreated, onCancel }) {
   const [title, setTitle] = useState("")
   const [why, setWhy] = useState("")
   const [type, setType] = useState("process-cadence")
+  const [enforcement, setEnforcement] = useState("relaxed")
+  const [cadence, setCadence] = useState("")
   const [icon, setIcon] = useState("🎯")
   const [color, setColor] = useState(DEFAULT_COLORS.find((c) => !used.includes(c)) || DEFAULT_COLORS[0])
   const [floor, setFloor] = useState("")
@@ -334,8 +398,9 @@ function NewGoalForm({ used, onCreated, onCancel }) {
     try {
       const payload = {
         title: title.trim(),
-        type, icon, color,
+        type, enforcement, icon, color,
         why: why.trim() || undefined,
+        cadence: cadence || undefined,
         floor: floor === "" ? undefined : Number(floor),
         target: target === "" ? undefined : Number(target),
         unit: unit || undefined,
@@ -378,6 +443,21 @@ function NewGoalForm({ used, onCreated, onCancel }) {
           <label>Type</label>
           <select value={type} onChange={(e) => setType(e.target.value)}>
             {GOAL_TYPES.map((t) => <option key={t.value} value={t.value}>{t.label}</option>)}
+          </select>
+        </div>
+        <div className={s.field}>
+          <label>Mode</label>
+          <select value={enforcement} onChange={(e) => setEnforcement(e.target.value)}>
+            {ENFORCEMENT_OPTIONS.map((t) => <option key={t.value} value={t.value}>{t.label}</option>)}
+          </select>
+        </div>
+        <div className={s.field}>
+          <label>Cadence</label>
+          <select value={cadence} onChange={(e) => setCadence(e.target.value)}>
+            <option value="">Default</option>
+            <option value="daily">Daily</option>
+            <option value="weekdays">Weekdays</option>
+            <option value="weekly">Weekly</option>
           </select>
         </div>
         <div className={s.field}>
@@ -424,7 +504,7 @@ function BootstrapPanel({ onBooted }) {
   return (
     <div className={s.bootstrap}>
       <div className={s.bootstrapTitle}>Start your first stint</div>
-      <div className={s.bootstrapBody}>A stint is a 75-day block. Write the intent — what these days are FOR. Your goals are tracked across the window.</div>
+      <div className={s.bootstrapBody}>A stint is a {DEFAULT_STINT_DAYS}-day block. Write the intent — what these days are FOR. Your goals are tracked across the window.</div>
       <div className={s.form} style={{ background: "transparent", border: "none", padding: 0, marginBottom: "1rem" }}>
         <div className={s.formGrid}>
           <div className={`${s.field} ${s.fieldWide}`}>
@@ -460,7 +540,7 @@ function StartNextStintPanel({ onCreated }) {
   return (
     <div className={s.bootstrap}>
       <div className={s.bootstrapTitle}>Start the next stint</div>
-      <div className={s.bootstrapBody}>The last 75 just ended. Write the intent for the next block.</div>
+      <div className={s.bootstrapBody}>The last {DEFAULT_STINT_DAYS} just ended. Write the intent for the next block.</div>
       <div className={s.form} style={{ background: "transparent", border: "none", padding: 0, marginBottom: "1rem" }}>
         <div className={s.formGrid}>
           <div className={`${s.field} ${s.fieldWide}`}>
@@ -469,7 +549,7 @@ function StartNextStintPanel({ onCreated }) {
           </div>
         </div>
       </div>
-      <button type="button" className={s.actionPrimary} onClick={start} disabled={busy}>{busy ? "Starting…" : "Start the next 75"}</button>
+      <button type="button" className={s.actionPrimary} onClick={start} disabled={busy}>{busy ? "Starting…" : `Start the next ${DEFAULT_STINT_DAYS}`}</button>
       {error && <div className={s.errorText} style={{ marginTop: "0.6rem" }}>{error}</div>}
       <div style={{ marginTop: "1.25rem", fontSize: "0.8rem", color: "var(--text-faint)" }}>
         <Link href="/dashboard/stints"><a className={s.linkSubtle}>View past stints &rarr;</a></Link>
@@ -528,8 +608,8 @@ export default function StintBoard({ onChange }) {
           onReview={() => setReviewing((v) => !v)}
           onEditIntent={() => setEditingIntent(true)}
           onRestart={async () => {
-            if (!confirm("Restart this stint from today? The 75-day window resets to begin now.")) return
-            await patchStint(stint.id, { startDate: today, endDate: addDays(today, 74) })
+            if (!confirm(`Restart this stint from today? The ${DEFAULT_STINT_DAYS}-day window resets to begin now.`)) return
+            await patchStint(stint.id, { startDate: today, endDate: addDays(today, DEFAULT_STINT_DAYS - 1) })
             load()
           }}
           onDelete={async () => {

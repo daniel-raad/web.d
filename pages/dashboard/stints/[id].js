@@ -5,6 +5,7 @@ import { useCallback, useEffect, useState } from "react"
 import Header from "../../../components/Header"
 import { getStint, patchStint } from "../../../lib/firestore"
 import { getDateKey, dateKeyToLocalDate } from "../../../lib/dates.js"
+import { DEFAULT_STINT_DAYS } from "../../../lib/stintConfig.js"
 import StintReviewForm from "../../../components/Dashboard/StintReviewForm"
 import s from "../../../styles/Stint.module.css"
 
@@ -34,11 +35,11 @@ function StintEditForm({ stint, onSaved, onCancel }) {
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState(null)
 
-  // If only startDate changes, recompute endDate as start+74 (75-day window)
+  // If only startDate changes, recompute endDate for the default stint window.
   const onStartChange = (e) => {
     const next = e.target.value
     setStartDate(next)
-    if (next) setEndDate(addDays(next, 74))
+    if (next) setEndDate(addDays(next, DEFAULT_STINT_DAYS - 1))
   }
 
   const save = async () => {
@@ -61,7 +62,7 @@ function StintEditForm({ stint, onSaved, onCancel }) {
       <div className={s.formGrid}>
         <div className={`${s.field} ${s.fieldWide}`}>
           <label>Name</label>
-          <input value={title} onChange={(e) => setTitle(e.target.value)} placeholder="e.g. Stint 1 — base + revenue" />
+          <input value={title} onChange={(e) => setTitle(e.target.value)} placeholder="e.g. Stint 1 — craft + health" />
         </div>
         <div className={`${s.field} ${s.fieldWide}`}>
           <label>Intent</label>

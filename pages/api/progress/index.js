@@ -96,9 +96,9 @@ export default async function handler(req, res) {
       byDate.get(inst.date).push(inst)
     }
 
-    // For goals with multiple lead-measure templates (Ironman: swim/bike/run/
-    // strength), compute per-template hit arrays so the UI can show each
-    // discipline separately AND grade the roll-up cell by how many hit.
+    // For goals with multiple lead-measure templates, compute per-template hit
+    // arrays so the UI can show each stream separately and grade the roll-up
+    // cell by how many hit.
     const leadTemplates = Array.isArray(goal.leadMeasureTemplates)
       ? goal.leadMeasureTemplates
       : []

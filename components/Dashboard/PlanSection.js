@@ -531,6 +531,9 @@ export default function PlanSection({ date, initialPlan, onChange, goalsById, en
                     {item.label || item.templateId}
                   </span>
                   {range && <span className={styles.planItemRange}>{range}</span>}
+                  {gMap && item.goalId && gMap.get(item.goalId)?.enforcement === "strict" && (
+                    <span className={styles.planItemStrictBadge}>Required today</span>
+                  )}
                 </div>
                 <div className={styles.planItemStatusBtns}>
                   {STATUS_OPTIONS.map((s) => (

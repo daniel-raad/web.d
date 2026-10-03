@@ -761,6 +761,18 @@
   letter-spacing: 0.02em;
 }
 
+.planItemStrictBadge {
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #fca5a5;
+  background: rgba(239,68,68,0.12);
+  border: 1px solid rgba(239,68,68,0.22);
+  border-radius: 999px;
+  padding: 0.1rem 0.4rem;
+}
+
 .planItemStatusBtns {
   display: flex;
   gap: 0.25rem;
