@@ -30,7 +30,7 @@ export default function StintReviewForm({ stint, onSaved, onCancel }) {
   return (
     <div>
       <div className={s.sectionTitle} style={{ marginBottom: "1rem" }}>
-        Stint {stint.index} review · {stint.startDate} → {stint.endDate}
+        Block {stint.index} review · {stint.startDate} → {stint.endDate}
       </div>
       <div className={s.formGrid}>
         <div className={s.field}>
@@ -57,7 +57,7 @@ export default function StintReviewForm({ stint, onSaved, onCancel }) {
           <textarea value={misses} onChange={(e) => setMisses(e.target.value)} />
         </div>
         <div className={`${s.field} ${s.fieldWide}`}>
-          <label>The one shift for next stint</label>
+          <label>The one shift for next block</label>
           <input value={nextFocus} onChange={(e) => setNextFocus(e.target.value)} />
         </div>
         <div className={`${s.field} ${s.fieldWide}`}>

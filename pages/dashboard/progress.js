@@ -187,7 +187,7 @@ export default function ProgressPage() {
 
         <nav className={s.topNav}>
           <Link href="/dashboard"><a className={s.topNavLink}>Today</a></Link>
-          <Link href="/dashboard/stints"><a className={s.topNavLink}>Stints</a></Link>
+          <Link href="/dashboard/stints"><a className={s.topNavLink}>Blocks</a></Link>
           <Link href="/dashboard/progress"><a className={s.topNavLinkActive}>Trend</a></Link>
         </nav>
 
@@ -207,9 +207,9 @@ export default function ProgressPage() {
 
         {!loading && view === "github" && (
           <section className={s.section}>
-            <div className={s.sectionTitle}>Per-goal cadence · current stint window</div>
+            <div className={s.sectionTitle}>Per-goal cadence · current block</div>
             {goals.length === 0 ? (
-              <div className={s.bootstrap}>No active stint or no goals tracked yet.</div>
+              <div className={s.bootstrap}>No active block or goals tracked yet.</div>
             ) : (
               <GithubGoals goals={goals} today={today} />
             )}

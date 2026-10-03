@@ -19,6 +19,19 @@ function fmt(d) {
 
 function pct(n) { return Number.isFinite(n) ? `${Math.round(n * 100)}%` : "—" }
 
+function displayBlockTitle(stint) {
+  const fallback = `Block ${stint.index}`
+  return (stint.title || fallback)
+    .replace(/\bStint\b/g, "Block")
+    .replace(/\b75\b/g, String(DEFAULT_STINT_DAYS))
+}
+
+function displayBlockIntent(intent) {
+  if (!intent) return ""
+  if (/ironman|conversify|palantir|physicsx/i.test(intent)) return ""
+  return intent.replace(/\b75\b/g, String(DEFAULT_STINT_DAYS))
+}
+
 // Add N days to a YYYY-MM-DD key (UTC math to avoid TZ drift).
 function addDays(key, days) {
   const [y, m, d] = key.split("-").map(Number)
@@ -62,7 +75,7 @@ function StintEditForm({ stint, onSaved, onCancel }) {
       <div className={s.formGrid}>
         <div className={`${s.field} ${s.fieldWide}`}>
           <label>Name</label>
-          <input value={title} onChange={(e) => setTitle(e.target.value)} placeholder="e.g. Stint 1 — craft + health" />
+          <input value={title} onChange={(e) => setTitle(e.target.value)} placeholder="e.g. Block 1 — craft + health" />
         </div>
         <div className={`${s.field} ${s.fieldWide}`}>
           <label>Intent</label>
@@ -121,29 +134,31 @@ export default function StintDetailPage() {
 
   const stintColor = "#6366f1"
   const goals = stint.goals || []
+  const blockTitle = displayBlockTitle(stint)
+  const blockIntent = displayBlockIntent(stint.intent)
 
   return (
     <div>
-      <Head><title>{stint.title} - Daniel Raad</title></Head>
+      <Head><title>{blockTitle} - Daniel Raad</title></Head>
       <Header compact />
       <style jsx global>{`.fixed.bottom-0 { display: none; }`}</style>
       <div className={s.page}>
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", marginBottom: "0.85rem" }}>
-          <div className={s.heroDate}>Stint detail</div>
+          <div className={s.heroDate}>Block detail</div>
           <Link href="/dashboard"><a className={s.linkSubtle}>&larr; Dashboard</a></Link>
         </div>
 
         <nav className={s.topNav}>
           <Link href="/dashboard"><a className={s.topNavLink}>Today</a></Link>
-          <Link href="/dashboard/stints"><a className={s.topNavLinkActive}>Stints</a></Link>
+          <Link href="/dashboard/stints"><a className={s.topNavLinkActive}>Blocks</a></Link>
           <Link href="/dashboard/progress"><a className={s.topNavLink}>Trend</a></Link>
         </nav>
 
         <div className={s.hero} style={{ "--stint-color": stintColor }}>
           <div className={s.heroDate}>{stint.state}</div>
-          <div className={s.heroStint}>{stint.title || `Stint ${stint.index}`}</div>
+          <div className={s.heroStint}>{blockTitle}</div>
           <div className={s.heroDay}>{fmt(stint.startDate)} → {fmt(stint.endDate)}</div>
-          {stint.intent && <div className={s.heroIntent}>{stint.intent}</div>}
+          {blockIntent && <div className={s.heroIntent}>{blockIntent}</div>}
 
           <div className={s.heroActions}>
             <button type="button" className={s.actionSecondary} onClick={() => setEditing((v) => !v)}>

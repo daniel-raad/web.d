@@ -63,6 +63,19 @@ function lengthFromRange(start, end) {
   return days > 0 ? days : DEFAULT_STINT_DAYS
 }
 
+function displayStintTitle(stint) {
+  const fallback = `Block ${stint.index}`
+  return (stint.title || fallback)
+    .replace(/\bStint\b/g, "Block")
+    .replace(/\b75\b/g, String(DEFAULT_STINT_DAYS))
+}
+
+function displayStintIntent(intent) {
+  if (!intent) return ""
+  if (/ironman|conversify|palantir|physicsx/i.test(intent)) return ""
+  return intent.replace(/\b75\b/g, String(DEFAULT_STINT_DAYS))
+}
+
 // --- Hero (stint header) ---
 
 function StintHero({ stint, today, onReview, onEditIntent, onRestart, onDelete }) {
@@ -72,17 +85,18 @@ function StintHero({ stint, today, onReview, onEditIntent, onRestart, onDelete }
   const pctElapsed = totalDays > 0 ? Math.round((elapsed / totalDays) * 100) : 0
   const stintColor = "#6366f1"
   const isAlmostDone = remaining <= 7
+  const intent = displayStintIntent(stint.intent)
 
   return (
     <div className={s.hero} style={{ "--stint-color": stintColor }}>
       <div className={s.heroDate}>The Current {DEFAULT_STINT_DAYS}</div>
-      <div className={s.heroStint}>{stint.title || `Stint ${stint.index}`}</div>
+      <div className={s.heroStint}>{displayStintTitle(stint)}</div>
       <div className={s.heroDay}>
         <strong>Day {elapsed}</strong> of {totalDays}
         {remaining > 0 && <> · {remaining} {remaining === 1 ? "day" : "days"} left</>}
       </div>
-      <div className={`${s.heroIntent} ${!stint.intent ? s.heroIntentMuted : ""}`}>
-        {stint.intent || `No intent set — write the prompt for these ${DEFAULT_STINT_DAYS} days.`}
+      <div className={`${s.heroIntent} ${!intent ? s.heroIntentMuted : ""}`}>
+        {intent || `No intent set — write the prompt for these ${DEFAULT_STINT_DAYS} days.`}
       </div>
       <div className={s.heroProgress}>
         <div className={s.heroProgressFill} style={{ width: `${pctElapsed}%` }} />
@@ -95,9 +109,9 @@ function StintHero({ stint, today, onReview, onEditIntent, onRestart, onDelete }
         <button type="button" className={s.actionSecondary} onClick={onEditIntent}>Edit intent</button>
         <button type="button" className={s.actionSecondary} onClick={onRestart} title={`Reset the ${DEFAULT_STINT_DAYS}-day window starting today`}>Restart</button>
         {isAlmostDone && (
-          <button type="button" className={s.actionPrimary} onClick={onReview}>Run stint review</button>
+          <button type="button" className={s.actionPrimary} onClick={onReview}>Run block review</button>
         )}
-        <button type="button" className={s.actionSecondary} onClick={onDelete} title="Delete this stint" style={{ marginLeft: "auto", opacity: 0.7 }}>Delete</button>
+        <button type="button" className={s.actionSecondary} onClick={onDelete} title="Delete this block" style={{ marginLeft: "auto", opacity: 0.7 }}>Delete</button>
       </div>
     </div>
   )
@@ -499,26 +513,40 @@ function BootstrapPanel({ onBooted }) {
     try {
       await bootstrapCurrentStint({ intent: intent.trim() || undefined })
       onBooted?.()
-    } catch (e) { setError(e.message || "Failed to start stint") } finally { setBusy(false) }
+    } catch (e) { setError(e.message || "Failed to start block") } finally { setBusy(false) }
   }
   return (
     <div className={s.bootstrap}>
-      <div className={s.bootstrapTitle}>Start your first stint</div>
-      <div className={s.bootstrapBody}>A stint is a {DEFAULT_STINT_DAYS}-day block. Write the intent — what these days are FOR. Your goals are tracked across the window.</div>
+      <div className={s.bootstrapTitle}>Start a {DEFAULT_STINT_DAYS}-day block</div>
+      <div className={s.bootstrapBody}>One block sets the direction. Goals track what matters across the block. Daily tasks come from those goals.</div>
+      <div className={s.bootstrapModel}>
+        <div>
+          <strong>Block</strong>
+          <span>{DEFAULT_STINT_DAYS}-day direction</span>
+        </div>
+        <div>
+          <strong>Goals</strong>
+          <span>Outcomes or habits</span>
+        </div>
+        <div>
+          <strong>Tasks</strong>
+          <span>Today&apos;s work</span>
+        </div>
+      </div>
       <div className={s.form} style={{ background: "transparent", border: "none", padding: 0, marginBottom: "1rem" }}>
         <div className={s.formGrid}>
           <div className={`${s.field} ${s.fieldWide}`}>
-            <label>Intent (the prompt for the block)</label>
-            <textarea value={intent} onChange={(e) => setIntent(e.target.value)} placeholder="e.g. Build deep Sierra craft, keep health steady, and ship one compounding personal project." />
+            <label>Block direction</label>
+            <textarea value={intent} onChange={(e) => setIntent(e.target.value)} placeholder="e.g. Become excellent at Sierra agent engineering, keep health steady, and ship one compounding personal project." />
           </div>
         </div>
       </div>
-      <div className={s.heroActions} style={{ justifyContent: "center" }}>
-        <button type="button" className={s.actionPrimary} onClick={start} disabled={busy}>{busy ? "Starting…" : "Start the stint"}</button>
+      <div className={s.heroActions}>
+        <button type="button" className={s.actionPrimary} onClick={start} disabled={busy}>{busy ? "Starting…" : "Start block"}</button>
       </div>
-      {error && <div className={s.errorText} style={{ marginTop: "0.6rem", textAlign: "center" }}>{error}</div>}
+      {error && <div className={s.errorText} style={{ marginTop: "0.6rem" }}>{error}</div>}
       <div style={{ marginTop: "1.25rem", fontSize: "0.8rem", color: "var(--text-faint)" }}>
-        <Link href="/dashboard/stints"><a className={s.linkSubtle}>View past stints &rarr;</a></Link>
+        <Link href="/dashboard/stints"><a className={s.linkSubtle}>View past blocks &rarr;</a></Link>
       </div>
     </div>
   )
@@ -539,7 +567,7 @@ function StartNextStintPanel({ onCreated }) {
   }
   return (
     <div className={s.bootstrap}>
-      <div className={s.bootstrapTitle}>Start the next stint</div>
+      <div className={s.bootstrapTitle}>Start the next block</div>
       <div className={s.bootstrapBody}>The last {DEFAULT_STINT_DAYS} just ended. Write the intent for the next block.</div>
       <div className={s.form} style={{ background: "transparent", border: "none", padding: 0, marginBottom: "1rem" }}>
         <div className={s.formGrid}>
@@ -549,10 +577,10 @@ function StartNextStintPanel({ onCreated }) {
           </div>
         </div>
       </div>
-      <button type="button" className={s.actionPrimary} onClick={start} disabled={busy}>{busy ? "Starting…" : `Start the next ${DEFAULT_STINT_DAYS}`}</button>
+      <button type="button" className={s.actionPrimary} onClick={start} disabled={busy}>{busy ? "Starting…" : `Start next block`}</button>
       {error && <div className={s.errorText} style={{ marginTop: "0.6rem" }}>{error}</div>}
       <div style={{ marginTop: "1.25rem", fontSize: "0.8rem", color: "var(--text-faint)" }}>
-        <Link href="/dashboard/stints"><a className={s.linkSubtle}>View past stints &rarr;</a></Link>
+        <Link href="/dashboard/stints"><a className={s.linkSubtle}>View past blocks &rarr;</a></Link>
       </div>
     </div>
   )
@@ -608,12 +636,12 @@ export default function StintBoard({ onChange }) {
           onReview={() => setReviewing((v) => !v)}
           onEditIntent={() => setEditingIntent(true)}
           onRestart={async () => {
-            if (!confirm(`Restart this stint from today? The ${DEFAULT_STINT_DAYS}-day window resets to begin now.`)) return
+            if (!confirm(`Restart this block from today? The ${DEFAULT_STINT_DAYS}-day window resets to begin now.`)) return
             await patchStint(stint.id, { startDate: today, endDate: addDays(today, DEFAULT_STINT_DAYS - 1) })
             load()
           }}
           onDelete={async () => {
-            if (!confirm("Delete this stint? It will be archived (goals + plans stay).")) return
+            if (!confirm("Delete this block? It will be archived. Goals and tasks stay.")) return
             await archiveStint(stint.id)
             load()
           }}

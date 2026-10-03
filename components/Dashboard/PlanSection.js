@@ -400,11 +400,11 @@ export default function PlanSection({ date, initialPlan, onChange, goalsById, en
     return (
       <section className={styles.hubSection}>
         <div className={styles.hubSectionHeader}>
-          <span className={styles.hubSectionTitle}>Today&apos;s plan</span>
+          <span className={styles.hubSectionTitle}>Today&apos;s tasks</span>
         </div>
         <div className={styles.hubEmpty}>
-          No plan written yet. Tonight&apos;s 9pm check-in writes tomorrow&apos;s — or
-          generate one now.
+          No tasks scheduled yet. Tonight&apos;s 9pm check-in writes tomorrow&apos;s list, or
+          generate it now.
         </div>
         <div className={styles.planGenerateRow}>
           <button
@@ -413,7 +413,7 @@ export default function PlanSection({ date, initialPlan, onChange, goalsById, en
             onClick={handleGenerate}
             disabled={generating}
           >
-            {generating ? "Generating…" : "Generate plan"}
+            {generating ? "Generating…" : "Generate tasks"}
           </button>
           {generateError && (
             <span className={styles.planGenerateError}>{generateError}</span>
@@ -426,7 +426,7 @@ export default function PlanSection({ date, initialPlan, onChange, goalsById, en
   const items = plan.items || []
   const doneCount = items.filter((i) => i.status === "done").length
 
-  // Group plan items by goal so we can render a "Today serves: A · B"
+  // Group today's task items by goal so we can render a "Today serves: A · B"
   // focus line under the plan header.
   const focusGroups = []
   if (gMap) {
@@ -447,7 +447,7 @@ export default function PlanSection({ date, initialPlan, onChange, goalsById, en
     <section className={styles.hubSection}>
       <div className={styles.hubSectionHeader}>
         <span className={styles.hubSectionTitle}>
-          Today&apos;s plan
+          Today&apos;s tasks
           <span className={styles.hubSectionCount}>
             {doneCount}/{items.length}
           </span>
@@ -464,7 +464,7 @@ export default function PlanSection({ date, initialPlan, onChange, goalsById, en
             className={styles.planRegenerateBtn}
             onClick={handleGenerate}
             disabled={generating}
-            title="Regenerate today's plan"
+            title="Regenerate today's tasks"
           >
             {generating ? "Regenerating…" : "Regenerate"}
           </button>

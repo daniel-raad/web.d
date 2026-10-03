@@ -9,6 +9,7 @@ import {
 } from "../../lib/firestore"
 import { getIdToken } from "../../lib/AuthContext"
 import { dateKeyToLocalDate, getDateKey } from "../../lib/dates.js"
+import { DEFAULT_STINT_DAYS } from "../../lib/stintConfig.js"
 import StintBoard from "./StintBoard"
 import PlanSection from "./PlanSection"
 import s from "../../styles/Stint.module.css"
@@ -30,6 +31,13 @@ function planCounts(plan) {
 function currentPlanItem(plan) {
   const items = plan?.items || []
   return items.find((i) => !["done", "skipped"].includes(i.status)) || items[0] || null
+}
+
+function displayStintTitle(stint) {
+  const fallback = `Block ${stint.index}`
+  return (stint.title || fallback)
+    .replace(/\bStint\b/g, "Block")
+    .replace(/\b75\b/g, String(DEFAULT_STINT_DAYS))
 }
 
 export default function TodayHub() {
@@ -133,62 +141,56 @@ export default function TodayHub() {
   const activeGoals = goals.filter((g) => (g.state || "active") === "active")
   const counts = planCounts(plan)
   const nextItem = currentPlanItem(plan)
+  const hasPlanItems = counts.total > 0
   const planPercent = counts.total ? Math.round((counts.done / counts.total) * 100) : 0
   const stintLabel = stintData?.stint
-    ? stintData.stint.title || `Stint ${stintData.stint.index}`
+    ? displayStintTitle(stintData.stint)
     : "No active stint"
 
   return (
     <div className={s.page}>
       <nav className={s.topNav}>
         <Link href="/dashboard"><a className={s.topNavLinkActive}>Today</a></Link>
-        <Link href="/dashboard/stints"><a className={s.topNavLink}>Stints</a></Link>
+        <Link href="/dashboard/stints"><a className={s.topNavLink}>Blocks</a></Link>
         <Link href="/dashboard/progress"><a className={s.topNavLink}>Trend</a></Link>
       </nav>
 
-      <section className={s.todayPanel}>
-        <div className={s.todayHeader}>
-          <div>
-            <div className={s.sectionTitle}>Today</div>
-            <h1 className={s.todayTitle}>{dateLabel}</h1>
-          </div>
-          <div className={hasActiveStint ? s.todayStatus : `${s.todayStatus} ${s.todayStatusMuted}`}>
-            {hasActiveStint ? "Stint active" : "No stint"}
-          </div>
-        </div>
-
-        <div className={s.todayGrid}>
-          <div className={s.todayFocus}>
-            <span className={s.todayKicker}>Current</span>
-            <strong>{nextItem?.label || nextItem?.templateId || "No plan set"}</strong>
-            <span>{nextItem?.rationale || (hasActiveStint ? "Generate today’s plan when you are ready." : "Start a stint to anchor the next 100 days.")}</span>
+      {hasActiveStint && (
+        <section className={s.todayPanel}>
+          <div className={s.todayHeader}>
+            <div>
+              <div className={s.sectionTitle}>Today</div>
+              <h1 className={s.todayTitle}>{dateLabel}</h1>
+            </div>
+            <div className={s.todayStatus}>Block active</div>
           </div>
 
-          <div className={s.todayMetric}>
-            <span className={s.todayKicker}>Plan</span>
-            <strong>{counts.done}/{counts.total || 0}</strong>
-            <span>{counts.open} open{counts.partial ? ` · ${counts.partial} partial` : ""}</span>
-            <div className={s.todayMeter} aria-hidden="true">
-              <div className={s.todayMeterFill} style={{ width: `${planPercent}%` }} />
+          <div className={s.todayGrid}>
+            <div className={s.todayFocus}>
+              <span className={s.todayKicker}>Current</span>
+              <strong>{nextItem?.label || nextItem?.templateId || "Nothing queued"}</strong>
+              <span>{nextItem?.rationale || "Generate today’s tasks when you are ready."}</span>
+            </div>
+
+            <div className={s.todayMetric}>
+              <span className={s.todayKicker}>Tasks</span>
+              <strong>{hasPlanItems ? `${counts.done}/${counts.total}` : "No tasks"}</strong>
+              <span>{hasPlanItems ? `${counts.open} open${counts.partial ? ` · ${counts.partial} partial` : ""}` : "No tasks scheduled today."}</span>
+              {hasPlanItems && (
+                <div className={s.todayMeter} aria-hidden="true">
+                  <div className={s.todayMeterFill} style={{ width: `${planPercent}%` }} />
+                </div>
+              )}
+            </div>
+
+            <div className={s.todayMetric}>
+              <span className={s.todayKicker}>Goals</span>
+              <strong>{activeGoals.length} active</strong>
+              <span>{stintLabel}</span>
             </div>
           </div>
-
-          <div className={s.todayMetric}>
-            <span className={s.todayKicker}>Goals</span>
-            <strong>{activeGoals.length} active</strong>
-            <span>{stintLabel}</span>
-          </div>
-
-          <div className={s.telegramRail}>
-            <span className={s.todayKicker}>Telegram</span>
-            <div className={s.telegramCommandList}>
-              <code>done first item</code>
-              <code>log 90m Sierra agents</code>
-              <code>move item 2 tomorrow</code>
-            </div>
-          </div>
-        </div>
-      </section>
+        </section>
+      )}
 
       {/* Plan only makes sense within a stint — outside, hide it. */}
       {hasActiveStint && (
@@ -208,7 +210,7 @@ export default function TodayHub() {
       <StintBoard onChange={loadAll} />
 
       {/* Today's log — collapsed by default. Click to expand. */}
-      <section className={s.section}>
+      {hasActiveStint && <section className={s.section}>
         <button
           type="button"
           className={s.linkSubtle}
@@ -256,7 +258,7 @@ export default function TodayHub() {
             </div>
           </div>
         )}
-      </section>
+      </section>}
 
     </div>
   )

@@ -81,7 +81,7 @@ export default function GoalDetailPage() {
 
         <nav className={s.topNav}>
           <Link href="/dashboard"><a className={s.topNavLinkActive}>Today</a></Link>
-          <Link href="/dashboard/stints"><a className={s.topNavLink}>Stints</a></Link>
+          <Link href="/dashboard/stints"><a className={s.topNavLink}>Blocks</a></Link>
           <Link href="/dashboard/progress"><a className={s.topNavLink}>Trend</a></Link>
         </nav>
 
