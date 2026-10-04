@@ -1,5 +1,38 @@
 export const projects = [
   {
+    title: 'Conversify',
+    excerpt: "AI-powered WhatsApp marketing platform for restaurants. Customers earn loyalty points, redeem offers, and interact via intelligent AI conversations. Features campaign scheduling, a digital web wallet, QR code onboarding, and multi-restaurant support. Built end-to-end as co-founder, from architecture to deployment.",
+    badges: [
+      { label: 'Complete', color: '#10B981' },
+      { label: 'Meta Tech Provider', color: '#0081FB' },
+      { label: 'Google for Startups', color: '#34A853' },
+    ],
+    tags: ['Next.js', 'Express.js', 'TypeScript', 'Go', 'Supabase', 'WhatsApp API', 'AI'],
+    featuredImage: {
+      url: "/conversify.png"
+    },
+    author: {
+      name: 'Daniel Raad',
+      photo: {
+          url: '/astro.png'
+      },
+    },
+    createdAt: "November, 2025",
+    source: 'https://github.com/daniel-raad/conversify',
+    visit: 'https://conversify.uk/',
+    id: 5,
+    featured: true,
+    experiments: [
+      {
+        title: 'Conversational Flow DSL',
+        description: 'A graph-based journey DSL for defining WhatsApp conversation flows. Three layers: a fluent TypeScript builder that compiles to nodes and edges, a plugin system for messages, AI classification, scheduling, and business logic, and a runtime engine that executes the graph.',
+        tags: ['TypeScript', 'DSL', 'graph engine', 'WhatsApp'],
+        image: '/DSL.png',
+        status: 'complete',
+      },
+    ],
+  },
+  {
     title: 'OVA gym',
     excerpt: "Cross-platform mobile fitness app with a Python backend. Built with React Native for iOS and Android, backed by a Python API and PostgreSQL database.",
     tags: ['React-Native', 'Python', 'Azure', 'PostgreSQL'],
