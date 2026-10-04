@@ -9,7 +9,7 @@ export default function Description(){
             <div className={styles.card}>
                 <h2 className={styles.sectionHeader}>About</h2>
                 <div className={styles.bioText}>
-                    <p>Building products end-to-end. Agent Engineer at <a href="https://sierra.ai" target="_blank" rel="noopener noreferrer">Sierra</a>.</p>
+                    <p>Agent Engineer at <a href="https://sierra.ai" target="_blank" rel="noopener noreferrer">Sierra</a>.</p>
                 </div>
             </div>
 
