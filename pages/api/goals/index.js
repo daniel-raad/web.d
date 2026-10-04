@@ -5,6 +5,7 @@ import {
   DEFAULT_GOAL_ICONS,
   GOAL_ENFORCEMENTS,
   GOAL_STATES,
+  getCurrentStint,
   slugifyTitle,
   withGoalDisplayDefaults,
 } from "../../../lib/stints"
@@ -18,7 +19,7 @@ const ALLOWED = [
   "target", "floor", "unit", "cadence", "deadline", "enforcement",
   "primaryPrimitive", "weeklyTargets", "leadMeasures",
   "leadMeasureTemplates", "window", "context",
-  "state",
+  "state", "stintId",
 ]
 
 export default async function handler(req, res) {
@@ -47,9 +48,11 @@ export default async function handler(req, res) {
     if (existing.exists) return res.status(409).json({ error: `Goal "${id}" already exists` })
 
     const total = (await adminDb.collection("goals").get()).size
+    const currentStint = body.stintId ? null : await getCurrentStint(getDateKey())
     const doc = {
       status: "active",
       state: body.state && GOAL_STATES.includes(body.state) ? body.state : "active",
+      stintId: body.stintId || currentStint?.id || null,
       priority: typeof body.priority === "number" ? body.priority : total + 1,
       color: body.color || DEFAULT_GOAL_COLORS[total % DEFAULT_GOAL_COLORS.length],
       icon: body.icon || DEFAULT_GOAL_ICONS[total % DEFAULT_GOAL_ICONS.length],

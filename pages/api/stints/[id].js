@@ -20,7 +20,9 @@ async function loadOne(id) {
   const snap = await adminDb.collection("stints").doc(id).get()
   if (!snap.exists) return null
   const stint = { id: snap.id, ...snap.data() }
-  const goals = (await loadActiveGoals()).map((g, i) => withGoalDisplayDefaults(g, i))
+  const goals = (await loadActiveGoals())
+    .filter((g) => !g.stintId || g.stintId === id)
+    .map((g, i) => withGoalDisplayDefaults(g, i))
   const dates = buildDates(stint.startDate, stint.endDate)
   const instSnap = await adminDb.collection("instances")
     .where("date", ">=", stint.startDate)

@@ -23,6 +23,8 @@ export default async function handler(req, res) {
     const goalsByStint = new Map()
     for (const d of goalsSnap.docs) {
       const data = d.data()
+      const state = data.state || (data.status === "archived" ? "archived" : "active")
+      if (state === "archived") continue
       const sid = data.stintId
       if (!sid) continue
       goalsByStint.set(sid, (goalsByStint.get(sid) || 0) + 1)

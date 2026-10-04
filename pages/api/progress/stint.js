@@ -33,6 +33,7 @@ export default async function handler(req, res) {
   const goals = goalsSnap.docs
     .map((d) => ({ id: d.id, ...d.data() }))
     .filter((g) => (g.state || (g.status === "archived" ? "archived" : "active")) !== "archived")
+    .filter((g) => !g.stintId || g.stintId === stint.id)
     .sort((a, b) => (a.priority ?? 99) - (b.priority ?? 99))
     .map((g, i) => withGoalDisplayDefaults(g, i))
 
